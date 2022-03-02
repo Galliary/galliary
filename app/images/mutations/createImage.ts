@@ -1,0 +1,29 @@
+import { resolver } from "blitz"
+import db from "db"
+import { z } from "zod"
+import { snowflake } from "app/core/utils/snowflake"
+
+const CreateImage = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  albumId: z.string().optional(),
+  sourceId: z.string(),
+})
+
+export default resolver.pipe(
+  resolver.zod(CreateImage),
+  resolver.authorize(),
+  async (input, ctx) => {
+    if (!ctx.session.userId) {
+      return null
+    }
+
+    return await db.image.create({
+      data: {
+        ...input,
+        id: snowflake(),
+        authorId: ctx.session.userId,
+      },
+    })
+  }
+)
