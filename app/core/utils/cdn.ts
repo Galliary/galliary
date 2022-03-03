@@ -1,5 +1,3 @@
-import { default as ServerFormData } from "form-data"
-import { request } from "http"
 import { getAntiCSRFToken } from "blitz"
 
 export enum ImageType {
@@ -52,8 +50,6 @@ export class CDN {
       },
       body: formData,
     })
-
-    console.log(response)
 
     return response.ok && (await response.text())
   }

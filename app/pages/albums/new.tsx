@@ -25,6 +25,7 @@ const NewAlbumPage: BlitzPage = () => {
             const album = await createAlbumMutation({
               ...values,
               sourceId,
+              colors: values.__image_color ?? [0, 0, 0],
             })
             router.push(Routes.ShowAlbumPage({ albumId: album.id }))
           } catch (error: any) {

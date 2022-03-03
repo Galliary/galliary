@@ -99,6 +99,7 @@ model Image {
   updatedAt DateTime @updatedAt
 
   sourceId      String
+  colors        Int[]
 
   title       String?
   description String?
@@ -119,10 +120,11 @@ model Album {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 
-  sourceId String?
+  sourceId      String
+  colors        Int[]
 
-  title       String
-  description String
+  title       String?
+  description String?
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String

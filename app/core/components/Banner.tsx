@@ -1,20 +1,21 @@
 import { Box } from "@chakra-ui/react"
+import { Album } from "@prisma/client"
 
 interface BannerProps {
-  bannerUrl?: string
+  album: Album
 }
 
-export const Banner = ({ bannerUrl }: BannerProps) => {
-  return bannerUrl ? (
+export const Banner = ({ album }: BannerProps) => {
+  return (
     <Box w="full" h="banner.height" overflow="hidden" pos="relative">
       <Box
         pos="absolute"
         inset={-8}
-        bgImg={bannerUrl}
         bgSize="cover"
         bgPosition="center"
-        filter="blur(50px)"
+        filter="blur(80px)"
+        bg={`rgba(${album.colors[0]}, ${album.colors[1]}, ${album.colors[2]}, 1)`}
       />
     </Box>
-  ) : null
+  )
 }

@@ -8,6 +8,7 @@ const CreateImage = z.object({
   description: z.string().optional(),
   albumId: z.string().optional(),
   sourceId: z.string(),
+  colors: z.array(z.number()),
 })
 
 export default resolver.pipe(

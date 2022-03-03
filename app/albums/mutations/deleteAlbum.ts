@@ -11,13 +11,19 @@ export default resolver.pipe(
   resolver.zod(DeleteAlbum),
   resolver.authorize(),
   async ({ id }, ctx) => {
+    if (!ctx.session.userId) {
+      return null
+    }
+
     const album = await db.album.findFirst({ where: { id }, select: { sourceId: true } })
 
     if (!album) {
       return null
     }
 
-    await CDN.delete(album.sourceId)
+    if (album.sourceId) {
+      await CDN.delete(album.sourceId)
+    }
 
     return await db.album.deleteMany({ where: { id, authorId: ctx.session.userId } })
   }

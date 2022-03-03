@@ -16,15 +16,31 @@ import deleteAlbum from "app/albums/mutations/deleteAlbum"
 import { useLittera } from "@assembless/react-littera"
 import { translations } from "app/core/modals/DeleteImageModal/translations"
 import deleteImage from "app/images/mutations/deleteImage"
+import { usePage } from "app/core/hooks/usePage"
 
-export const DeleteImageModal = ({ disclosure }: { disclosure: UseDisclosureReturn }) => {
+export const DeleteImageModal = ({
+  imageId,
+  disclosure,
+}: {
+  imageId: string
+  disclosure: UseDisclosureReturn
+}) => {
+  const { goBack } = usePage()
   const translated = useLittera(translations)
   const [deleteImageMutation] = useMutation(deleteImage)
 
   return (
     <Modal {...disclosure}>
       <ModalOverlay bg="overlay" />
-      <ModalContent p={8} rounded="md" maxW="500px" bg="background.full" inset={0} margin="auto">
+      <ModalContent
+        zIndex={100000}
+        p={8}
+        rounded="md"
+        maxW="500px"
+        bg="background.full"
+        inset={0}
+        margin="auto"
+      >
         <VStack w="full" align="start" spacing={4}>
           <ModalHeader>
             <Text textStyle="heading.small">{translated.title}</Text>
@@ -38,7 +54,10 @@ export const DeleteImageModal = ({ disclosure }: { disclosure: UseDisclosureRetu
           </ModalBody>
           <ModalFooter w="full" pt={6}>
             <HStack spacing={4} w="full" justify="space-between">
-              <Button variant="bad" onClick={() => deleteImageMutation()}>
+              <Button
+                variant="bad"
+                onClick={() => deleteImageMutation({ id: imageId }).then(goBack)}
+              >
                 {translated.confirm}
               </Button>
               <Button onClick={disclosure.onClose}>{translated.cancel}</Button>

@@ -8,6 +8,7 @@ const UpdateAlbum = z.object({
   title: z.string(),
   description: z.string(),
   sourceId: z.string().optional(),
+  colors: z.array(z.number()),
 })
 
 export default resolver.pipe(

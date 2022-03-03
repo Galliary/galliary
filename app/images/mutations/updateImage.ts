@@ -9,6 +9,7 @@ const UpdateImage = z.object({
   description: z.string().optional(),
   sourceId: z.string(),
   oldSourceId: z.string(),
+  colors: z.array(z.number()),
 })
 
 export default resolver.pipe(

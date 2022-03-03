@@ -45,6 +45,7 @@ export const EditAlbum = () => {
                 id: album.id,
                 ...values,
                 sourceId,
+                colors: values.__image_color ?? [0, 0, 0],
               })
 
               if (!updated) {

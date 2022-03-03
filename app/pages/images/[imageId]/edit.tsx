@@ -48,13 +48,14 @@ export const EditImage = () => {
           initialValues={image}
           onSubmit={async (values) => {
             try {
-              const sourceId = await CDN.upload(values.file)
+              const sourceId = values.file ? await CDN.upload(values.file) : image.sourceId
 
               const updated = await updateImageMutation({
                 id: image.id,
                 ...values,
                 sourceId,
                 oldSourceId: image.sourceId,
+                colors: values.__image_color ?? [0, 0, 0],
               })
 
               if (updated) {

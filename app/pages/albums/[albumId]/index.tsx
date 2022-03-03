@@ -37,9 +37,9 @@ export const Album = () => {
 
   return (
     <VStack spacing={0} boxSize="full">
-      <Banner bannerUrl={CDN.getImageUrl(album.sourceId ?? "")} />
+      <Banner album={album} />
 
-      <DeleteAlbumModal disclosure={deleteConfirmDisclosure} />
+      <DeleteAlbumModal albumId={album.id} disclosure={deleteConfirmDisclosure} />
 
       <GalleryViewController
         title={album.title}

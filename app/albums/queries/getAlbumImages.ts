@@ -9,7 +9,6 @@ interface GetAlbumImagesInput
 export default resolver.pipe(
   resolver.authorize(),
   async ({ albumId, where, orderBy, skip = 0, take = 100 }: GetAlbumImagesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const {
       items: images,
       hasMore,

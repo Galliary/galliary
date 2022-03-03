@@ -21,10 +21,13 @@ const NewImagePage: BlitzPage = () => {
           try {
             const sourceId = await CDN.upload(values.file)
 
+            console.log(values.__image_color)
+
             const image = await createImageMutation({
               ...values,
               sourceId,
               albumId,
+              colors: values.__image_color ?? [0, 0, 0],
             })
 
             if (image) {

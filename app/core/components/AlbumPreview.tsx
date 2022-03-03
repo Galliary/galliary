@@ -2,10 +2,13 @@ import { Album } from "@prisma/client"
 import { Routes } from "blitz"
 import { CDN } from "app/core/utils/cdn"
 import { Link } from "app/core/components/Link"
-import { Box, Image as Img } from "@chakra-ui/react"
+import { Box, Center, Image as Img } from "@chakra-ui/react"
 import { MotionBox, transitionConfig, transitionMediumConfig } from "app/core/components/MotionBox"
 import { useThumbnailSizing } from "app/core/hooks/useThumbnailSizing"
 import { Tooltip } from "app/core/components/Tooltip"
+import { useHasImageLoaded } from "app/core/hooks/useHasImageLoaded"
+import { useRef } from "react"
+import { LoadingIconGroup } from "app/core/components/LoadingIconGroup"
 
 export interface EntityPreviewProps {
   item: Album & {
@@ -15,6 +18,8 @@ export interface EntityPreviewProps {
 
 export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
   const [size, sizingName] = useThumbnailSizing()
+  const ref = useRef<HTMLImageElement>(null)
+  const hasImageLoaded = useHasImageLoaded(ref)
 
   const sampleImages = [
     {
@@ -69,6 +74,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
                 </Link>
               )
             })}
+
           <MotionBox
             pos="absolute"
             inset={0}
@@ -78,23 +84,51 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
               y: isHovering ? "8px" : 0,
             }}
             transition={transitionMediumConfig}
+            overflow="hidden"
+            bg="flow.20"
           >
-            <Link
-              key={album.id}
-              d="flex"
-              rounded="md"
-              href={Routes.ShowAlbumPage({ albumId: album.id })}
+            <MotionBox
+              pointerEvents="none"
+              userSelect="none"
+              transition={transitionConfig}
+              animate={{ opacity: Number(!hasImageLoaded) }}
             >
-              <Img
-                bg="#0f121c"
+              <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
+                <LoadingIconGroup size="60%" isSimple />
+              </Center>
+            </MotionBox>
+            <Box
+              pos="absolute"
+              inset={0}
+              filter="blur(60px)"
+              rounded="md"
+              overflow="hidden"
+              boxSize="full"
+              bg={`rgba(${album.colors[0]}, ${album.colors[1]}, ${album.colors[2]}, 0.4)`}
+            />
+            <MotionBox
+              pos="absolute"
+              zIndex={1}
+              inset={0}
+              animate={{ opacity: Number(hasImageLoaded) }}
+            >
+              <Link
+                key={album.id}
+                d="flex"
                 rounded="md"
-                overflow="hidden"
-                objectFit="cover"
-                boxSize={size}
-                alt={album.title ?? album.id}
-                src={CDN.getImageUrl(album.sourceId ?? "", sizingName)}
-              />
-            </Link>
+                href={Routes.ShowAlbumPage({ albumId: album.id })}
+              >
+                <Img
+                  ref={ref}
+                  rounded="md"
+                  overflow="hidden"
+                  objectFit="cover"
+                  boxSize={size}
+                  alt={album.title ?? album.id}
+                  src={CDN.getImageUrl(album.sourceId ?? "", sizingName)}
+                />
+              </Link>
+            </MotionBox>
           </MotionBox>
         </Box>
       )}

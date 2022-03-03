@@ -5,8 +5,8 @@ import { Fragment, ReactNode } from "react"
 import { Link } from "app/core/components/Link"
 
 interface GalleryViewControllerProps<Data extends Album | Image> {
-  title?: string
-  description?: string
+  title?: null | string
+  description?: null | string
   actions?: ReactNode
   actionSubText?: string
   actionSubHref?: string

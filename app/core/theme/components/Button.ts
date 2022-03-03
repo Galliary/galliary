@@ -11,6 +11,7 @@ export const ButtonStyle: ComponentStyleConfig = {
     textStyle: "label.medium",
   },
   variants: {
+    none: {},
     default: {
       color: "ui.80",
       bg: "ui.5",
@@ -37,6 +38,7 @@ export const ButtonStyle: ComponentStyleConfig = {
     },
   },
   sizes: {
+    none: {},
     default: {
       py: 3,
       px: 6,

@@ -70,6 +70,7 @@
     },
     "background": {
       "full": "#131623",
+      "full-darker": "#0f121c",
       "dark": "#08090e"
     }
   }
