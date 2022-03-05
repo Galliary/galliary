@@ -61,7 +61,6 @@ const AlbumsPage: BlitzPage = () => {
   )
 }
 
-AlbumsPage.authenticate = true
 AlbumsPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default AlbumsPage

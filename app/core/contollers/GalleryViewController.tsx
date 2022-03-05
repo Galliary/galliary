@@ -8,7 +8,7 @@ interface GalleryViewControllerProps<Data extends Album | Image> {
   title?: null | string
   description?: null | string
   actions?: ReactNode
-  actionSubText?: string
+  actionSubText?: ReactNode
   actionSubHref?: string
 
   data: Array<Data>

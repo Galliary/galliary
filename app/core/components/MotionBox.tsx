@@ -8,6 +8,8 @@ import {
   FlexProps,
   Stack,
   StackProps,
+  Image,
+  ImageProps,
 } from "@chakra-ui/react"
 
 export const DEFAULT_DURATION = 0.85
@@ -35,3 +37,4 @@ export const MotionStack = motion<Omit<StackProps, keyof MotionProps> & MotionPr
 export const MotionButton = motion<Omit<ButtonProps, keyof MotionProps> & MotionProps>(
   Button as any
 )
+export const MotionImage = motion<Omit<ImageProps, keyof MotionProps> & MotionProps>(Image as any)

@@ -4,9 +4,9 @@ import { z } from "zod"
 import { snowflake } from "app/core/utils/snowflake"
 
 const CreateAlbum = z.object({
-  sourceId: z.string().optional(),
-  title: z.string().min(2).max(50),
-  description: z.string().min(1).max(150),
+  sourceId: z.string(),
+  title: z.string().max(50).optional(),
+  description: z.string().max(150).optional(),
   colors: z.array(z.number()),
 })
 

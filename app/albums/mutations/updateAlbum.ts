@@ -5,8 +5,8 @@ import { CDN } from "app/core/utils/cdn"
 
 const UpdateAlbum = z.object({
   id: z.string(),
-  title: z.string(),
-  description: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
   sourceId: z.string().optional(),
   colors: z.array(z.number()),
 })

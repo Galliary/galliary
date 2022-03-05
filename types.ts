@@ -1,8 +1,7 @@
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from "blitz"
-import { User } from "db"
+import { User, UserRole } from "db"
 
-// Note: You should switch to Postgres and then use a DB enum for role type
-export type Role = "ADMIN" | "USER"
+export type Maybe<T> = T | null | undefined
 
 export enum SupportedLocales {
   English = "en-US",
@@ -13,10 +12,9 @@ declare module "blitz" {
     session: SessionContext
   }
   export interface Session {
-    isAuthorized: SimpleRolesIsAuthorized<Role>
+    isAuthorized: SimpleRolesIsAuthorized<UserRole>
     PublicData: {
       userId: User["id"]
-      role: Role
     }
   }
 }

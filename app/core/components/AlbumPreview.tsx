@@ -9,10 +9,14 @@ import { Tooltip } from "app/core/components/Tooltip"
 import { useHasImageLoaded } from "app/core/hooks/useHasImageLoaded"
 import { useRef } from "react"
 import { LoadingIconGroup } from "app/core/components/LoadingIconGroup"
+import favouriteAlbum from "app/mutations/favouriteAlbum"
+import { Favourite } from "app/core/components/Favourite"
 
 export interface EntityPreviewProps {
   item: Album & {
     images: Array<{ id: string; sourceId: string; createdAt: Date }>
+  } & {
+    userFavourites: Array<{ id: string }>
   }
 }
 
@@ -39,7 +43,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
   return (
     <Tooltip label={album.title ?? "Untitled Album"} offset={16}>
       {({ isHovering }) => (
-        <Box pos="relative" boxSize={size}>
+        <Box pos="relative" boxSize={size} zIndex={isHovering ? 10 : 0}>
           {album.images
             .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
             .map((image, index) => {
@@ -49,7 +53,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
                   key={offset}
                   d="flex"
                   rounded="md"
-                  href={Routes.ShowAlbumImagePage({ albumId: album.id, imageId: image.id ?? "" })}
+                  href={Routes.ShowImagePage({ albumId: album.id, imageId: image.id ?? "" })}
                 >
                   <MotionBox
                     whileHover={{ y: `calc(${isHovering ? offset : 0} - 12px)` }}
@@ -85,8 +89,11 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
             }}
             transition={transitionMediumConfig}
             overflow="hidden"
-            bg="flow.20"
+            bg="background.full"
           >
+            <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
+              <Favourite item={album} mutation={favouriteAlbum} />
+            </Box>
             <MotionBox
               pointerEvents="none"
               userSelect="none"

@@ -9,15 +9,19 @@ import { LoadingIconGroup } from "app/core/components/LoadingIconGroup"
 import { MotionBox, transitionConfig } from "app/core/components/MotionBox"
 import { useRef } from "react"
 import { useHasImageLoaded } from "app/core/hooks/useHasImageLoaded"
+import { Favourite } from "app/core/components/Favourite"
+import favouriteAlbum from "app/mutations/favouriteAlbum"
+import favouriteImage from "app/mutations/favouriteImage"
 
 export interface EntityPreviewProps {
-  item: Image
+  item: Image & {
+    userFavourites: Array<{ id: string }>
+  }
 }
 
 export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
   const ref = useRef<HTMLImageElement>(null)
   const [size, sizingName] = useThumbnailSizing()
-  const albumId = useParam("albumId", "string")
   const hasImageLoaded = useHasImageLoaded(ref)
 
   return (
@@ -51,15 +55,14 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
           boxSize={size}
           rounded="md"
         >
+          <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
+            <Favourite item={image} mutation={favouriteImage} />
+          </Box>
           <Link
             key={image.id}
             d="flex"
             rounded="md"
-            href={
-              albumId
-                ? Routes.ShowAlbumImagePage({ albumId, imageId: image.id })
-                : Routes.ShowImagePage({ imageId: image.id })
-            }
+            href={Routes.ShowImagePage({ albumId: image.albumId, imageId: image.id })}
           >
             <Img
               ref={ref}

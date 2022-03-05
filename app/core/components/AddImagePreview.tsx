@@ -1,31 +1,44 @@
 import { Routes, useParam } from "blitz"
 import { Link } from "app/core/components/Link"
-import { Box, Center, Text } from "@chakra-ui/react"
+import { Box, Center, Text, useBoolean } from "@chakra-ui/react"
 import { useThumbnailSizing } from "app/core/hooks/useThumbnailSizing"
+import { MotionBox, transitionConfig } from "app/core/components/MotionBox"
+import { NewGraphicIcon } from "app/core/icons/NewGraphicIcon"
 
 export const AddImagePreview = () => {
   const [size] = useThumbnailSizing()
   const albumId = useParam("albumId", "string")
+  const [isHovering, setHovering] = useBoolean(false)
 
   return (
-    <Link
-      d="flex"
-      rounded="md"
-      href={albumId ? Routes.UploadAlbumImage({ albumId }) : Routes.NewImagePage()}
-    >
-      <Center
-        rounded="md"
-        boxSize={size}
-        bg="ui.5"
-        borderWidth="4px"
-        borderStyle="dashed"
-        borderColor="ui.10"
+    <Box boxSize={size} p={4}>
+      <Link
+        boxSize="full"
+        d="flex"
+        rounded="full"
+        href={Routes.NewImagePage({ albumId: albumId ?? "" })}
+        pos="relative"
+        onPointerEnter={setHovering.on}
+        onPointerLeave={setHovering.off}
         color="ui.60"
-        _hover={{ bg: "ui.10", color: "ui.80" }}
-        transitionDuration="fast"
+        _hover={{ color: "ui.100" }}
       >
-        <Text textStyle="heading.small">New Image</Text>
-      </Center>
-    </Link>
+        <MotionBox
+          as={NewGraphicIcon}
+          pos="absolute"
+          inset={0}
+          boxSize="full"
+          transition={transitionConfig}
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{
+            opacity: isHovering ? 1 : 0,
+            scale: isHovering ? 1.2 : 0.6,
+          }}
+        />
+        <Center boxSize="full">
+          <Text textStyle="display.medium">New</Text>
+        </Center>
+      </Link>
+    </Box>
   )
 }

@@ -6,7 +6,7 @@ import { snowflake } from "app/core/utils/snowflake"
 const CreateImage = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  albumId: z.string().optional(),
+  albumId: z.string(),
   sourceId: z.string(),
   colors: z.array(z.number()),
 })

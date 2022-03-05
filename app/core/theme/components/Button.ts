@@ -33,6 +33,7 @@ export const ButtonStyle: ComponentStyleConfig = {
       color: "flow.100",
       bg: "brand.primary.100",
       _hover: {
+        color: "flow.100",
         bg: "brand.primary.80",
       },
     },

@@ -7,7 +7,7 @@ const GetAlbum = z.object({
   id: z.string().optional().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetAlbum), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetAlbum), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const album = await db.album.findFirst({
     where: { id },

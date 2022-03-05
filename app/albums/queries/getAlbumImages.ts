@@ -7,8 +7,7 @@ interface GetAlbumImagesInput
 }
 
 export default resolver.pipe(
-  resolver.authorize(),
-  async ({ albumId, where, orderBy, skip = 0, take = 100 }: GetAlbumImagesInput) => {
+  async ({ albumId, where, orderBy, skip = 0, take = 100 }: GetAlbumImagesInput, ctx) => {
     const {
       items: images,
       hasMore,
@@ -23,6 +22,16 @@ export default resolver.pipe(
           ...paginateArgs,
           where: { albumId },
           orderBy,
+          include: {
+            userFavourites: {
+              select: {
+                id: true,
+              },
+              where: {
+                id: ctx.session.userId ?? "",
+              },
+            },
+          },
         }),
     })
 

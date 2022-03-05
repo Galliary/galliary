@@ -2,7 +2,6 @@ import { MotionBox, transitionMediumConfig } from "app/core/components/MotionBox
 import { Box, Portal, Text, useBoolean } from "@chakra-ui/react"
 import { arrow, autoUpdate, offset, shift, useFloating } from "@floating-ui/react-dom"
 import { ReactNode, useEffect, useRef } from "react"
-import { useBanner } from "app/core/store/banner.store"
 
 export type TooltipProps = {
   label: string
@@ -11,7 +10,6 @@ export type TooltipProps = {
 }
 
 export const Tooltip = ({ label, children, offset: offsetN = 8 }: TooltipProps) => {
-  const [banner] = useBanner()
   const arrowRef = useRef(null)
   const [isHovering, setHovering] = useBoolean(false)
 
@@ -36,7 +34,7 @@ export const Tooltip = ({ label, children, offset: offsetN = 8 }: TooltipProps) 
     }
 
     return autoUpdate(refs.reference.current, refs.floating.current, update)
-  }, [banner, refs.reference, refs.floating, update])
+  }, [refs.reference, refs.floating, update])
 
   return (
     <Box ref={reference} onPointerEnter={setHovering.on} onPointerLeave={setHovering.off}>

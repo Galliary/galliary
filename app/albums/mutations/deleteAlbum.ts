@@ -15,9 +15,16 @@ export default resolver.pipe(
       return null
     }
 
-    const album = await db.album.findFirst({ where: { id }, select: { sourceId: true } })
+    const album = await db.album.findFirst({
+      where: { id },
+      select: { sourceId: true, images: true },
+    })
 
     if (!album) {
+      return null
+    }
+
+    if (album.images.length !== 0) {
       return null
     }
 

@@ -4,5 +4,7 @@ import { PropsWithChildren } from "react"
 export interface BodyProps {}
 
 export const Body = ({ children }: PropsWithChildren<BodyProps>) => (
-  <Center boxSize="full">{children}</Center>
+  <Center w="full" pb={12}>
+    {children}
+  </Center>
 )

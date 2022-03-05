@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { BlitzPage, Routes, usePaginatedQuery, useParam, useQuery } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getAlbum from "app/albums/queries/getAlbum"
-import { HStack, IconButton, useDisclosure, VStack } from "@chakra-ui/react"
+import { HStack, IconButton, Text, useDisclosure, VStack } from "@chakra-ui/react"
 import getAlbumImages from "app/albums/queries/getAlbumImages"
 import { ImagePreview } from "app/core/components/ImagePreview"
 import { CDN } from "app/core/utils/cdn"
@@ -52,7 +52,7 @@ export const Album = () => {
               <Tooltip label="Upload Image">
                 <IconButton
                   as={Link}
-                  href={Routes.UploadAlbumImage({ albumId: album.id })}
+                  href={Routes.NewImagePage({ albumId: album.id })}
                   aria-label="Upload Image"
                   p={3}
                   icon={<UploadIcon />}
@@ -79,9 +79,16 @@ export const Album = () => {
           )
         }
         actionSubText={
-          currentUser?.id === album.authorId
-            ? "You created this album"
-            : `By ${album.author.nickname ?? album.author.username}`
+          currentUser?.id === album.authorId ? (
+            "You created this album"
+          ) : (
+            <>
+              <Text as="span">By</Text>{" "}
+              <Link href={Routes.UserPage({ userId: album.authorId })}>
+                {album.author.nickname ?? album.author.username}
+              </Link>
+            </>
+          )
         }
         data={images}
         hasMore={hasMore}
@@ -102,7 +109,6 @@ const ShowAlbumPage: BlitzPage = () => {
   )
 }
 
-ShowAlbumPage.authenticate = true
 ShowAlbumPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default ShowAlbumPage
