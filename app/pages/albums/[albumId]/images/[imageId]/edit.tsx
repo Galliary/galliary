@@ -1,21 +1,30 @@
-import { Suspense } from "react"
-import { BlitzPage, Head, Routes, useMutation, useParam, useQuery, useRouter } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getImage from "app/images/queries/getImage"
-import updateImage from "app/images/mutations/updateImage"
-import { FORM_ERROR, ImageForm } from "app/images/components/ImageForm"
-import { CDN } from "app/core/utils/cdn"
+import { Suspense } from 'react'
+import {
+  BlitzPage,
+  Head,
+  Routes,
+  useMutation,
+  useParam,
+  useQuery,
+  useRouter,
+} from 'blitz'
+import updateImage from 'app/data/mutations/images/updateImage'
+import { ImageForm } from 'app/components/forms/fields/ImageForm'
+import { CDN } from 'app/utils/cdn'
+import getImage from 'app/data/queries/images/getImage'
+import { FORM_ERROR } from 'app/components/forms/Form'
+import Layout from 'app/layouts/Layout'
 
 export const EditImage = () => {
   const router = useRouter()
-  const imageId = useParam("imageId", "string")
+  const imageId = useParam('imageId', 'string')
   const [image, { setQueryData }] = useQuery(
     getImage,
     { id: imageId },
     {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
-    }
+    },
   )
   const [updateImageMutation] = useMutation(updateImage)
 
@@ -38,7 +47,9 @@ export const EditImage = () => {
           initialValues={image}
           onSubmit={async (values) => {
             try {
-              const sourceId = values.file ? await CDN.upload(values.file) : image.sourceId
+              const sourceId = values.file
+                ? await CDN.upload(values.file)
+                : image.sourceId
 
               const updated = await updateImageMutation({
                 id: image.id,
@@ -50,7 +61,12 @@ export const EditImage = () => {
 
               if (updated) {
                 await setQueryData(updated)
-                router.push(Routes.ShowImagePage({ albumId: image.albumId, imageId: updated.id }))
+                router.push(
+                  Routes.ShowImagePage({
+                    albumId: image.albumId,
+                    imageId: updated.id,
+                  }),
+                )
               }
             } catch (error: any) {
               console.error(error)

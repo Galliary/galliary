@@ -1,26 +1,26 @@
-import { Suspense } from "react"
-import { BlitzPage, Head, useMutation, useParam, useQuery } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import { Avatar, Box, HStack, Text, VStack } from "@chakra-ui/react"
-import { InvertCircleLongIcon } from "app/core/icons/InvertCircleLongIcon"
-import getUserProfile from "app/users/queries/getUserProfile"
-import { HeartIcon } from "app/core/icons/HeartIcon"
-import { FavouritesSection } from "app/core/components/FavouritesSection"
-import { AlbumPreview } from "app/core/components/AlbumPreview"
-import { ImagePreview } from "app/core/components/ImagePreview"
-import { Favourite } from "app/core/components/Favourite"
-import favouriteUser from "app/mutations/favouriteUser"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { ProfileBanner } from "app/core/components/ProfileBanner"
-import { CDN, ImageType } from "app/core/utils/cdn"
-import { MotionBox, transitionConfig } from "app/core/components/MotionBox"
-import { LogoutIcon } from "app/core/icons/LogoutIcon"
-import logout from "app/auth/mutations/logout"
-import { Tooltip } from "app/core/components/Tooltip"
+import { Suspense } from 'react'
+import { BlitzPage, Head, useMutation, useParam, useQuery } from 'blitz'
+import { Avatar, Box, HStack, Text, VStack } from '@chakra-ui/react'
+import { AlbumPreview } from 'app/components/views/AlbumPreview'
+import { CDN, ImageType } from 'app/utils/cdn'
+import getUserProfile from 'app/data/queries/users/getUserProfile'
+import { LogoutIcon } from 'app/components/icons/LogoutIcon'
+import { ImagePreview } from 'app/components/views/ImagePreview'
+import { MotionBox, transitionConfig } from 'app/components/Motion'
+import { InvertCircleLongIcon } from 'app/components/icons/InvertCircleLongIcon'
+import { FavouritesSection } from 'app/components/views/FavouritesSection'
+import { Favourite } from 'app/components/views/Favourite'
+import { ProfileBanner } from 'app/components/views/ProfileBanner'
+import { HeartIcon } from 'app/components/icons/HeartIcon'
+import favouriteUser from 'app/data/mutations/users/favouriteUser'
+import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import logout from 'app/data/mutations/auth/logout'
+import { Tooltip } from 'app/components/Tooltip'
+import Layout from 'app/layouts/Layout'
 
 export const UserProfile = () => {
   const currentUser = useCurrentUser()
-  const userId = useParam("userId", "string")
+  const userId = useParam('userId', 'string')
   const [user] = useQuery(getUserProfile, { idOrUsername: userId })
   const [logoutMutation] = useMutation(logout)
 
@@ -35,12 +35,19 @@ export const UserProfile = () => {
     <VStack boxSize="full" spacing={8}>
       <ProfileBanner
         isOwnProfile={isOwnProfile}
-        bannerUrl={user.bannerSourceId && CDN.getImageUrl(user.bannerSourceId, ImageType.Public)}
+        bannerUrl={
+          user.bannerSourceId &&
+          CDN.getImageUrl(user.bannerSourceId, ImageType.Public)
+        }
       />
       <HStack spacing={0} align="start" w="profile.width" maxW="profile.width">
         <Box pos="relative" flexShrink={0} zIndex={10}>
           <VStack spacing={10} align="start" transform="translateY(-156px)">
-            <MotionBox initial={{ y: 32 }} animate={{ y: 0 }} transition={transitionConfig}>
+            <MotionBox
+              initial={{ y: 32 }}
+              animate={{ y: 0 }}
+              transition={transitionConfig}
+            >
               <Box p={8} rounded="full" bg="background.full">
                 <InvertCircleLongIcon
                   pos="absolute"
@@ -49,7 +56,7 @@ export const UserProfile = () => {
                   color="background.full"
                   transform="scaleX(-1)"
                 />
-                <Avatar boxSize="256px" src={user.avatarUrl ?? ""} />
+                <Avatar boxSize="256px" src={user.avatarUrl ?? ''} />
                 <InvertCircleLongIcon
                   pos="absolute"
                   top="84px"
@@ -60,7 +67,7 @@ export const UserProfile = () => {
             </MotionBox>
             <VStack px={8} w="full" spacing={10} align="start">
               <Text textStyle="paragraph.large" color="ui.60">
-                {user.bio ?? "I am a new Galliary user!"}
+                {user.bio ?? 'I am a new Galliary user!'}
               </Text>
               {hasFavourites && (
                 <VStack w="full" align="start" spacing={2}>
@@ -71,9 +78,18 @@ export const UserProfile = () => {
                     </Text>
                   </HStack>
                   <VStack w="full">
-                    <FavouritesSection label="People" items={user.favouriteUsers} />
-                    <FavouritesSection label="Albums" items={user.favouriteAlbums} />
-                    <FavouritesSection label="Images" items={user.favouriteImages} />
+                    <FavouritesSection
+                      label="People"
+                      items={user.favouriteUsers}
+                    />
+                    <FavouritesSection
+                      label="Albums"
+                      items={user.favouriteAlbums}
+                    />
+                    <FavouritesSection
+                      label="Images"
+                      items={user.favouriteImages}
+                    />
                   </VStack>
                 </VStack>
               )}
@@ -104,7 +120,9 @@ export const UserProfile = () => {
                     <Favourite
                       item={user}
                       mutation={favouriteUser}
-                      style={(isActive) => ({ stroke: isActive ? "special.heart" : "ui.100" })}
+                      style={(isActive) => ({
+                        stroke: isActive ? 'special.heart' : 'ui.100',
+                      })}
                     />
                   )}
                 </HStack>

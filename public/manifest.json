@@ -1,0 +1,11 @@
+{
+  "short_name": "Galliary",
+  "name": "Galliary App",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "242x242"
+    }
+  ]
+}

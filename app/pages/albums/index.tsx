@@ -1,7 +1,14 @@
-import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getAlbums from "app/albums/queries/getAlbums"
+import { Suspense } from 'react'
+import {
+  Head,
+  Link,
+  usePaginatedQuery,
+  useRouter,
+  BlitzPage,
+  Routes,
+} from 'blitz'
+import getAlbums from 'app/data/queries/albums/getAlbums'
+import Layout from 'app/layouts/Layout'
 
 const ITEMS_PER_PAGE = 100
 
@@ -9,7 +16,7 @@ export const AlbumsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
   const [{ albums, hasMore }] = usePaginatedQuery(getAlbums, {
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })

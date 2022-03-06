@@ -36,6 +36,7 @@ enum SafetyRating {
   SAFE
   UNKNOWN
   NOT_SAFE
+  NSFW
 }
 
 enum LockingStatus {

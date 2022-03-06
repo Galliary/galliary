@@ -1,19 +1,21 @@
-import { Strategy } from "passport-google-oauth20"
-import db from "db"
-import { snowflake } from "app/core/utils/snowflake"
+import { Strategy } from 'passport-google-oauth20'
+import db from 'db'
+import { snowflake } from 'app/utils/snowflake'
 
 export const GoogleStrategy = new Strategy(
   {
-    clientID: process.env.GOOGLE_CLIENT_ID ?? "",
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    callbackURL: process.env.GOOGLE_CALLBACK_URL ?? "",
-    scope: "profile email",
+    clientID: process.env.GOOGLE_CLIENT_ID ?? '',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    callbackURL: process.env.GOOGLE_CALLBACK_URL ?? '',
+    scope: 'profile email',
   },
   async (accessToken, refreshToken, profile, done) => {
     const email = profile.emails?.[0]?.value
 
     if (!email) {
-      return done(new Error("Twitter OAuth response did not supply an email address."))
+      return done(
+        new Error('Twitter OAuth response did not supply an email address.'),
+      )
     }
 
     const avatarUrl = profile.photos?.[0]?.value
@@ -33,9 +35,9 @@ export const GoogleStrategy = new Strategy(
     const publicData = {
       userId: user.id,
       roles: [user.role],
-      source: "google",
+      source: 'google',
     }
 
     done(undefined, { publicData })
-  }
+  },
 )

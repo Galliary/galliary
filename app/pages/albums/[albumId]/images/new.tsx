@@ -1,14 +1,14 @@
-import { BlitzPage, Routes, useMutation, useParam, useRouter } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import createImage from "app/images/mutations/createImage"
-import { FORM_ERROR, ImageForm } from "app/images/components/ImageForm"
-import { Text, VStack } from "@chakra-ui/react"
-import { Link } from "app/core/components/Link"
-import { CDN } from "app/core/utils/cdn"
+import { BlitzPage, Routes, useMutation, useParam, useRouter } from 'blitz'
+import { Text, VStack } from '@chakra-ui/react'
+import createImage from 'app/data/mutations/images/createImage'
+import { ImageForm } from 'app/components/forms/fields/ImageForm'
+import { CDN } from 'app/utils/cdn'
+import { FORM_ERROR } from 'app/components/forms/Form'
+import Layout from 'app/layouts/Layout'
 
 const NewImagePage: BlitzPage = () => {
   const router = useRouter()
-  const albumId = useParam("albumId", "string")
+  const albumId = useParam('albumId', 'string')
   const [createImageMutation] = useMutation(createImage)
 
   return (
@@ -34,7 +34,10 @@ const NewImagePage: BlitzPage = () => {
               router.push(
                 albumId
                   ? Routes.ShowAlbumPage({ albumId })
-                  : Routes.ShowImagePage({ albumId: albumId ?? "", imageId: image.id })
+                  : Routes.ShowImagePage({
+                      albumId: albumId ?? '',
+                      imageId: image.id,
+                    }),
               )
             }
           } catch (error: any) {
@@ -50,6 +53,8 @@ const NewImagePage: BlitzPage = () => {
 }
 
 NewImagePage.authenticate = true
-NewImagePage.getLayout = (page) => <Layout title={"Create New Image"}>{page}</Layout>
+NewImagePage.getLayout = (page) => (
+  <Layout title={'Create New Image'}>{page}</Layout>
+)
 
 export default NewImagePage

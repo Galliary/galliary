@@ -1,8 +1,5 @@
-import { Suspense } from "react"
-import { BlitzPage, Routes, useParam, useQuery } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getImage from "app/images/queries/getImage"
-import { CDN } from "app/core/utils/cdn"
+import { Suspense } from 'react'
+import { BlitzPage, Routes, useParam, useQuery } from 'blitz'
 import {
   Box,
   Button,
@@ -12,23 +9,30 @@ import {
   Image as ChakraImage,
   useBoolean,
   useDisclosure,
-} from "@chakra-ui/react"
-import { Tooltip } from "app/core/components/Tooltip"
-import { EditIcon } from "app/core/icons/EditIcon"
-import { DeleteIcon } from "app/core/icons/DeleteIcon"
-import { Link } from "app/core/components/Link"
-import { MotionBox, transitionConfig, transitionMediumConfig } from "app/core/components/MotionBox"
-import { DeleteImageModal } from "app/core/modals/DeleteImageModal"
-import { FullscreenIcon } from "app/core/icons/FullscreenIcon"
-import { LoadingIconGroup } from "app/core/components/LoadingIconGroup"
-import { usePage } from "app/core/hooks/usePage"
-import { InvertCircleCornerIcon } from "app/core/icons/InvertCircleCornerIcon"
+} from '@chakra-ui/react'
+import { DeleteImageModal } from 'app/components/modals/DeleteImageModal'
+import { InvertCircleCornerIcon } from 'app/components/icons/InvertCircleCornerIcon'
+import { CDN } from 'app/utils/cdn'
+import {
+  MotionBox,
+  transitionConfig,
+  transitionMediumConfig,
+} from 'app/components/Motion'
+import { EditIcon } from 'app/components/icons/EditIcon'
+import { FullscreenIcon } from 'app/components/icons/FullscreenIcon'
+import { usePage } from 'app/data/hooks/usePage'
+import getImage from 'app/data/queries/images/getImage'
+import { DeleteIcon } from 'app/components/icons/DeleteIcon'
+import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
+import { Tooltip } from 'app/components/Tooltip'
+import { Link } from 'app/components/Link'
+import Layout from 'app/layouts/Layout'
 
 export const ImageView = () => {
   const { goBack } = usePage()
   const deleteConfirmDisclosure = useDisclosure()
-  const albumId = useParam("albumId", "string")
-  const imageId = useParam("imageId", "string")
+  const albumId = useParam('albumId', 'string')
+  const imageId = useParam('imageId', 'string')
   const [image] = useQuery(getImage, { id: imageId })
 
   const [isLoaded, setLoaded] = useBoolean(false)
@@ -36,7 +40,10 @@ export const ImageView = () => {
 
   return (
     <>
-      <DeleteImageModal imageId={image.id} disclosure={deleteConfirmDisclosure} />
+      <DeleteImageModal
+        imageId={image.id}
+        disclosure={deleteConfirmDisclosure}
+      />
       <Center pos="relative" boxSize="full" overflow="hidden">
         <Box
           zIndex={-1}
@@ -54,10 +61,13 @@ export const ImageView = () => {
             inset={0}
             margin="auto"
           >
-            <LoadingIconGroup />
+            <LogoLoadingAnimation />
           </Center>
         )}
-        <MotionBox transition={transitionConfig} animate={{ opacity: Number(isLoaded) }}>
+        <MotionBox
+          transition={transitionConfig}
+          animate={{ opacity: Number(isLoaded) }}
+        >
           <ChakraImage
             pos="absolute"
             boxSize="full"
@@ -77,18 +87,18 @@ export const ImageView = () => {
                 onPointerLeave={setHovering.off}
               >
                 <MotionBox
-                  initial={{ y: "0%" }}
+                  initial={{ y: '0%' }}
                   animate={
                     isHovering
                       ? {
-                          y: "0%",
+                          y: '0%',
                           transition: {
                             ...transitionMediumConfig,
                             delay: 0,
                           },
                         }
                       : {
-                          y: "-100%",
+                          y: '-100%',
                           transition: {
                             ...transitionConfig,
                             delay: 2,
@@ -104,7 +114,12 @@ export const ImageView = () => {
                       transform="rotate(90deg)"
                       color="background.full-darker"
                     />
-                    <Box pos="relative" p={4} bg="background.full-darker" roundedBottom="lg">
+                    <Box
+                      pos="relative"
+                      p={4}
+                      bg="background.full-darker"
+                      roundedBottom="lg"
+                    >
                       <MotionBox
                         zIndex={-1}
                         pos="absolute"
@@ -133,8 +148,22 @@ export const ImageView = () => {
                               }
                         }
                       >
-                        <Box pos="absolute" insetX={3} bottom={4} rounded="md" bg="ui.5" h={1} />
-                        <Box pos="absolute" insetX={6} bottom={2} rounded="md" bg="ui.5" h={1} />
+                        <Box
+                          pos="absolute"
+                          insetX={3}
+                          bottom={4}
+                          rounded="md"
+                          bg="ui.5"
+                          h={1}
+                        />
+                        <Box
+                          pos="absolute"
+                          insetX={6}
+                          bottom={2}
+                          rounded="md"
+                          bg="ui.5"
+                          h={1}
+                        />
                       </MotionBox>
                       <HStack spacing={4}>
                         <Button onClick={goBack}>Go back</Button>
@@ -145,14 +174,18 @@ export const ImageView = () => {
                             aria-label="Edit Image"
                             icon={<EditIcon />}
                             href={Routes.EditImagePage({
-                              albumId: albumId ?? "",
+                              albumId: albumId ?? '',
                               imageId: image.id,
                             })}
                           />
                         </Tooltip>
                         <Tooltip label="Fullscreen">
                           {/* TODO: Actually implement this */}
-                          <IconButton p={3} aria-label="Fullscreen" icon={<FullscreenIcon />} />
+                          <IconButton
+                            p={3}
+                            aria-label="Fullscreen"
+                            icon={<FullscreenIcon />}
+                          />
                         </Tooltip>
                         <Tooltip label="Delete Image">
                           <IconButton
@@ -170,7 +203,10 @@ export const ImageView = () => {
               </Box>
             </Center>
           )}
-          <MotionBox transition={transitionConfig} animate={{ opacity: Number(isLoaded) }}>
+          <MotionBox
+            transition={transitionConfig}
+            animate={{ opacity: Number(isLoaded) }}
+          >
             <ChakraImage
               objectFit="contain"
               src={CDN.getImageUrl(image.sourceId)}

@@ -1,23 +1,33 @@
-import { Suspense } from "react"
-import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getAlbum from "app/albums/queries/getAlbum"
-import updateAlbum from "app/albums/mutations/updateAlbum"
-import { AlbumForm, FORM_ERROR } from "app/albums/components/AlbumForm"
-import { CDN } from "app/core/utils/cdn"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { Suspense } from 'react'
+import {
+  BlitzPage,
+  Head,
+  Link,
+  Routes,
+  useMutation,
+  useParam,
+  useQuery,
+  useRouter,
+} from 'blitz'
+import updateAlbum from 'app/data/mutations/albums/updateAlbum'
+import { AlbumForm } from 'app/components/forms/AlbumForm'
+import { CDN } from 'app/utils/cdn'
+import getAlbum from 'app/data/queries/albums/getAlbum'
+import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import Layout from 'app/layouts/Layout'
+import { FORM_ERROR } from 'app/components/forms/Form'
 
 export const EditAlbum = () => {
   const router = useRouter()
   const currentUser = useCurrentUser()
-  const albumId = useParam("albumId", "string")
+  const albumId = useParam('albumId', 'string')
   const [album, { setQueryData }] = useQuery(
     getAlbum,
     { id: albumId },
     {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
-    }
+    },
   )
   const [updateAlbumMutation] = useMutation(updateAlbum)
 
@@ -40,7 +50,9 @@ export const EditAlbum = () => {
           initialValues={album}
           onSubmit={async (values) => {
             try {
-              const sourceId = values.file ? await CDN.upload(values.file) : album.sourceId
+              const sourceId = values.file
+                ? await CDN.upload(values.file)
+                : album.sourceId
               const updated = await updateAlbumMutation({
                 id: album.id,
                 ...values,

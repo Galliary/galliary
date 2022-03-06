@@ -1,6 +1,33 @@
 {
+  "private": true,
   "name": "galliary",
   "version": "1.0.0-beta",
+  "galliary": {
+    "name": "Galliary",
+    "longName": "Galliary Image App",
+    "headline": "Explore and share photography, albums and images with others!",
+    "short": "Explore and share images!",
+    "description": "Galliary - Upload photography for free and sort them in albums. Get user feedback and share high quality images to everyone.",
+    "email": "contact@galliary.com",
+    "url": "https://galliary.com",
+    "logo": "https://galliary.com/logo.png",
+    "color": "#3574D2",
+    "socials": [
+      {
+        "type": "twitter",
+        "handle": "GalliaryApp",
+        "url": "https://twitter.com/GalliaryApp"
+      }
+    ],
+    "tags": [
+      "photography",
+      "gallery",
+      "photo",
+      "album",
+      "image",
+      "free"
+    ]
+  },
   "scripts": {
     "dev": "blitz dev",
     "build": "blitz build",
@@ -14,10 +41,6 @@
   },
   "prisma": {
     "schema": "db/schema.prisma"
-  },
-  "prettier": {
-    "semi": false,
-    "printWidth": 100
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -55,6 +78,8 @@
     "react": "18.0.0-beta-149b420f6-20211119",
     "react-avatar-editor": "12.0.0",
     "react-dom": "18.0.0-alpha-5ca4b0433-20211020",
+    "react-schemaorg": "2.0.0",
+    "schema-dts": "1.1.0",
     "snowflake-uuid": "1.0.0",
     "zod": "3.x"
   },
@@ -81,11 +106,10 @@
     "husky": "7.x",
     "lint-staged": "11.x",
     "prettier": "2.5.1",
-    "prettier-plugin-prisma": "3.10.0",
+    "prettier-plugin-prisma": "^3.10.0",
     "pretty-quick": "3.1.3",
     "preview-email": "3.0.5",
-    "prisma": "3.x",
-    "typescript": "~4.5"
-  },
-  "private": true
+    "prisma": "3.10.0",
+    "typescript": "^4.6.2"
+  }
 }

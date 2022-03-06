@@ -1,15 +1,13 @@
-import { BlitzPage, useMutation, usePaginatedQuery, useRouter } from "blitz"
-import { Avatar, Box, Button, HStack, Text, VStack, Wrap } from "@chakra-ui/react"
-import Layout from "app/core/layouts/Layout"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import logout from "app/auth/mutations/logout"
-import { Link } from "app/core/components/Link"
-import { LoginController } from "app/core/contollers/LoginController"
-import { AlbumPreview } from "app/core/components/AlbumPreview"
-import getAlbums from "app/albums/queries/getAlbums"
-import { AddAlbumPreview } from "app/core/components/AddAlbumPreview"
-import { GalleryViewController } from "app/core/contollers/GalleryViewController"
-import { usePage } from "app/core/hooks/usePage"
+import { BlitzPage, useMutation, usePaginatedQuery } from 'blitz'
+import { Avatar, Box, Button, HStack, Text, VStack } from '@chakra-ui/react'
+import { AlbumPreview } from 'app/components/views/AlbumPreview'
+import { usePage } from 'app/data/hooks/usePage'
+import { GalleryViewController } from 'app/controllers/GalleryViewController'
+import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import logout from 'app/data/mutations/auth/logout'
+import { AddNewItem } from 'app/components/views/AddNewItem'
+import Layout from 'app/layouts/Layout'
+import getAlbums from 'app/data/queries/albums/getAlbums'
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -27,7 +25,7 @@ const UserInfo = () => {
   return (
     <HStack spacing={4}>
       <HStack spacing={4} p={4} rounded="md" bg="ui.5">
-        <Avatar boxSize={16} src={currentUser.avatarUrl ?? ""} />
+        <Avatar boxSize={16} src={currentUser.avatarUrl ?? ''} />
         <VStack spacing={2} align="start">
           <Text fontSize="20px" color="ui.100">
             {currentUser.nickname ?? currentUser.username}
@@ -47,7 +45,7 @@ const ITEMS_PER_PAGE = 32
 const Home: BlitzPage = () => {
   const { page } = usePage()
   const [{ albums, hasMore }] = usePaginatedQuery(getAlbums, {
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
@@ -57,7 +55,7 @@ const Home: BlitzPage = () => {
       <GalleryViewController
         data={albums}
         hasMore={hasMore}
-        addPrompt={<AddAlbumPreview />}
+        addPrompt={<AddNewItem />}
         onDisplay={(data) => <AlbumPreview item={data} />}
       />
 

@@ -1,45 +1,45 @@
-import { Suspense } from "react"
-import { BlitzPage, Routes, usePaginatedQuery, useParam, useQuery } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getAlbum from "app/albums/queries/getAlbum"
-import { HStack, IconButton, Text, useDisclosure, VStack } from "@chakra-ui/react"
-import getAlbumImages from "app/albums/queries/getAlbumImages"
-import { ImagePreview } from "app/core/components/ImagePreview"
-import { CDN } from "app/core/utils/cdn"
-import { Link } from "app/core/components/Link"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { DeleteIcon } from "app/core/icons/DeleteIcon"
-import { EditIcon } from "app/core/icons/EditIcon"
-import { UploadIcon } from "app/core/icons/UploadIcon"
-import { Tooltip } from "app/core/components/Tooltip"
-import { AddImagePreview } from "app/core/components/AddImagePreview"
-import { GalleryViewController } from "app/core/contollers/GalleryViewController"
-import { usePage } from "app/core/hooks/usePage"
-import { DeleteAlbumModal } from "app/core/modals/DeleteAlbumModal"
-import { Banner } from "app/core/components/Banner"
+import { Suspense } from 'react'
+import { BlitzPage, Routes, usePaginatedQuery, useParam, useQuery } from 'blitz'
+import { HStack, IconButton, VStack, Text } from '@chakra-ui/react'
+import { DeleteAlbumModal } from 'app/components/modals/DeleteAlbumModal'
+import getAlbumImages from 'app/data/queries/albums/getAlbumImages'
+import { EditIcon } from 'app/components/icons/EditIcon'
+import { ImagePreview } from 'app/components/views/ImagePreview'
+import { UploadIcon } from 'app/components/icons/UploadIcon'
+import { usePage } from 'app/data/hooks/usePage'
+import { GalleryViewController } from 'app/controllers/GalleryViewController'
+import getAlbum from 'app/data/queries/albums/getAlbum'
+import { DeleteIcon } from 'app/components/icons/DeleteIcon'
+import { useDisclosure } from '@chakra-ui/hooks'
+import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import { Tooltip } from 'app/components/Tooltip'
+import { Link } from 'app/components/Link'
+import Layout from 'app/layouts/Layout'
+import { AddNewItem } from 'app/components/views/AddNewItem'
 
 const ITEMS_PER_PAGE = 30
 
 export const Album = () => {
   const currentUser = useCurrentUser()
   const deleteConfirmDisclosure = useDisclosure()
-  const albumId = useParam("albumId", "string")
+  const albumId = useParam('albumId', 'string')
   const [album] = useQuery(getAlbum, { id: albumId })
 
   const { page } = usePage()
 
   const [{ images, hasMore }] = usePaginatedQuery(getAlbumImages, {
     albumId: album.id,
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
 
   return (
     <VStack spacing={0} boxSize="full">
-      <Banner album={album} />
-
-      <DeleteAlbumModal albumId={album.id} disclosure={deleteConfirmDisclosure} />
+      <DeleteAlbumModal
+        albumId={album.id}
+        disclosure={deleteConfirmDisclosure}
+      />
 
       <GalleryViewController
         title={album.title}
@@ -80,10 +80,10 @@ export const Album = () => {
         }
         actionSubText={
           currentUser?.id === album.authorId ? (
-            "You created this album"
+            'You created this album'
           ) : (
             <>
-              <Text as="span">By</Text>{" "}
+              <Text as="span">By</Text>{' '}
               <Link href={Routes.UserPage({ userId: album.authorId })}>
                 {album.author.nickname ?? album.author.username}
               </Link>
@@ -92,7 +92,7 @@ export const Album = () => {
         }
         data={images}
         hasMore={hasMore}
-        addPrompt={<AddImagePreview />}
+        addPrompt={<AddNewItem />}
         onDisplay={(data) => <ImagePreview item={data} />}
       />
     </VStack>

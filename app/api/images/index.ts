@@ -1,8 +1,8 @@
-import { NextApiResponse } from "next"
-import { CDN } from "app/core/utils/cdn"
-import multer from "multer"
-import { CloudflareStorage } from "multer-cloudflare-storage"
-import nextConnect from "next-connect"
+import { NextApiResponse } from 'next'
+import multer from 'multer'
+import { CloudflareStorage } from 'multer-cloudflare-storage'
+import nextConnect from 'next-connect'
+import { CDN } from 'app/utils/cdn'
 
 const uploader = multer({
   storage: new CloudflareStorage(CDN.ACCOUNT_ID, CDN.API_KEY),
@@ -18,7 +18,7 @@ const ImagesApiRoute = nextConnect({
   },
 })
 
-ImagesApiRoute.use(uploader.single("file"))
+ImagesApiRoute.use(uploader.single('file'))
 
 ImagesApiRoute.post((req, res: NextApiResponse) => {
   const sample = (req as any).file as { destination: string }

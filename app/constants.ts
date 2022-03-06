@@ -1,0 +1,1 @@
+export const CLOUDFLARE_ACCOUNT_HASH = '8yAzsAP1tGpuA0gIh26SsA'
