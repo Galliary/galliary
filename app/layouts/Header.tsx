@@ -1,5 +1,16 @@
 import { Routes } from 'blitz'
-import { Avatar, Button, Center, Heading, HStack } from '@chakra-ui/react'
+import {
+  Avatar,
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react'
 import { Link } from 'app/components/Link'
 import { LoginController } from 'app/controllers/LoginController'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
@@ -45,9 +56,28 @@ export const Header = ({}: HeaderProps) => (
         <Button>Browse</Button>
         <LoginController
           action={
-            <Button as={Link} href={Routes.LoginPage()} variant="primary">
-              Login
-            </Button>
+            <Menu>
+              <MenuButton as={Button} variant="primary">
+                Login
+              </MenuButton>
+              <MenuList minW="200px">
+                <MenuItem as={Link} href="/api/auth/google">
+                  <HStack>
+                    <Text>Google</Text>
+                  </HStack>
+                </MenuItem>
+                <MenuItem as={Link} href="/api/auth/discord">
+                  <HStack>
+                    <Text>Discord</Text>
+                  </HStack>
+                </MenuItem>
+                <MenuItem as={Link} href="/api/auth/twitter">
+                  <HStack>
+                    <Text>Twitter</Text>
+                  </HStack>
+                </MenuItem>
+              </MenuList>
+            </Menu>
           }
         >
           <UserLoggedInHeaderButtons />

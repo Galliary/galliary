@@ -4,6 +4,7 @@ import {
   HStack,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -31,41 +32,30 @@ const ConfirmationModal = ({
   ...disclosure
 }: ConfirmationModalProps) => (
   <Modal {...disclosure}>
-    <ModalOverlay bg="overlay" />
-    <ModalContent
-      zIndex={100000}
-      p={8}
-      rounded="md"
-      maxW="500px"
-      bg="background.full"
-      inset={0}
-      margin="auto"
-    >
-      <VStack w="full" align="start" spacing={4}>
-        <ModalHeader>
-          <Text textStyle="heading.small">{title}</Text>
-        </ModalHeader>
-        <ModalBody>
-          <Text textStyle="paragraph.large" color="ui.60">
-            {message}
-          </Text>
-        </ModalBody>
-        <ModalFooter w="full" pt={6}>
-          <HStack spacing={4} w="full" justify="space-between">
-            <Button variant="bad" onClick={onConfirm}>
-              {confirmMessage}
-            </Button>
-            <Button
-              onClick={() => {
-                disclosure.onClose()
-                onCancel()
-              }}
-            >
-              {cancelMessage}
-            </Button>
-          </HStack>
-        </ModalFooter>
-      </VStack>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalCloseButton />
+      <ModalHeader>
+        <Text>{title}</Text>
+      </ModalHeader>
+      <ModalBody>
+        <Text>{message}</Text>
+      </ModalBody>
+      <ModalFooter>
+        <HStack spacing={4} w="full" justify="space-between">
+          <Button variant="bad" onClick={onConfirm}>
+            {confirmMessage}
+          </Button>
+          <Button
+            onClick={() => {
+              disclosure.onClose()
+              onCancel()
+            }}
+          >
+            {cancelMessage}
+          </Button>
+        </HStack>
+      </ModalFooter>
     </ModalContent>
   </Modal>
 )

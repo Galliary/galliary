@@ -1,37 +1,33 @@
-import { inputAnatomy } from '@chakra-ui/anatomy'
-import { ComponentMultiStyleConfig } from '@chakra-ui/react'
+import { StyleConfig } from '@chakra-ui/theme-tools'
 
-export const TextareaStyle: ComponentMultiStyleConfig = {
-  parts: inputAnatomy.keys,
+export const TextareaStyle: StyleConfig = {
   baseStyle: {
-    field: {
-      width: '100%',
-      minWidth: 0,
-      outline: 0,
-      position: 'relative',
-      appearance: 'none',
-      transitionProperty: 'common',
-      transitionDuration: 'normal',
-      textStyle: 'paragraph.large',
-      _focus: {
-        boxShadow: 'outline',
-      },
+    bg: 'ui.5',
+    p: 4,
+    width: '100%',
+    minWidth: 0,
+    outline: 0,
+    position: 'relative',
+    appearance: 'none',
+    transitionProperty: 'common',
+    transitionDuration: 'normal',
+    textStyle: 'paragraph.large',
+    _focus: {
+      boxShadow: 'outline',
     },
-    addon: {},
   },
   variants: {
     default: {
-      field: {
-        bg: 'ui.5',
-        rounded: 'md',
+      bg: 'ui.5',
+      rounded: 'md',
+      _hover: {
+        bg: 'ui.10',
       },
     },
   },
   sizes: {
     default: {
-      field: {
-        p: 8,
-      },
+      p: 8,
     },
   },
   defaultProps: {

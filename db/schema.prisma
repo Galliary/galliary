@@ -222,3 +222,71 @@ model Album {
 
   @@index([id, authorId])
 }
+
+enum AuditAction {
+  DELETE_IMAGE
+  DELETE_ALBUM
+  DELETE_USER
+  DELETE_CATEGORY
+
+  LOCK_IMAGE
+  LOCK_ALBUM
+  LOCK_USER
+  LOCK_CATEGORY
+
+  UNLOCK_IMAGE
+  UNLOCK_ALBUM
+  UNLOCK_USER
+  UNLOCK_CATEGORY
+
+  UPDATE_IMAGE_RATING
+  UPDATE_ALBUM_RATING
+  UPDATE_USER_RATING
+  UPDATE_CATEGORY_RATING
+
+  UPDATE_IMAGE_STATUS
+  UPDATE_ALBUM_STATUS
+  UPDATE_USER_STATUS
+  UPDATE_CATEGORY_STATUS
+
+  EDIT_IMAGE_NAME
+  EDIT_ALBUM_NAME
+  EDIT_USER_NAME
+  EDIT_CATEGORY_NAME
+
+  EDIT_IMAGE_DESCRIPTION
+  EDIT_ALBUM_DESCRIPTION
+  EDIT_USER_DESCRIPTION
+  EDIT_CATEGORY_DESCRIPTION
+
+  EDIT_IMAGE_SOURCE
+  EDIT_ALBUM_SOURCE
+
+  BAN_USER
+  UNBAN_USER
+}
+
+model AuditLog {
+  id        String   @id @unique
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  affectedUser   User?   @relation(fields: [affectedUserId], references: [id])
+  affectedUserId String?
+
+  affectedImage   Image?   @relation(fields: [affectedImageId], references: [id])
+  affectedImageId String?
+
+  affectedAlbum   Image?   @relation(fields: [affectedAlbumId], references: [id])
+  affectedAlbumId String?
+
+  affectedCategory   Image?   @relation(fields: [affectedCategoryId], references: [id])
+  affectedCategoryId String?
+
+  action AuditAction
+
+  valueBefore Any?
+  valueAfter Any
+}

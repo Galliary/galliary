@@ -1,18 +1,18 @@
-import { PropsWithoutRef, ReactNode, useState } from "react"
-import { Formik, FormikProps } from "formik"
-import { validateZodSchema } from "blitz"
-import { z } from "zod"
-import { Button, FormErrorMessage, VStack } from "@chakra-ui/react"
+import { PropsWithoutRef, ReactNode, useState } from 'react'
+import { Formik, FormikProps } from 'formik'
+import { validateZodSchema } from 'blitz'
+import { z } from 'zod'
+import { Button, FormErrorMessage, VStack } from '@chakra-ui/react'
 
 export interface FormProps<S extends z.ZodType<any, any>>
-  extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
+  extends Omit<PropsWithoutRef<JSX.IntrinsicElements['form']>, 'onSubmit'> {
   /** All your form fields */
   children?: ReactNode
   /** Text to display in the submit button */
   submitText?: string
   schema?: S
   onSubmit: (values: z.infer<S>) => Promise<void | OnSubmitResult>
-  initialValues?: FormikProps<z.infer<S>>["initialValues"]
+  initialValues?: FormikProps<z.infer<S>>['initialValues']
 }
 
 interface OnSubmitResult {
@@ -20,7 +20,7 @@ interface OnSubmitResult {
   [prop: string]: any
 }
 
-export const FORM_ERROR = "FORM_ERROR"
+export const FORM_ERROR = 'FORM_ERROR'
 
 export function Form<S extends z.ZodType<any, any>>({
   children,

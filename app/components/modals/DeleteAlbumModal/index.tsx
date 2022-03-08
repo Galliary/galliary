@@ -4,6 +4,7 @@ import {
   HStack,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -31,46 +32,31 @@ export const DeleteAlbumModal = ({
 
   return (
     <Modal {...disclosure}>
-      <ModalOverlay bg="overlay" zIndex={1} />
-      <Box pos="absolute" zIndex={2}>
-        <ModalContent
-          p={8}
-          rounded="md"
-          maxW="500px"
-          bg="background.full"
-          inset={0}
-          margin="auto"
-          zIndex={2}
-        >
-          <VStack w="full" align="start" spacing={4}>
-            <ModalHeader>
-              <Text textStyle="heading.small">{translated.title}</Text>
-            </ModalHeader>
-            <ModalBody>
-              <Text textStyle="paragraph.large" color="ui.60">
-                {translated.body_0}
-                <br />
-                {translated.body_1}
-              </Text>
-            </ModalBody>
-            <ModalFooter w="full" pt={6}>
-              <HStack spacing={4} w="full" justify="space-between">
-                <Button
-                  variant="bad"
-                  onClick={() =>
-                    deleteAlbumMutation({ id: albumId }).then(goBack)
-                  }
-                >
-                  {translated.confirm}
-                </Button>
-                <Button onClick={disclosure.onClose}>
-                  {translated.cancel}
-                </Button>
-              </HStack>
-            </ModalFooter>
-          </VStack>
-        </ModalContent>
-      </Box>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader>
+          <Text>{translated.title}</Text>
+        </ModalHeader>
+        <ModalBody>
+          <Text>
+            {translated.body_0}
+            <br />
+            {translated.body_1}
+          </Text>
+        </ModalBody>
+        <ModalFooter>
+          <HStack spacing={4} w="full" justify="space-between">
+            <Button
+              variant="bad"
+              onClick={() => deleteAlbumMutation({ id: albumId }).then(goBack)}
+            >
+              {translated.confirm}
+            </Button>
+            <Button onClick={disclosure.onClose}>{translated.cancel}</Button>
+          </HStack>
+        </ModalFooter>
+      </ModalContent>
     </Modal>
   )
 }

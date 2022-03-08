@@ -1,5 +1,7 @@
-
 - Shared albums between users
   - Add contributors to albums for shared experiences
-
-
+- Implement the category system
+- Add ability to make super categories
+- Add/design edit user page / profile page
+- Make role-based middleware for routes
+- Add voting system for albums, users and images

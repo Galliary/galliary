@@ -2,7 +2,6 @@ import { IconProps } from '@chakra-ui/icon'
 import { useLoggedIn } from 'app/data/hooks/useLoggedIn'
 import { useOptimisticFavourites } from 'app/data/hooks/useOptimisticFavourites'
 import { HeartIcon } from 'app/components/icons/HeartIcon'
-import { Tooltip } from 'app/components/Tooltip'
 
 type UseOptimisticFavouritesParams = Parameters<typeof useOptimisticFavourites>
 
@@ -24,31 +23,33 @@ export const Favourite = ({
   )
 
   return !isLoggedIn ? null : (
-    <Tooltip label="Favourite">
-      <HeartIcon
-        boxSize={10}
-        strokeWidth={2}
-        cursor="pointer"
-        transitionDuration="fast"
-        transitionTimingFunction="ease"
-        {...(userHasLoved
-          ? {
+    <HeartIcon
+      boxSize={10}
+      strokeWidth={2}
+      cursor="pointer"
+      transitionDuration="fast"
+      transitionTimingFunction="ease"
+      {...(userHasLoved
+        ? {
+            color: 'special.heart',
+            _hover: {
+              opacity: 0.8,
+            },
+            stroke: 'special.heart',
+          }
+        : {
+            color: 'background.full',
+            _hover: {
               color: 'special.heart',
-              _hover: {
-                opacity: 0.8,
-              },
-              stroke: 'special.heart',
-            }
-          : {
-              color: 'transparent',
-              _hover: {
-                color: 'special.heart',
-              },
-              stroke: 'background.full',
-            })}
-        {...style(userHasLoved)}
-        onClick={updateFavourite}
-      />
-    </Tooltip>
+            },
+            stroke: 'background.full',
+          })}
+      {...style(userHasLoved)}
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        updateFavourite()
+      }}
+    />
   )
 }

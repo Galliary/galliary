@@ -25,18 +25,11 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
-      <Box
-        pos="relative"
-        boxSize={size}
-        bg="flow.20"
-        rounded="md"
-        overflow="hidden"
-      >
+      <Box pos="relative" boxSize={size} bg="flow.20" overflow="hidden">
         <Box
           pos="absolute"
           inset={0}
           filter="blur(60px)"
-          rounded="md"
           overflow="hidden"
           boxSize="full"
           bg={`rgba(${image.colors[0]}, ${image.colors[1]}, ${image.colors[2]}, 0.4)`}
@@ -58,7 +51,6 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
           pos="absolute"
           inset={0}
           boxSize={size}
-          rounded="md"
         >
           <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
             <Favourite item={image} mutation={favouriteImage} />
@@ -66,7 +58,6 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
           <Link
             key={image.id}
             d="flex"
-            rounded="md"
             href={Routes.ShowImagePage({
               albumId: image.albumId,
               imageId: image.id,
@@ -75,7 +66,6 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
             <Img
               ref={ref}
               loading="lazy"
-              rounded="md"
               overflow="hidden"
               objectFit="cover"
               boxSize={size}

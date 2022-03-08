@@ -31,21 +31,21 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
 
   const sampleImages = [
     {
-      offset: '-68px',
+      offset: '-74px',
       inset: 5,
     },
     {
-      offset: '-44px',
+      offset: '-50px',
       inset: 3,
     },
     {
-      offset: '-20px',
+      offset: '-26px',
       inset: 1,
     },
   ]
 
   return (
-    <Tooltip label={album.title ?? 'Untitled Album'} offset={16}>
+    <Tooltip label={album.title ?? 'Untitled Album'}>
       {({ isHovering }) => (
         <Box pos="relative" boxSize={size} zIndex={isHovering ? 10 : 0}>
           {album.images
@@ -53,99 +53,94 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
             .map((image, index) => {
               const offset = sampleImages[index]?.offset ?? ''
               return (
-                <Link
+                <MotionBox
                   key={offset}
-                  d="flex"
-                  rounded="md"
-                  href={Routes.ShowImagePage({
-                    albumId: album.id,
-                    imageId: image.id ?? '',
-                  })}
+                  pos="absolute"
+                  whileHover={{
+                    y: `calc(${isHovering ? offset : 0} - 12px)`,
+                  }}
+                  transition={transitionMediumConfig}
+                  animate={{
+                    opacity: Number(isHovering),
+                    y: isHovering ? offset : 0,
+                  }}
                 >
-                  <MotionBox
-                    whileHover={{
-                      y: `calc(${isHovering ? offset : 0} - 12px)`,
-                    }}
-                    transition={transitionConfig}
-                    animate={{
-                      opacity: Number(isHovering),
-                      y: isHovering ? offset : 0,
-                    }}
-                    d={isHovering ? 'auto' : 'none'}
-                    inset={1}
-                    rounded="md"
-                    pos="absolute"
-                    bg="background.dark"
-                    borderColor="background.dark"
-                    overflow="hidden"
-                    bgImg={CDN.getImageUrl(image.sourceId ?? '')}
-                    borderWidth={4}
-                    bgPosition="center"
-                    bgSize="cover"
-                    bgRepeat="no-repeat"
-                  />
-                </Link>
+                  <Link
+                    d="flex"
+                    href={Routes.ShowImagePage({
+                      albumId: album.id,
+                      imageId: image.id ?? '',
+                    })}
+                  >
+                    <MotionBox
+                      boxSize={size}
+                      d={isHovering ? 'auto' : 'none'}
+                      inset={1}
+                      bg="background.dark"
+                      borderColor="background.dark"
+                      overflow="hidden"
+                      bgImg={CDN.getImageUrl(image.sourceId ?? '')}
+                      borderWidth={4}
+                      bgPosition="center"
+                      bgSize="cover"
+                      bgRepeat="no-repeat"
+                    />
+                  </Link>
+                </MotionBox>
               )
             })}
 
-          <MotionBox
-            pos="absolute"
-            inset={0}
+          <Link
+            d="flex"
             boxSize={size}
-            rounded="md"
-            animate={{
-              y: isHovering ? '8px' : 0,
-            }}
-            transition={transitionMediumConfig}
-            overflow="hidden"
-            bg="background.full"
+            href={Routes.ShowAlbumPage({ albumId: album.id })}
           >
-            <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
-              <Favourite item={album} mutation={favouriteAlbum} />
-            </Box>
             <MotionBox
-              pointerEvents="none"
-              userSelect="none"
-              transition={transitionConfig}
-              animate={{ opacity: Number(!hasImageLoaded) }}
-            >
-              <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
-                <LogoLoadingAnimation size="60%" />
-              </Center>
-            </MotionBox>
-            <Box
               pos="absolute"
               inset={0}
-              filter="blur(60px)"
-              rounded="md"
+              boxSize={size}
+              transition={transitionMediumConfig}
               overflow="hidden"
-              boxSize="full"
-              bg={`rgba(${album.colors[0]}, ${album.colors[1]}, ${album.colors[2]}, 0.4)`}
-            />
-            <MotionBox
-              pos="absolute"
-              zIndex={1}
-              inset={0}
-              animate={{ opacity: Number(hasImageLoaded) }}
+              bg="background.full"
             >
-              <Link
-                key={album.id}
-                d="flex"
-                rounded="md"
-                href={Routes.ShowAlbumPage({ albumId: album.id })}
+              <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
+                <Favourite item={album} mutation={favouriteAlbum} />
+              </Box>
+              <MotionBox
+                pointerEvents="none"
+                userSelect="none"
+                transition={transitionMediumConfig}
+                animate={{ opacity: Number(!hasImageLoaded) }}
+              >
+                <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
+                  <LogoLoadingAnimation size="60%" />
+                </Center>
+              </MotionBox>
+              <Box
+                pos="absolute"
+                inset={0}
+                filter="blur(60px)"
+                overflow="hidden"
+                boxSize="full"
+                bg={`rgba(${album.colors[0]}, ${album.colors[1]}, ${album.colors[2]}, 0.4)`}
+              />
+              <MotionBox
+                pos="absolute"
+                zIndex={1}
+                inset={0}
+                animate={{ opacity: Number(hasImageLoaded) }}
               >
                 <Img
                   ref={ref}
-                  rounded="md"
                   overflow="hidden"
                   objectFit="cover"
                   boxSize={size}
                   alt={album.title ?? album.id}
                   src={CDN.getImageUrl(album.sourceId ?? '', sizingName)}
                 />
-              </Link>
+              </MotionBox>
             </MotionBox>
-          </MotionBox>
+          </Link>
         </Box>
       )}
     </Tooltip>

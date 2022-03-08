@@ -15,6 +15,8 @@ export type TooltipProps = {
   children: ReactNode | (({ isHovering: boolean }) => ReactNode)
 }
 
+const TOOLTIP_GRADIENT_BG = '#203b69'
+
 export const Tooltip = ({
   label,
   children,
@@ -48,13 +50,15 @@ export const Tooltip = ({
     }
 
     return autoUpdate(refs.reference.current, refs.floating.current, update)
-  }, [refs.reference, refs.floating, update])
+  }, [refs.reference, refs.floating, update, isHovering])
 
   return (
     <Box
       ref={reference}
       onPointerEnter={setHovering.on}
       onPointerLeave={setHovering.off}
+      onFocus={setHovering.on}
+      onBlur={setHovering.off}
     >
       <Portal>
         <MotionBox
@@ -80,18 +84,18 @@ export const Tooltip = ({
             animate={{ y: isHovering ? -6 : 12 }}
           >
             <Box
-              bg="background.dark"
               boxSize={4}
               rounded="sm"
               transform="rotate(45deg)"
+              bg={TOOLTIP_GRADIENT_BG}
             />
           </MotionBox>
           <MotionBox
             transition={transitionMediumConfig}
             p={4}
-            bg="background.dark"
-            pointerEvents="none"
             rounded="md"
+            pointerEvents="none"
+            bg={TOOLTIP_GRADIENT_BG}
           >
             <Text color="ui.80" pointerEvents="none" userSelect="none">
               {label}

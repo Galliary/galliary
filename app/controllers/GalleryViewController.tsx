@@ -74,7 +74,7 @@ export function GalleryViewController<Data extends Album | Image>({
         </HStack>
       </VStack>
 
-      <Wrap p={0} spacing={4} align="center" justify="center">
+      <Wrap p={0} spacing={1} align="center" justify="center">
         {data.map((item) => (
           <Fragment key={item.id}>{onDisplay(item)}</Fragment>
         ))}

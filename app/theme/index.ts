@@ -4,8 +4,10 @@ import { opacityForHex } from '../utils/hexOpacity'
 import { transition } from './transition'
 import { textStyles } from './textStyles'
 
+import { MenuStyle } from './components/Menu'
 import { LinkStyle } from './components/Link'
 import { InputStyle } from './components/Input'
+import { ModalStyle } from './components/Modal'
 import { ButtonStyle } from './components/Button'
 import { TextareaStyle } from './components/TextareaStyle'
 
@@ -49,8 +51,10 @@ const rootStyles = {
 
 export const theme = {
   components: {
+    Menu: MenuStyle,
     Link: LinkStyle,
     Input: InputStyle,
+    Modal: ModalStyle,
     Textarea: TextareaStyle,
     Button: ButtonStyle,
     Container: {

@@ -24,6 +24,9 @@ export const InputStyle: ComponentMultiStyleConfig = {
       field: {
         bg: 'ui.5',
         rounded: 'md',
+        _hover: {
+          bg: 'ui.10',
+        },
       },
     },
   },

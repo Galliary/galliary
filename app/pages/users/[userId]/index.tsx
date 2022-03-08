@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { BlitzPage, Head, useMutation, useParam, useQuery } from 'blitz'
-import { Avatar, Box, HStack, Text, VStack } from '@chakra-ui/react'
+import { Avatar, Box, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { CDN, ImageType } from 'app/utils/cdn'
 import getUserProfile from 'app/data/queries/users/getUserProfile'
@@ -17,12 +17,15 @@ import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 import logout from 'app/data/mutations/auth/logout'
 import { Tooltip } from 'app/components/Tooltip'
 import Layout from 'app/layouts/Layout'
+import { EditIcon } from 'app/components/icons/EditIcon'
+import { useModal } from 'app/data/hooks/useModal'
 
 export const UserProfile = () => {
   const currentUser = useCurrentUser()
   const userId = useParam('userId', 'string')
   const [user] = useQuery(getUserProfile, { idOrUsername: userId })
   const [logoutMutation] = useMutation(logout)
+  const [openEditProfileModal] = useModal('editProfile')
 
   const isOwnProfile = Boolean(currentUser && currentUser.id === user.id)
 
@@ -105,17 +108,37 @@ export const UserProfile = () => {
                 </Text>
                 <HStack>
                   {isOwnProfile ? (
-                    <Tooltip label="Logout">
-                      <LogoutIcon
-                        boxSize={10}
-                        cursor="pointer"
-                        color="status.bad"
-                        transitionDuration="fast"
-                        transitionTimingFunction="ease"
-                        _hover={{ opacity: 0.8 }}
-                        onClick={() => logoutMutation()}
-                      />
-                    </Tooltip>
+                    <>
+                      <Tooltip label="Logout">
+                        <IconButton
+                          aria-label="Logout"
+                          p={2}
+                          onClick={() => logoutMutation()}
+                        >
+                          <LogoutIcon
+                            boxSize={8}
+                            cursor="pointer"
+                            color="status.bad"
+                            transitionDuration="fast"
+                            transitionTimingFunction="ease"
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip label="Edit Profile">
+                        <IconButton
+                          aria-label="Edit Profile"
+                          p={2}
+                          onClick={() => openEditProfileModal()}
+                        >
+                          <EditIcon
+                            boxSize={8}
+                            cursor="pointer"
+                            transitionDuration="fast"
+                            transitionTimingFunction="ease"
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </>
                   ) : (
                     <Favourite
                       item={user}

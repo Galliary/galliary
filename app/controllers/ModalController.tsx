@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { ConfirmationModalProps } from 'app/components/modals/ConfirmationModal'
 import { NotUndefined } from 'types'
+import { EditProfileModalProps } from 'app/components/modals/EditProfileModal'
 
 const dynamicOptions: DynamicOptions<
   ModalContextProps[keyof ModalContextProps]
@@ -27,10 +28,15 @@ const modals = {
     () => import('app/components/modals/ConfirmationModal'),
     dynamicOptions,
   ),
+  editProfile: dynamic(
+    () => import('app/components/modals/EditProfileModal'),
+    dynamicOptions,
+  ),
 } as const
 
 export type ModalContextProps = {
   confirm: ConfirmationModalProps
+  editProfile: EditProfileModalProps
 }
 
 export type ModalContextNames = keyof typeof modals
