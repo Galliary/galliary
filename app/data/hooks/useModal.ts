@@ -25,7 +25,7 @@ export const useModal = <
   const { disclosure, setActiveModal } = useContext(ModalContext)
 
   const openModal = (props?: Partial<Props>) => {
-    setActiveModal(modalName, merge(initialProps, props, {}))
+    setActiveModal(modalName, merge(initialProps, props, {}) as any)
   }
 
   return [openModal, disclosure] as const

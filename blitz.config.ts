@@ -1,18 +1,22 @@
-import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
-import { SupportedLocales } from "types"
+import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
+import { SupportedLocales } from 'types'
 
 export const DEFAULT_LOCAL = SupportedLocales.English
 
 const config: BlitzConfig = {
+  eslint: {
+    // TODO: we need to enable this later but eslint packages are being super cringe
+    ignoreDuringBuilds: true,
+  },
   middleware: [
     sessionMiddleware({
-      cookiePrefix: "galliary",
+      cookiePrefix: 'galliary',
       isAuthorized: simpleRolesIsAuthorized,
     }),
   ],
   images: {
     // TODO: Change to "galliary.com" when supported
-    domains: ["synqat.gg"],
+    domains: ['synqat.gg'],
   },
   i18n: {
     locales: [SupportedLocales.English],

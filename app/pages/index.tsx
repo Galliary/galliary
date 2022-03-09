@@ -9,37 +9,6 @@ import { AddNewItem } from 'app/components/views/AddNewItem'
 import Layout from 'app/layouts/Layout'
 import getAlbums from 'app/data/queries/albums/getAlbums'
 
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
-
-const UserInfo = () => {
-  const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
-
-  if (!currentUser) {
-    return null
-  }
-
-  return (
-    <HStack spacing={4}>
-      <HStack spacing={4} p={4} rounded="md" bg="ui.5">
-        <Avatar boxSize={16} src={currentUser.avatarUrl ?? ''} />
-        <VStack spacing={2} align="start">
-          <Text fontSize="20px" color="ui.100">
-            {currentUser.nickname ?? currentUser.username}
-          </Text>
-          <Text color="ui.60">{currentUser.email}</Text>
-        </VStack>
-      </HStack>
-      <Button onClick={() => logoutMutation()} variant="bad">
-        Logout
-      </Button>
-    </HStack>
-  )
-}
-
 const ITEMS_PER_PAGE = 32
 
 const Home: BlitzPage = () => {
@@ -58,25 +27,6 @@ const Home: BlitzPage = () => {
         addPrompt={<AddNewItem />}
         onDisplay={(data) => <AlbumPreview item={data} />}
       />
-
-      {/* TODO: Move me to a menu */}
-      {/*<LoginController
-        action={
-          <HStack>
-            <Button as={Link} href="/api/auth/google">
-              Google
-            </Button>
-            <Button as={Link} href="/api/auth/discord">
-              Discord
-            </Button>
-            <Button as={Link} href="/api/auth/twitter">
-              Twitter
-            </Button>
-          </HStack>
-        }
-      >
-        <UserInfo />
-      </LoginController>*/}
     </Box>
   )
 }

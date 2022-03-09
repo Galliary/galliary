@@ -266,27 +266,27 @@ enum AuditAction {
   UNBAN_USER
 }
 
-model AuditLog {
-  id        String   @id @unique
-  createdAt DateTime @default(now())
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  affectedUser   User?   @relation(fields: [affectedUserId], references: [id])
-  affectedUserId String?
-
-  affectedImage   Image?   @relation(fields: [affectedImageId], references: [id])
-  affectedImageId String?
-
-  affectedAlbum   Image?   @relation(fields: [affectedAlbumId], references: [id])
-  affectedAlbumId String?
-
-  affectedCategory   Image?   @relation(fields: [affectedCategoryId], references: [id])
-  affectedCategoryId String?
-
-  action AuditAction
-
-  valueBefore Any?
-  valueAfter Any
-}
+//model AuditLog {
+//  id        String   @id @unique
+//  createdAt DateTime @default(now())
+//
+//  user   User   @relation(fields: [userId], references: [id])
+//  userId String
+//
+//  affectedUser   User?   @relation(fields: [affectedUserId], references: [id])
+//  affectedUserId String?
+//
+//  affectedImage   Image?   @relation(fields: [affectedImageId], references: [id])
+//  affectedImageId String?
+//
+//  affectedAlbum   Image?   @relation(fields: [affectedAlbumId], references: [id])
+//  affectedAlbumId String?
+//
+//  affectedCategory   Image?   @relation(fields: [affectedCategoryId], references: [id])
+//  affectedCategoryId String?
+//
+//  action AuditAction
+//
+//  valueBefore Any?
+//  valueAfter Any
+//}
