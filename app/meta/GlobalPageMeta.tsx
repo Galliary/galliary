@@ -1,7 +1,8 @@
 import { Head } from 'next/document'
-import { useRouter } from 'blitz'
-import { galliary } from 'package.json'
 import { OrganizationInfo } from 'app/meta/OrganizationInfo'
+import * as packageJson from '../../package.json'
+
+const { galliary } = packageJson
 
 type GlobalPageMetaProps = {
   title?: string
@@ -24,10 +25,8 @@ export const GlobalPageMeta = ({
   tags = galliary.tags,
   ...props
 }: GlobalPageMetaProps) => {
-  const router = useRouter()
-
   const name = title ? galliary.name + ' | ' + title : galliary.name
-  const url = galliary.url + router.asPath
+  const url = galliary.url
 
   const twitter = galliary.socials.find((social) => social.type === 'twitter')
 

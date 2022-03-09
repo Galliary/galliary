@@ -5,7 +5,9 @@ import type {
   WebPage,
   WebSite,
 } from 'schema-dts'
-import { galliary } from 'package.json'
+import * as packageJson from '../../package.json'
+
+const { galliary } = packageJson
 
 export const OrganizationInfo = () => (
   <>

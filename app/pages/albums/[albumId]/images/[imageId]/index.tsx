@@ -27,6 +27,7 @@ import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import Layout from 'app/layouts/Layout'
+import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
 
 export const ImageView = () => {
   const { goBack } = usePage()
@@ -229,6 +230,11 @@ const ShowImagePage: BlitzPage = () => {
   )
 }
 
-ShowImagePage.getLayout = (page) => <Layout>{page}</Layout>
+ShowImagePage.getLayout = (page) => (
+  <Layout>
+    <GlobalPageMeta />
+    {page}
+  </Layout>
+)
 
 export default ShowImagePage

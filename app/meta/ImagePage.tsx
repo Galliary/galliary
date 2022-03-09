@@ -3,8 +3,10 @@ import { useRouter } from 'blitz'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import { Article } from 'schema-dts'
 import { Image, User } from '@prisma/client'
-import { galliary } from 'package.json'
 import { CDN, ImageType } from 'app/utils/cdn'
+import * as packageJson from '../../package.json'
+
+const { galliary } = packageJson
 
 interface ImagePageProps {
   image: Image & {

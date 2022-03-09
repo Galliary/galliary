@@ -5,6 +5,7 @@ import {
   Main,
   BlitzScript /*DocumentContext*/,
 } from 'blitz'
+import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
@@ -16,6 +17,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
+        <GlobalPageMeta />
         <DocumentHead />
         <body>
           <Main />

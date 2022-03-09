@@ -8,6 +8,7 @@ import logout from 'app/data/mutations/auth/logout'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import Layout from 'app/layouts/Layout'
 import getAlbums from 'app/data/queries/albums/getAlbums'
+import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
 
 const ITEMS_PER_PAGE = 32
 
