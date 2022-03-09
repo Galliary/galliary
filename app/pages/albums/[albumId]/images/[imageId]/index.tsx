@@ -230,11 +230,6 @@ const ShowImagePage: BlitzPage = () => {
   )
 }
 
-ShowImagePage.getLayout = (page) => (
-  <Layout>
-    <GlobalPageMeta />
-    {page}
-  </Layout>
-)
+ShowImagePage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default ShowImagePage

@@ -17,7 +17,13 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <GlobalPageMeta />
+        <GlobalPageMeta
+          imageUrl="/logo.png"
+          imageAlt="Galliary"
+          imageWidth="242"
+          imageHeight="242"
+          imageType="image/png"
+        />
         <DocumentHead />
         <body>
           <Main />
