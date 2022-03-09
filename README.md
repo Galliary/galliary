@@ -1,5 +1,5 @@
-<img src="https://imagedelivery.net/8yAzsAP1tGpuA0gIh26SsA/2390621d-537e-409a-986e-38324e46a300/public#gh-dark-mode-only" alt="Galliary" />
-<img src="https://imagedelivery.net/8yAzsAP1tGpuA0gIh26SsA/5bbf3eba-0d17-4362-0561-84f4e1de1200/public#gh-light-mode-only" alt="Galliary" />
+<img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_light.png#gh-dark-mode-only" alt="Galliary" />
+<img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_dark.png#gh-light-mode-only" alt="Galliary" />
 
 <h3>
   <p align="center">
