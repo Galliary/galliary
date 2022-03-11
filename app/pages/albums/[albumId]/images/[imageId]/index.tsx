@@ -1,5 +1,12 @@
-import { Suspense } from 'react'
-import { BlitzPage, Routes, useParam, useQuery } from 'blitz'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  invokeWithMiddleware,
+  PromiseReturnType,
+  Routes,
+  useParam,
+  useQuery,
+} from 'blitz'
 import {
   Box,
   Button,
@@ -27,20 +34,41 @@ import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import Layout from 'app/layouts/Layout'
-import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
 
-export const ImageView = () => {
+export interface ImagePageProps {
+  initialData: PromiseReturnType<typeof getImage>
+}
+
+export const getServerSideProps: GetServerSideProps<ImagePageProps> = async ({
+  query,
+  req,
+  res,
+}) => {
+  const initialData = await invokeWithMiddleware(
+    getImage,
+    { id: query.imageId },
+    { req, res },
+  )
+
+  return {
+    props: {
+      initialData,
+    },
+  }
+}
+
+const ShowImagePage: BlitzPage<ImagePageProps> = ({ initialData }) => {
   const { goBack } = usePage()
   const deleteConfirmDisclosure = useDisclosure()
   const albumId = useParam('albumId', 'string')
   const imageId = useParam('imageId', 'string')
-  const [image] = useQuery(getImage, { id: imageId })
+  const [image] = useQuery(getImage, { id: imageId }, { initialData })
 
   const [isLoaded, setLoaded] = useBoolean(false)
   const [isHovering, setHovering] = useBoolean(false)
 
   return (
-    <>
+    <Center boxSize="full" pos="relative">
       <DeleteImageModal
         imageId={image.id}
         disclosure={deleteConfirmDisclosure}
@@ -216,16 +244,6 @@ export const ImageView = () => {
           </MotionBox>
         </Center>
       </Center>
-    </>
-  )
-}
-
-const ShowImagePage: BlitzPage = () => {
-  return (
-    <Center boxSize="full" pos="relative">
-      <Suspense fallback={<div>Loading...</div>}>
-        <ImageView />
-      </Suspense>
     </Center>
   )
 }

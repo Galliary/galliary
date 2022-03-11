@@ -1,11 +1,11 @@
 import {
-  Document,
   Html,
-  DocumentHead,
   Main,
-  BlitzScript /*DocumentContext*/,
+  Document,
+  BlitzScript,
+  DocumentHead,
+  /*DocumentContext*/
 } from 'blitz'
-import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour

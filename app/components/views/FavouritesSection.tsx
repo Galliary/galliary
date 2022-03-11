@@ -76,7 +76,11 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
   }, [])
 
   return item ? (
-    <Link boxSize="full" href={href} rounded="md">
+    <Link
+      boxSize="full"
+      href={href}
+      rounded={'username' in item ? 'full' : 'md'}
+    >
       <Tooltip label={label}>
         <AspectRatio boxSize="full" ratio={1}>
           <MotionBox

@@ -1,5 +1,12 @@
-import { Suspense } from 'react'
-import { BlitzPage, Head, useMutation, useParam, useQuery } from 'blitz'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  invokeWithMiddleware,
+  PromiseReturnType,
+  useMutation,
+  useParam,
+  useQuery,
+} from 'blitz'
 import { Avatar, Box, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { CDN, ImageType } from 'app/utils/cdn'
@@ -20,10 +27,32 @@ import Layout from 'app/layouts/Layout'
 import { EditIcon } from 'app/components/icons/EditIcon'
 import { useModal } from 'app/data/hooks/useModal'
 
-export const UserProfile = () => {
+export interface UserPageProps {
+  initialData: PromiseReturnType<typeof getUserProfile>
+}
+
+export const getServerSideProps: GetServerSideProps<UserPageProps> = async ({
+  query,
+  req,
+  res,
+}) => {
+  const initialData = await invokeWithMiddleware(
+    getUserProfile,
+    { idOrUsername: query.userId ?? '' },
+    { req, res },
+  )
+
+  return {
+    props: {
+      initialData,
+    },
+  }
+}
+
+const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
   const currentUser = useCurrentUser()
-  const userId = useParam('userId', 'string')
-  const [user] = useQuery(getUserProfile, { idOrUsername: userId })
+  const idOrUsername = useParam('userId', 'string')
+  const [user] = useQuery(getUserProfile, { idOrUsername }, { initialData })
   const [logoutMutation] = useMutation(logout)
   const [openEditProfileModal] = useModal('editProfile')
 
@@ -182,7 +211,7 @@ export const UserProfile = () => {
             </VStack>
           )}
           <Box bg="flow.20" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.40" rounded="md" minH="200px" w="full" />
           <Box bg="flow.20" rounded="md" minH="200px" w="full" />
           <Box bg="flow.20" rounded="md" minH="200px" w="full" />
           <Box bg="flow.20" rounded="md" minH="200px" w="full" />
@@ -190,20 +219,6 @@ export const UserProfile = () => {
         </VStack>
       </HStack>
     </VStack>
-  )
-}
-
-const UserPage: BlitzPage = () => {
-  return (
-    <>
-      <Head>
-        <title>User</title>
-      </Head>
-
-      <Suspense fallback={<div>Loading...</div>}>
-        <UserProfile />
-      </Suspense>
-    </>
   )
 }
 

@@ -1,0 +1,11 @@
+{
+  "long-name": "Galliary Image App",
+  "short": "Explore and share images!",
+  "headline": "Explore and share photography, albums and images with others!",
+  "description": "Galliary - Upload photography for free and sort them in albums. Get user feedback and share high quality images to everyone.",
+  "defaults": {
+    "image-name": "Untitled Image",
+    "album-name": "Untitled Album",
+    "user-bio": "Hi, I'm new a new user to Galliary. I look forward to sharing my images with you!"
+  }
+}

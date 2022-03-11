@@ -1,8 +1,9 @@
 import { Routes } from 'blitz'
-import { Button, Spinner } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { PropsWithChildren, ReactNode, Suspense } from 'react'
-import { Link } from '../components/Link'
+import { Link } from 'app/components/Link'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import { Loader } from 'app/components/views/Loader'
 
 interface LoginControllerProps {
   fallback?: ReactNode
@@ -18,7 +19,7 @@ const LoginCTA = () => (
 export const LoginController = ({
   children,
   action = <LoginCTA />,
-  fallback = <Spinner />,
+  fallback = <Loader />,
 }: PropsWithChildren<LoginControllerProps>) => {
   const currentUser = useCurrentUser()
 

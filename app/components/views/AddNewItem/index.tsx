@@ -1,15 +1,12 @@
 import { Routes } from 'blitz'
 import { Box, Center, Text, useBoolean } from '@chakra-ui/react'
-import { useLittera } from '@assembless/react-littera'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
 import { NewGraphicIcon } from 'app/components/icons/NewGraphicIcon'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import { translations } from 'app/components/views/AddNewItem/translations'
 import { Link } from 'app/components/Link'
 
 export const AddNewItem = () => {
   const [size] = useThumbnailSizing()
-  const translate = useLittera(translations)
   const [isHovering, setHovering] = useBoolean(false)
 
   return (
@@ -38,7 +35,7 @@ export const AddNewItem = () => {
           }}
         />
         <Center boxSize="full">
-          <Text textStyle="display.medium">{translate.label}</Text>
+          <Text textStyle="display.medium">new</Text>
         </Center>
       </Link>
     </Box>

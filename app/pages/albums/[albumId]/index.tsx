@@ -1,5 +1,14 @@
 import { Suspense } from 'react'
-import { BlitzPage, Routes, usePaginatedQuery, useParam, useQuery } from 'blitz'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  invokeWithMiddleware,
+  PromiseReturnType,
+  Routes,
+  usePaginatedQuery,
+  useParam,
+  useQuery,
+} from 'blitz'
 import { HStack, IconButton, VStack, Text } from '@chakra-ui/react'
 import { DeleteAlbumModal } from 'app/components/modals/DeleteAlbumModal'
 import getAlbumImages from 'app/data/queries/albums/getAlbumImages'
@@ -19,11 +28,33 @@ import { AddNewItem } from 'app/components/views/AddNewItem'
 
 const ITEMS_PER_PAGE = 30
 
-export const Album = () => {
+export interface AlbumPageProps {
+  initialData: PromiseReturnType<typeof getAlbum>
+}
+
+export const getServerSideProps: GetServerSideProps<AlbumPageProps> = async ({
+  query,
+  req,
+  res,
+}) => {
+  const initialData = await invokeWithMiddleware(
+    getAlbum,
+    { id: query.albumId },
+    { req, res },
+  )
+
+  return {
+    props: {
+      initialData,
+    },
+  }
+}
+
+const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({ initialData }) => {
   const currentUser = useCurrentUser()
   const deleteConfirmDisclosure = useDisclosure()
   const albumId = useParam('albumId', 'string')
-  const [album] = useQuery(getAlbum, { id: albumId })
+  const [album] = useQuery(getAlbum, { id: albumId }, { initialData })
 
   const { page } = usePage()
 
@@ -96,16 +127,6 @@ export const Album = () => {
         onDisplay={(data) => <ImagePreview item={data} />}
       />
     </VStack>
-  )
-}
-
-const ShowAlbumPage: BlitzPage = () => {
-  return (
-    <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Album />
-      </Suspense>
-    </>
   )
 }
 

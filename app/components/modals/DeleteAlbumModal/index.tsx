@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   HStack,
   Modal,
@@ -11,12 +10,9 @@ import {
   ModalOverlay,
   Text,
   UseDisclosureReturn,
-  VStack,
 } from '@chakra-ui/react'
 import { useMutation } from 'blitz'
-import { useLittera } from '@assembless/react-littera'
 import { usePage } from 'app/data/hooks/usePage'
-import { translations } from 'app/components/modals/DeleteAlbumModal/translations'
 import deleteAlbum from 'app/data/mutations/albums/deleteAlbum'
 
 export const DeleteAlbumModal = ({
@@ -27,7 +23,6 @@ export const DeleteAlbumModal = ({
   disclosure: UseDisclosureReturn
 }) => {
   const { goBack } = usePage()
-  const translated = useLittera(translations)
   const [deleteAlbumMutation] = useMutation(deleteAlbum)
 
   return (
@@ -36,14 +31,10 @@ export const DeleteAlbumModal = ({
       <ModalContent>
         <ModalCloseButton />
         <ModalHeader>
-          <Text>{translated.title}</Text>
+          <Text>what are u gonna do? delet this album cuh?</Text>
         </ModalHeader>
         <ModalBody>
-          <Text>
-            {translated.body_0}
-            <br />
-            {translated.body_1}
-          </Text>
+          <Text>do it, you wont.</Text>
         </ModalBody>
         <ModalFooter>
           <HStack spacing={4} w="full" justify="space-between">
@@ -51,9 +42,9 @@ export const DeleteAlbumModal = ({
               variant="bad"
               onClick={() => deleteAlbumMutation({ id: albumId }).then(goBack)}
             >
-              {translated.confirm}
+              watch me cuh
             </Button>
-            <Button onClick={disclosure.onClose}>{translated.cancel}</Button>
+            <Button onClick={disclosure.onClose}>nah</Button>
           </HStack>
         </ModalFooter>
       </ModalContent>

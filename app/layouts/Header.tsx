@@ -53,7 +53,9 @@ export const Header = ({}: HeaderProps) => (
         </Heading>
       </Link>
       <HStack spacing={4}>
-        <Button>Browse</Button>
+        <Button as={Link} href={Routes.Home()}>
+          Browse
+        </Button>
         <LoginController
           action={
             <Menu>

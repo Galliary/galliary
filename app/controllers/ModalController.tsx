@@ -1,16 +1,11 @@
 import dynamic, { DynamicOptions } from 'next/dynamic'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { createContext, PropsWithChildren, useMemo, useState } from 'react'
-import {
-  Box,
-  Center,
-  Portal,
-  Spinner,
-  UseDisclosureReturn,
-} from '@chakra-ui/react'
+import { Box, Center, Portal, UseDisclosureReturn } from '@chakra-ui/react'
 import { ConfirmationModalProps } from 'app/components/modals/ConfirmationModal'
 import { NotUndefined } from 'types'
 import { EditProfileModalProps } from 'app/components/modals/EditProfileModal'
+import { Loader } from 'app/components/views/Loader'
 
 const dynamicOptions: DynamicOptions<
   ModalContextProps[keyof ModalContextProps]
@@ -18,7 +13,7 @@ const dynamicOptions: DynamicOptions<
   ssr: false,
   loading: () => (
     <Center pos="fixed" inset={0} m="auto">
-      <Spinner color="brand.primary.100" />
+      <Loader />
     </Center>
   ),
 }

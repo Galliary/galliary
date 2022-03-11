@@ -10,6 +10,7 @@ import { InputStyle } from './components/Input'
 import { ModalStyle } from './components/Modal'
 import { ButtonStyle } from './components/Button'
 import { TextareaStyle } from './components/TextareaStyle'
+import { cssVar } from '@chakra-ui/theme-tools'
 
 export const DEFAULT_MODE = 'dark'
 
@@ -108,7 +109,7 @@ export const theme = {
     },
   },
   shadows: {
-    outline: '0 0 0 2px var(--galliary-colors-brand-secondary-100)',
+    outline: '0 0 0 4px var(--galliary-colors-brand-secondary-100)',
   },
   radii: themeData.radius,
   sizes: {

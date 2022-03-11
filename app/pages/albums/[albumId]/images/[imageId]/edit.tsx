@@ -1,7 +1,10 @@
 import { Suspense } from 'react'
 import {
   BlitzPage,
+  GetServerSideProps,
   Head,
+  invokeWithMiddleware,
+  PromiseReturnType,
   Routes,
   useMutation,
   useParam,
@@ -15,13 +18,34 @@ import getImage from 'app/data/queries/images/getImage'
 import { FORM_ERROR } from 'app/components/forms/Form'
 import Layout from 'app/layouts/Layout'
 
-export const EditImage = () => {
+export interface EditImagePageProps {
+  initialData: PromiseReturnType<typeof getImage>
+}
+
+export const getServerSideProps: GetServerSideProps<
+  EditImagePageProps
+> = async ({ query, req, res }) => {
+  const initialData = await invokeWithMiddleware(
+    getImage,
+    { id: query.imageId },
+    { req, res },
+  )
+
+  return {
+    props: {
+      initialData,
+    },
+  }
+}
+
+const EditImagePage: BlitzPage<EditImagePageProps> = ({ initialData }) => {
   const router = useRouter()
   const imageId = useParam('imageId', 'string')
   const [image, { setQueryData }] = useQuery(
     getImage,
     { id: imageId },
     {
+      initialData,
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     },
@@ -78,14 +102,6 @@ export const EditImage = () => {
         />
       </div>
     </>
-  )
-}
-
-const EditImagePage: BlitzPage = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <EditImage />
-    </Suspense>
   )
 }
 

@@ -1,10 +1,22 @@
-import { BlitzPage, Routes, useMutation, useRouter } from 'blitz'
-import { Center, VStack } from '@chakra-ui/react'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  Routes,
+  useMutation,
+  useRouter,
+} from 'blitz'
+import { Center } from '@chakra-ui/react'
 import createAlbum from 'app/data/mutations/albums/createAlbum'
 import { AlbumForm } from 'app/components/forms/AlbumForm'
 import { CDN } from 'app/utils/cdn'
 import { FORM_ERROR } from 'app/components/forms/Form'
 import Layout from 'app/layouts/Layout'
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  }
+}
 
 const NewAlbumPage: BlitzPage = () => {
   const router = useRouter()
@@ -41,10 +53,6 @@ const NewAlbumPage: BlitzPage = () => {
 }
 
 NewAlbumPage.authenticate = true
-NewAlbumPage.getLayout = (page) => (
-  <Layout title={'Create New Album'} hideFooter>
-    {page}
-  </Layout>
-)
+NewAlbumPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default NewAlbumPage

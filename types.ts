@@ -8,10 +8,6 @@ export type NotUndefined<T> = T extends undefined ? never : T
 export type PropsForModal<Props = Record<string, unknown>> = Props &
   UseDisclosureReturn
 
-export enum SupportedLocales {
-  English = 'en-US',
-}
-
 declare module 'blitz' {
   export interface Ctx extends DefaultCtx {
     session: SessionContext

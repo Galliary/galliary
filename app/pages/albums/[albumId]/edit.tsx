@@ -1,8 +1,9 @@
-import { Suspense } from 'react'
 import {
   BlitzPage,
+  GetServerSideProps,
   Head,
-  Link,
+  invokeWithMiddleware,
+  PromiseReturnType,
   Routes,
   useMutation,
   useParam,
@@ -17,7 +18,27 @@ import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 import Layout from 'app/layouts/Layout'
 import { FORM_ERROR } from 'app/components/forms/Form'
 
-export const EditAlbum = () => {
+export interface EditAlbumPageProps {
+  initialData: PromiseReturnType<typeof getAlbum>
+}
+
+export const getServerSideProps: GetServerSideProps<
+  EditAlbumPageProps
+> = async ({ query, req, res }) => {
+  const initialData = await invokeWithMiddleware(
+    getAlbum,
+    { id: query.albumId },
+    { req, res },
+  )
+
+  return {
+    props: {
+      initialData,
+    },
+  }
+}
+
+const EditAlbumPage: BlitzPage<EditAlbumPageProps> = () => {
   const router = useRouter()
   const currentUser = useCurrentUser()
   const albumId = useParam('albumId', 'string')
@@ -84,22 +105,6 @@ export const EditAlbum = () => {
         />
       </div>
     </>
-  )
-}
-
-const EditAlbumPage: BlitzPage = () => {
-  return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <EditAlbum />
-      </Suspense>
-
-      <p>
-        <Link href={Routes.AlbumsPage()}>
-          <a>Albums</a>
-        </Link>
-      </p>
-    </div>
   )
 }
 

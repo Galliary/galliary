@@ -1,10 +1,13 @@
 import { Suspense } from 'react'
+import { Body } from 'app/layouts/Body'
 import { BlitzLayout, Head } from 'blitz'
-import { Spinner, VStack } from '@chakra-ui/react'
 import { Header } from 'app/layouts/Header'
 import { Footer } from 'app/layouts/Footer'
-import { Body } from 'app/layouts/Body'
+import { VStack } from '@chakra-ui/react'
 import { VersionDisplay } from 'app/components/views/VersionDisplay'
+import { Loader } from 'app/components/views/Loader'
+import { GlobalMeta } from 'app/meta/GlobalMeta'
+import { SimpleMeta } from 'app/meta/SimpleMeta'
 
 const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
   title,
@@ -20,20 +23,23 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
           href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700&family=Style+Script&display=swap"
           rel="stylesheet"
         />
+
+        <GlobalMeta />
+        <SimpleMeta />
       </Head>
 
       <VStack spacing={0} boxSize="full">
-        <Suspense fallback="Fetching version...">
+        <Suspense fallback={<Loader />}>
           <VersionDisplay />
         </Suspense>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<Loader />}>
           <Header />
         </Suspense>
         <Body>
-          <Suspense fallback={<Spinner />}>{children}</Suspense>
+          <Suspense fallback={<Loader />}>{children}</Suspense>
         </Body>
         {!hideFooter && (
-          <Suspense fallback={<Spinner />}>
+          <Suspense fallback={<Loader />}>
             <Footer />
           </Suspense>
         )}

@@ -1,10 +1,23 @@
-import { BlitzPage, Routes, useMutation, useParam, useRouter } from 'blitz'
+import {
+  BlitzPage,
+  GetServerSideProps,
+  Routes,
+  useMutation,
+  useParam,
+  useRouter,
+} from 'blitz'
 import { Text, VStack } from '@chakra-ui/react'
 import createImage from 'app/data/mutations/images/createImage'
 import { ImageForm } from 'app/components/forms/fields/ImageForm'
 import { CDN } from 'app/utils/cdn'
 import { FORM_ERROR } from 'app/components/forms/Form'
 import Layout from 'app/layouts/Layout'
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {},
+  }
+}
 
 const NewImagePage: BlitzPage = () => {
   const router = useRouter()

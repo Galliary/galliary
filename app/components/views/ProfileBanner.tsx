@@ -3,8 +3,6 @@ import {
   Center,
   CenterProps,
   forwardRef,
-  HStack,
-  Img,
   useBoolean,
 } from '@chakra-ui/react'
 import { ChangeEvent, useRef, useState } from 'react'

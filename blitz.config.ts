@@ -1,7 +1,7 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
-import { SupportedLocales } from 'types'
+import { defaultLocale, locales } from './i18n.json'
 
-export const DEFAULT_LOCAL = SupportedLocales.English
+const nextTranslate = require('next-translate')
 
 // For building on vercel: https://github.com/Automattic/node-canvas/issues/1779
 if (
@@ -31,12 +31,12 @@ const config: BlitzConfig = {
     domains: ['synqat.gg'],
   },
   i18n: {
-    locales: [SupportedLocales.English],
-    defaultLocale: DEFAULT_LOCAL,
+    locales,
+    defaultLocale,
   },
   /* Uncomment this to customize the webpack config
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Note: we provide webpack above so you should not `require` it
+    // Note: we provide webpack above, so you should not `require` it
     // Perform customizations to webpack config
     // Important: return the modified config
     return config
@@ -44,4 +44,4 @@ const config: BlitzConfig = {
   */
 }
 
-module.exports = config
+module.exports = nextTranslate(config)

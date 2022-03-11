@@ -6,21 +6,17 @@ import {
   usePaginatedQuery,
 } from 'blitz'
 import { Box } from '@chakra-ui/react'
-import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import { usePage } from 'app/data/hooks/usePage'
-import { GalleryViewController } from 'app/controllers/GalleryViewController'
-import { AddNewItem } from 'app/components/views/AddNewItem'
 import Layout from 'app/layouts/Layout'
+import { usePage } from 'app/data/hooks/usePage'
 import getAlbums from 'app/data/queries/albums/getAlbums'
-import { GlobalPageMeta } from 'app/meta/GlobalPageMeta'
-import packageJson from '../../package.json'
+import { AddNewItem } from 'app/components/views/AddNewItem'
+import { AlbumPreview } from 'app/components/views/AlbumPreview'
+import { GalleryViewController } from 'app/controllers/GalleryViewController'
+import { GlobalMeta } from 'app/meta/GlobalMeta'
 
 const ITEMS_PER_PAGE = 32
 
-export type GalliarySiteInfo = typeof packageJson['galliary']
-
 export interface HomeProps {
-  siteInfo: GalliarySiteInfo
   initialData: PromiseReturnType<typeof getAlbums>
 }
 
@@ -42,12 +38,11 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
   return {
     props: {
       initialData,
-      siteInfo: packageJson.galliary,
     },
   }
 }
 
-const Home: BlitzPage<HomeProps> = ({ initialData, siteInfo }) => {
+const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
   const [{ albums, hasMore }] = usePaginatedQuery(
     getAlbums,
@@ -63,27 +58,17 @@ const Home: BlitzPage<HomeProps> = ({ initialData, siteInfo }) => {
 
   return (
     <>
-      <GlobalPageMeta
-        siteInfo={siteInfo}
-        imageUrl={siteInfo.logo}
-        imageAlt={siteInfo.name}
-        imageWidth="240"
-        imageHeight="240"
-        imageType="image/png"
+      <GalleryViewController
+        data={albums}
+        hasMore={hasMore}
+        addPrompt={<AddNewItem />}
+        onDisplay={(data) => <AlbumPreview item={data} />}
       />
-      <Box h="full">
-        <GalleryViewController
-          data={albums}
-          hasMore={hasMore}
-          addPrompt={<AddNewItem />}
-          onDisplay={(data) => <AlbumPreview item={data} />}
-        />
-      </Box>
     </>
   )
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.getLayout = (page) => <Layout>{page}</Layout>
 
 export default Home

@@ -74,12 +74,12 @@
       "bad": "#ff3838"
     },
     "brand": {
-      "primary": "#3574d2",
-      "secondary": "#59aeec"
+      "primary": "#374BB4",
+      "secondary": "#5E70CD"
     },
     "background": {
-      "full": "#131623",
-      "full-darker": "#0f121c",
+      "full": "#1B1F2F",
+      "full-darker": "#10131c",
       "dark": "#08090e"
     }
   }

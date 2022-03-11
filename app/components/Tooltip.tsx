@@ -15,7 +15,7 @@ export type TooltipProps = {
   children: ReactNode | (({ isHovering: boolean }) => ReactNode)
 }
 
-const TOOLTIP_GRADIENT_BG = '#203b69'
+const TOOLTIP_GRADIENT_BG = '#000000'
 
 export const Tooltip = ({
   label,
