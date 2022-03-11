@@ -1,13 +1,17 @@
 import { z } from 'zod'
 import { Box, Center, HStack, VStack } from '@chakra-ui/react'
 import { Form, FormProps } from 'app/components/forms/Form'
-import LabeledImageField from 'app/components/forms/fields/LabeledImageField'
 import LabeledTextField from 'app/components/forms/fields/LabeledTextField'
 import LabeledTextareaField from 'app/components/forms/fields/LabeledTextareaField'
 import { useFormikContext } from 'formik'
-import { useEffect } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { atom, useAtom } from 'jotai'
 import { MotionBox } from 'app/components/Motion'
+import { Loader } from 'app/components/views/Loader'
+
+const LabeledImageField = lazy(
+  () => import('app/components/forms/fields/LabeledImageField'),
+)
 
 const image = atom('')
 
@@ -66,14 +70,16 @@ export function AlbumForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
         <HStack spacing={12} align="start" w="70vw">
           <SetImageAsBackground />
           <Box>
-            <LabeledImageField
-              name="file"
-              label="Album Cover"
-              ratio={1}
-              imageProps={{
-                boxSize: '512px',
-              }}
-            />
+            <Suspense fallback={<Loader />}>
+              <LabeledImageField
+                name="file"
+                label="Album Cover"
+                ratio={1}
+                imageProps={{
+                  boxSize: '512px',
+                }}
+              />
+            </Suspense>
           </Box>
           <VStack align="stretch" w="full" spacing={8}>
             <LabeledTextField

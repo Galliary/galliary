@@ -19,7 +19,7 @@ import {
   VStack,
   Wrap,
 } from '@chakra-ui/react'
-import { getColorFromURL, getPaletteFromURL, Palette } from 'color-thief-node'
+import { getPaletteFromURL, Palette } from 'color-thief-node'
 import { AnimateSharedLayout } from 'framer-motion'
 import {
   MotionBox,
