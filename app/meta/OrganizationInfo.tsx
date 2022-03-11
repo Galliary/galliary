@@ -5,7 +5,7 @@ import type {
   WebPage,
   WebSite,
 } from 'schema-dts'
-import { GalliarySiteInfo } from 'app/pages/_app'
+import { GalliarySiteInfo } from 'app/pages'
 
 export interface OrganizationInfoProps {
   siteInfo: GalliarySiteInfo
