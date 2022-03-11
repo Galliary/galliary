@@ -1,13 +1,12 @@
-import { Head } from 'next/document'
+import { Head } from 'blitz'
 import { OrganizationInfo } from 'app/meta/OrganizationInfo'
-import * as packageJson from '../../package.json'
-
-const { galliary } = packageJson
+import { GalliarySiteInfo } from 'app/pages'
 
 type GlobalPageMetaProps = {
   title?: string
   description?: string
   tags?: string[]
+  siteInfo: GalliarySiteInfo
 } & (
   | {}
   | {
@@ -21,14 +20,15 @@ type GlobalPageMetaProps = {
 
 export const GlobalPageMeta = ({
   title,
-  description = galliary.description,
-  tags = galliary.tags,
+  siteInfo,
   ...props
 }: GlobalPageMetaProps) => {
-  const name = title ? galliary.name + ' | ' + title : galliary.name
-  const url = galliary.url
+  const tags = props.tags ?? siteInfo.tags ?? []
+  const description = props.description ?? siteInfo.description
+  const name = title ? siteInfo.name + ' | ' + title : siteInfo.name
+  const url = siteInfo.url
 
-  const twitter = galliary.socials.find((social) => social.type === 'twitter')
+  const twitter = siteInfo.socials.find((social) => social.type === 'twitter')
 
   return (
     <Head>
@@ -43,7 +43,7 @@ export const GlobalPageMeta = ({
 
       <meta property="og:type" content="website" />
 
-      <meta name="theme-color" content={galliary.color} />
+      <meta name="theme-color" content={siteInfo.color} />
 
       <meta name="keywords" content={tags.toString()} />
 
@@ -73,16 +73,16 @@ export const GlobalPageMeta = ({
         <meta name="twitter:creator" content={`@${twitter.handle}`} />
       )}
 
-      <meta name="darkreader" content={galliary.url} />
+      <meta name="darkreader" content={siteInfo.url} />
 
       <link
         rel="search"
         type="application/opensearchdescription+xml"
         href="/opensearch.xml"
-        title={galliary.name}
+        title={siteInfo.name}
       />
 
-      <OrganizationInfo />
+      <OrganizationInfo siteInfo={siteInfo} />
     </Head>
   )
 }

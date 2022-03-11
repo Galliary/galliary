@@ -5,22 +5,24 @@ import type {
   WebPage,
   WebSite,
 } from 'schema-dts'
-import * as packageJson from '../../package.json'
+import { GalliarySiteInfo } from 'app/pages/_app'
 
-const { galliary } = packageJson
+export interface OrganizationInfoProps {
+  siteInfo: GalliarySiteInfo
+}
 
-export const OrganizationInfo = () => (
+export const OrganizationInfo = ({ siteInfo }: OrganizationInfoProps) => (
   <>
     <script
       {...jsonLdScriptProps<Organization>({
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: galliary.name,
-        alternateName: galliary.longName,
-        url: galliary.url,
-        logo: galliary.logo,
-        email: galliary.email,
-        sameAs: galliary.socials.map((social) => social.url),
+        name: siteInfo.name,
+        alternateName: siteInfo.longName,
+        url: siteInfo.url,
+        logo: siteInfo.logo,
+        email: siteInfo.email,
+        sameAs: siteInfo.socials.map((social) => social.url),
       })}
     />
 
@@ -28,10 +30,10 @@ export const OrganizationInfo = () => (
       {...jsonLdScriptProps<SoftwareApplication>({
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
-        name: galliary.name,
-        alternateName: galliary.longName,
-        url: galliary.url,
-        description: galliary.description,
+        name: siteInfo.name,
+        alternateName: siteInfo.longName,
+        url: siteInfo.url,
+        description: siteInfo.description,
         operatingSystem: 'Windows, MacOS',
         applicationCategory: 'https://en.wikipedia.org/wiki/Photography',
         offers: {
@@ -46,14 +48,14 @@ export const OrganizationInfo = () => (
       {...jsonLdScriptProps<WebPage>({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        headline: galliary.headline,
-        description: galliary.description,
-        url: galliary.url,
+        headline: siteInfo.headline,
+        description: siteInfo.description,
+        url: siteInfo.url,
         about: [
           {
             '@type': 'Thing',
-            name: galliary.name,
-            sameAs: galliary.socials.map((social) => social.url),
+            name: siteInfo.name,
+            sameAs: siteInfo.socials.map((social) => social.url),
           },
         ],
       })}
@@ -63,9 +65,9 @@ export const OrganizationInfo = () => (
       {...jsonLdScriptProps<WebSite>({
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        '@id': galliary.url + '#web',
-        url: galliary.url,
-        name: galliary.name,
+        '@id': siteInfo.url + '#web',
+        url: siteInfo.url,
+        name: siteInfo.name,
       })}
     />
   </>

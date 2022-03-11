@@ -14,8 +14,6 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
   return (
     <>
       <Head>
-        <title>{title || 'galliary'}</title>
-        <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
