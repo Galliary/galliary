@@ -85,7 +85,7 @@ export function AlbumForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
             <LabeledTextField
               name="title"
               label="Title"
-              placeholder="Untilited Album"
+              placeholder="Untitled Album"
             />
             <LabeledTextareaField
               name="description"

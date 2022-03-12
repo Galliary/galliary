@@ -12,18 +12,15 @@ generator client {
 
 // --------------------------------------
 
-enum UserRole {
-  USER
-  TRUSTED
-  MOD
-  ADMIN
-}
-
 enum UserBadge {
-  MODERATOR
-  TRUSTED
-  NSFW
-  PREMIUM
+  PREMIUM // Has subscribed to the premium service
+  MATURE // Has 18+ NSFW content (moderator actionable)
+  NOT_SAFE // Has had around for a small amount of time, or many reports (moderator actionable)
+  SAFE // Has been around for 2-3 months and no reports (moderator actionable)
+  TRUSTED // (moderator actionable)
+  MODERATOR // Ability to add, remove
+  ADMINISTRATOR
+  SUPERADMIN // Total developer control of website
 }
 
 enum PremiumFeature {
@@ -32,18 +29,17 @@ enum PremiumFeature {
 }
 
 enum SafetyRating {
-  TRUSTED
-  SAFE
-  UNKNOWN
-  NOT_SAFE
-  NSFW
+  TRUSTED // Uploaded by a trusted user (or manually marked as trusted)
+  SAFE // Uploaded by known users (or manually marked as safe)
+  UNKNOWN // Not bad but not good, neutral state for unknown images
+  NOT_SAFE // Potentially unsafe content
+  MATURE // 18+ NSFW content
 }
 
 enum LockingStatus {
-  BANNED
-  LOCKED
-  HIDDEN
-  NONE
+  LOCKED // Not visible by anyone, not editable by anyone, not linkable
+  HIDDEN // Not visible in any featured lists or search results, visible on user profiles or direct linking
+  NONE // No restrictions
 }
 
 enum UserConnectionType {
@@ -51,6 +47,50 @@ enum UserConnectionType {
   GOOGLE
   TWITTER
   EMAIL
+}
+
+enum GroupMemberRole {
+  NONE
+  ADMINISTRATOR // Has the ability to add and edit images/albums owned by the group
+  OWNER // Has ability to add and remove admins
+}
+
+enum UserRole {
+  NONE
+  MATURE // Has 18+ NSFW content (moderator actionable)
+  NOT_SAFE // Has had around for a small amount of time, or many reports (moderator actionable)
+  SAFE // Has been around for 2-3 months and no reports (moderator actionable)
+  TRUSTED // (moderator actionable)
+  MODERATOR // Ability to add, remove
+  ADMINISTRATOR
+  SUPERADMIN // Total developer control of website
+}
+
+model Group {
+  id String @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+  displayName String
+
+  member GroupMember[]
+}
+
+model GroupMember {
+  id        String   @id @unique
+
+  role GroupMemberRole @default(NONE)
+
+  group Group @relation(fields: [groupId], references: [id])
+  groupId String
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+
+  invitedAt DateTime @default(now())
+
+  @@unique([groupId, userId])
 }
 
 model User {
@@ -63,6 +103,8 @@ model User {
 
   bio String?
 
+  role UserRole @default(NONE)
+
   email          String  @unique
   hashedPassword String?
 
@@ -70,14 +112,13 @@ model User {
 
   bannerSourceId String?
 
-  role   UserRole    @default(USER)
   badges UserBadge[]
-
-  likes    Int @default(0)
-  dislikes Int @default(0)
 
   lockStatus LockingStatus @default(NONE)
 
+  reports Report[] @relation(name: "UserWasReported")
+  createdReports Report[] @relation(name: "UserIsReporter")
+  memberships GroupMember[]
   connections     UserConnection[]
   premiumFeatures PremiumFeature[]
 
@@ -86,6 +127,10 @@ model User {
 
   albums Album[]
   images Image[]
+  groups Group[]
+
+  notifications Notification[]
+  moderatorNotifications ModeratorNotifications[]
 
   favouriteUsers User[] @relation(name: "UserFavouriteUsers")
   favouriteAlbums Album[] @relation(name: "UserFavouriteAlbums")
@@ -174,11 +219,11 @@ model Image {
   title       String?
   description String?
 
-  likes    Int @default(0)
-  dislikes Int @default(0)
-
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
+
+  group  Group?  @relation(fields: [groupId], references: [id])
+  groupId String?
 
   categories Category[]
 
@@ -205,11 +250,11 @@ model Album {
   title       String?
   description String?
 
-  likes    Int @default(0)
-  dislikes Int @default(0)
-
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
+
+  group  Group?  @relation(fields: [groupId], references: [id])
+  groupId String?
 
   images     Image[]
   categories Category[]
@@ -223,70 +268,102 @@ model Album {
   @@index([id, authorId])
 }
 
-enum AuditAction {
-  DELETE_IMAGE
-  DELETE_ALBUM
-  DELETE_USER
-  DELETE_CATEGORY
-
-  LOCK_IMAGE
-  LOCK_ALBUM
-  LOCK_USER
-  LOCK_CATEGORY
-
-  UNLOCK_IMAGE
-  UNLOCK_ALBUM
-  UNLOCK_USER
-  UNLOCK_CATEGORY
-
-  UPDATE_IMAGE_RATING
-  UPDATE_ALBUM_RATING
-  UPDATE_USER_RATING
-  UPDATE_CATEGORY_RATING
-
-  UPDATE_IMAGE_STATUS
-  UPDATE_ALBUM_STATUS
-  UPDATE_USER_STATUS
-  UPDATE_CATEGORY_STATUS
-
-  EDIT_IMAGE_NAME
-  EDIT_ALBUM_NAME
-  EDIT_USER_NAME
-  EDIT_CATEGORY_NAME
-
-  EDIT_IMAGE_DESCRIPTION
-  EDIT_ALBUM_DESCRIPTION
-  EDIT_USER_DESCRIPTION
-  EDIT_CATEGORY_DESCRIPTION
-
-  EDIT_IMAGE_SOURCE
-  EDIT_ALBUM_SOURCE
-
-  BAN_USER
-  UNBAN_USER
+enum ReportReason {
+  MATURE
+  SPAM
+  VIOLENCE
+  HARASSMENT
+  OTHER
 }
 
-//model AuditLog {
-//  id        String   @id @unique
-//  createdAt DateTime @default(now())
-//
-//  user   User   @relation(fields: [userId], references: [id])
-//  userId String
-//
-//  affectedUser   User?   @relation(fields: [affectedUserId], references: [id])
-//  affectedUserId String?
-//
-//  affectedImage   Image?   @relation(fields: [affectedImageId], references: [id])
-//  affectedImageId String?
-//
-//  affectedAlbum   Image?   @relation(fields: [affectedAlbumId], references: [id])
-//  affectedAlbumId String?
-//
-//  affectedCategory   Image?   @relation(fields: [affectedCategoryId], references: [id])
-//  affectedCategoryId String?
-//
-//  action AuditAction
-//
-//  valueBefore Any?
-//  valueAfter Any
-//}
+model Report {
+  id String @id @unique
+  createdAt DateTime @default(now())
+
+  album  Album?  @relation(fields: [albumId], references: [id])
+  albumId String?
+
+  image  Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
+
+  user   User?   @relation("UserWasReported", fields: [userId], references: [id])
+  userId String?
+
+  reportee  User   @relation("UserIsReporter", fields: [reporteeId], references: [id])
+  reporteeId String
+
+  reason String
+
+  @@index([albumId, imageId, userId])
+}
+
+enum NotificationType {
+  RANDOM_INFO // Any sort of title & message combo
+
+  NEW_FAVOURITE
+  NEW_FOLLOWER
+
+  SUBSCRIPTION_ACTIVE
+  SUBSCRIPTION_EXPIRING_SOON
+  SUBSCRIPTION_EXPIRED
+
+  USER_MARKED_AS_MATURE_BY_MODERATOR
+  USER_MARKED_AS_NOT_MATURE_BY_MODERATOR
+
+  USER_MARKED_AS_TRUSTED_BY_MODERATOR
+  USER_MARKED_AS_NOT_TRUSTED_BY_MODERATOR
+
+  ALBUM_LOCKED_BY_MODERATOR
+  ALBUM_UNLOCKED_BY_MODERATOR
+  ALBUM_DELETED_BY_MODERATOR
+
+  IMAGE_LOCKED_BY_MODERATOR
+  IMAGE_UNLOCKED_BY_MODERATOR
+  IMAGE_DELETED_BY_MODERATOR
+
+  NEW_GROUP_INVITE
+
+  GROUP_MEMBER_JOINED
+  GROUP_MEMBER_LEFT
+
+  GROUP_MEMBER_INVITE_ACCEPTED
+  GROUP_MEMBER_INVITE_DECLINED
+  GROUP_MEMBER_INVITE_EXPIRED
+}
+
+model Notification {
+  id       String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  type NotificationType
+
+  title String
+  message String
+
+  group Group? @relation(fields: [groupId], references: [id])
+  groupId String?
+
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+enum ModeratorNotificationsType {
+  NEW_REPORT
+  SUSPICIOUS_ACTIVITY
+}
+
+model ModeratorNotifications {
+  id       String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  type ModeratorNotificationsType
+
+  title String
+  message String
+
+  group Group? @relation(fields: [groupId], references: [id])
+  groupId String?
+
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
+}
