@@ -1,20 +1,20 @@
-import { passportAuth } from 'blitz'
-import { DiscordStrategy } from 'app/auth/strategies/discord'
-import { TwitterStrategy } from 'app/auth/strategies/twitter'
-import { GoogleStrategy } from 'app/auth/strategies/google'
+import { BlitzApiHandler, getSession, passportAuth } from 'blitz'
+import { StrategyType } from 'app/auth/utils/strategyWithApi'
+import { ConfigService } from 'app/services/config.service'
 
-export default passportAuth({
-  successRedirectUrl: '/',
-  errorRedirectUrl: '/',
-  strategies: [
-    {
-      strategy: TwitterStrategy,
-    },
-    {
-      strategy: DiscordStrategy,
-    },
-    {
-      strategy: GoogleStrategy,
-    },
-  ],
-})
+const AuthApi: BlitzApiHandler = async (req, res) => {
+  const session = await getSession(req, res)
+
+  if (session && session.userId) {
+    res.redirect(`/users/${session.userId}?error=already-logged-in`)
+    return
+  }
+
+  return passportAuth({
+    successRedirectUrl: '/',
+    errorRedirectUrl: '/',
+    strategies: ConfigService.getStrategies(req, res, StrategyType.Create),
+  })(req, res)
+}
+
+export default AuthApi

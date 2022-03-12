@@ -7,7 +7,19 @@ import {
   useParam,
   useQuery,
 } from 'blitz'
-import { Avatar, Box, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { CDN, ImageType } from 'app/utils/cdn'
 import getUserProfile from 'app/data/queries/users/getUserProfile'
@@ -26,6 +38,9 @@ import { Tooltip } from 'app/components/Tooltip'
 import Layout from 'app/layouts/Layout'
 import { EditIcon } from 'app/components/icons/EditIcon'
 import { useModal } from 'app/data/hooks/useModal'
+import { Link } from 'app/components/Link'
+import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
+import { getConnectionDetails } from 'app/auth/utils/getConnectionDetails'
 
 export interface UserPageProps {
   initialData: PromiseReturnType<typeof getUserProfile>
@@ -101,6 +116,65 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
               <Text textStyle="paragraph.large" color="ui.60">
                 {user.bio ?? 'I am a new Galliary user!'}
               </Text>
+              <VStack align="start" w="full" spacing={1}>
+                {user.connections
+                  .filter((connection) => Boolean(connection.handle))
+                  .map((connection, index) => {
+                    const details = getConnectionDetails(connection.type)
+
+                    return (
+                      <Button
+                        key={index}
+                        as={Link}
+                        p={3}
+                        w="full"
+                        rounded={0}
+                        bg="flow.10"
+                        target="_blank"
+                        _hover={{ bg: 'flow.20' }}
+                        href={details.baseUrl + connection.handle}
+                      >
+                        <HStack w="full" justify="space-between">
+                          <HStack spacing={2} color="brand.primary.80">
+                            {details.icon}
+                            <Text textStyle="label.small">
+                              {details.displayName}
+                            </Text>
+                          </HStack>
+                          <Text textStyle="label.small" color="ui.100">
+                            <Text as="span" opacity={0.4}>
+                              {details.preHandle}
+                            </Text>
+                            <Text as="span">{connection.handle}</Text>
+                            <Text as="span" opacity={0.4}>
+                              {details.postHandle}
+                            </Text>
+                          </Text>
+                        </HStack>
+                      </Button>
+                    )
+                  })}
+                {isOwnProfile && (
+                  <Menu>
+                    <MenuButton as={Button} w="full" rounded="0">
+                      Connect Account
+                    </MenuButton>
+                    <MenuList minW="200px">
+                      {ENABLED_AUTH_STRATEGIES.map((strategy) => (
+                        <MenuItem
+                          key={strategy}
+                          as={Link}
+                          href={`/api/connect/${strategy.toLowerCase()}`}
+                        >
+                          <HStack>
+                            <Text>{strategy}</Text>
+                          </HStack>
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                )}
+              </VStack>
               {hasFavourites && (
                 <VStack w="full" align="start" spacing={2}>
                   <HStack spacing={2}>
@@ -128,7 +202,7 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
             </VStack>
           </VStack>
         </Box>
-        <VStack px={8} spacing={12}>
+        <VStack w="full" px={8} spacing={12}>
           <VStack rounded="md" w="full" align="start">
             <VStack align="start" w="full" spacing={2}>
               <HStack w="full" justify="space-between">
@@ -210,12 +284,14 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
               </HStack>
             </VStack>
           )}
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.40" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
-          <Box bg="flow.20" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
+          <Box bg="flow.10" rounded="md" minH="200px" w="full" />
         </VStack>
       </HStack>
     </VStack>

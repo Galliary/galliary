@@ -12,8 +12,9 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { Link } from 'app/components/Link'
-import { LoginController } from 'app/controllers/LoginController'
+import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import { LoginController } from 'app/controllers/LoginController'
 
 export interface HeaderProps {}
 
@@ -63,21 +64,17 @@ export const Header = ({}: HeaderProps) => (
                 Login
               </MenuButton>
               <MenuList minW="200px">
-                <MenuItem as={Link} href="/api/auth/google">
-                  <HStack>
-                    <Text>Google</Text>
-                  </HStack>
-                </MenuItem>
-                <MenuItem as={Link} href="/api/auth/discord">
-                  <HStack>
-                    <Text>Discord</Text>
-                  </HStack>
-                </MenuItem>
-                <MenuItem as={Link} href="/api/auth/twitter">
-                  <HStack>
-                    <Text>Twitter</Text>
-                  </HStack>
-                </MenuItem>
+                {ENABLED_AUTH_STRATEGIES.map((strategy) => (
+                  <MenuItem
+                    key={strategy}
+                    as={Link}
+                    href={`/api/auth/${strategy.toLowerCase()}`}
+                  >
+                    <HStack>
+                      <Text>{strategy}</Text>
+                    </HStack>
+                  </MenuItem>
+                ))}
               </MenuList>
             </Menu>
           }

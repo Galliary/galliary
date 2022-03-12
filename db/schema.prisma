@@ -43,10 +43,12 @@ enum LockingStatus {
 }
 
 enum UserConnectionType {
-  DISCORD
-  GOOGLE
-  TWITTER
   EMAIL
+
+  GOOGLE
+  DISCORD
+  TWITTER
+  LINKEDIN
 }
 
 enum GroupMemberRole {
@@ -74,10 +76,10 @@ model Group {
   name        String @unique
   displayName String
 
-  member GroupMember[]
+  members GroupMember[]
 
-  image Image[]
-  album Album[]
+  images Image[]
+  albums Album[]
 
   user                   User?                    @relation(fields: [userId], references: [id])
   userId                 String?
@@ -115,6 +117,7 @@ model User {
   hashedPassword String?
 
   avatarUrl String?
+  avatarSourceId String? // Overrides the 'avatarUrl' from outside connections
 
   bannerSourceId String?
 
@@ -149,8 +152,10 @@ model User {
 model UserConnection {
   type UserConnectionType
 
-  email        String?
-  authToken    String?
+  email        String
+  handle       String? // The linkable profile connection handle
+
+  accessToken  String?
   refreshToken String?
 
   createdAt DateTime  @default(now())
@@ -160,7 +165,7 @@ model UserConnection {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  @@unique([userId, type])
+  @@unique([email, type])
 }
 
 model Session {

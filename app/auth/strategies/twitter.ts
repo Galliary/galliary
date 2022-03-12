@@ -1,44 +1,65 @@
+import { getSession } from 'blitz'
+import { UserConnectionType } from 'db'
 import { Strategy } from 'passport-twitter'
-import db from 'db'
-import { snowflake } from 'app/utils/snowflake'
+import { BlitzApiRequest, BlitzApiResponse } from 'next'
+import { ConfigService } from 'app/services/config.service'
+import { StrategyType } from 'app/auth/utils/strategyWithApi'
+import { handleAuthType } from 'app/auth/utils/handleAuthType'
 
-export const TwitterStrategy = new Strategy(
-  {
-    includeEmail: true,
-    skipExtendedUserProfile: false,
-    consumerKey: process.env.TWITTER_CONSUMER_KEY ?? '',
-    consumerSecret: process.env.TWITTER_CONSUMER_SECRET ?? '',
-    callbackURL: process.env.TWITTER_CALLBACK_URL ?? '',
-  },
-  async (_token, _tokenSecret, profile, done) => {
-    const email = profile._json.email
+export const TwitterStrategy = (
+  req: BlitzApiRequest,
+  res: BlitzApiResponse,
+  type: StrategyType,
+) => {
+  const strategyOptions = ConfigService.getStrategyConfig(
+    UserConnectionType.TWITTER,
+    type,
+  )
 
-    if (!email) {
-      return done(
-        new Error('Twitter OAuth response did not supply an email address.'),
-      )
-    }
+  return new Strategy(
+    {
+      includeEmail: true,
+      skipExtendedUserProfile: false,
+      consumerKey: strategyOptions.clientId,
+      consumerSecret: strategyOptions.clientSecret,
+      callbackURL: strategyOptions.callbackUrl,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const session = await getSession(req, res)
 
-    const avatarUrl = profile._json.profile_image_url_https
+      const email = profile.emails?.[0]?.value
 
-    const user = await db.user.upsert({
-      where: { email },
-      create: {
-        id: snowflake(),
-        email,
-        username: profile.id?.trim(),
-        nickname: profile.displayName?.trim(),
-        avatarUrl,
-      },
-      update: { email, nickname: profile.displayName?.trim(), avatarUrl },
-    })
+      if (type === StrategyType.Connect && !session.userId) {
+        return done(
+          new Error('You need to be logged in to connect an account.'),
+        )
+      }
 
-    const publicData = {
-      userId: user.id,
-      roles: [user.role],
-      source: 'twitter',
-    }
+      if (!email) {
+        return done(
+          new Error('Twitter OAuth response did not supply an email address.'),
+        )
+      }
 
-    done(undefined, { publicData })
-  },
-)
+      const avatarUrl = profile.photos?.[0]?.value
+
+      try {
+        done(undefined, {
+          publicData: await handleAuthType(type, UserConnectionType.TWITTER, {
+            email,
+            avatarUrl,
+            userId: session.userId ?? '',
+            handle: profile.username,
+            nickname: profile.displayName,
+            tokens: {
+              accessToken,
+              refreshToken,
+            },
+          }),
+        })
+      } catch (err) {
+        done(err)
+      }
+    },
+  )
+}

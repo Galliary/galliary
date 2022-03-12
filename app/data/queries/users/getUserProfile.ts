@@ -19,6 +19,13 @@ export default resolver.pipe(
         ],
       },
       include: {
+        connections: {
+          select: {
+            type: true,
+            email: true,
+            handle: true,
+          },
+        },
         favouriteUsers: {
           select: {
             id: true,

@@ -6,7 +6,7 @@ export const MenuStyle: MultiStyleConfig<typeof menuAnatomy> = {
   baseStyle: {
     list: {
       zIndex: 100,
-      bg: 'background.full',
+      bg: 'background.full-darker',
       p: 2,
       rounded: 'md',
     },
