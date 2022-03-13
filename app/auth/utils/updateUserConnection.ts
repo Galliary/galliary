@@ -35,7 +35,6 @@ export const updateUserConnection = async ({
         id: user.id,
       },
       data: {
-        avatarUrl: update.avatarUrl,
         connections: {
           create: {
             type,

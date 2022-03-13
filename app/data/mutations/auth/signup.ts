@@ -13,12 +13,12 @@ export default resolver.pipe(
         email: email.toLowerCase().trim(),
         hashedPassword,
         username,
-        role: UserRole.USER,
+        role: UserRole.NONE,
       },
       select: { id: true, username: true, email: true, role: true },
     })
 
-    await ctx.session.$create({ userId: user.id })
+    await ctx.session.$create({ userId: user.id, role: UserRole.NONE })
 
     return user
   },

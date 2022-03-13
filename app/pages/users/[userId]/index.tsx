@@ -8,17 +8,17 @@ import {
   useQuery,
 } from 'blitz'
 import {
-  Avatar,
   Box,
-  Button,
-  HStack,
-  IconButton,
   Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
+  Avatar,
+  Button,
   VStack,
+  HStack,
+  MenuList,
+  MenuItem,
+  MenuButton,
+  IconButton,
 } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { CDN, ImageType } from 'app/utils/cdn'
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async ({
 }) => {
   const initialData = await invokeWithMiddleware(
     getUserProfile,
-    { idOrUsername: query.userId ?? '' },
+    { idOrUsername: query.userId },
     { req, res },
   )
 

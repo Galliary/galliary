@@ -2,6 +2,9 @@ import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
 import { defaultLocale, locales } from './i18n.json'
 
 const nextTranslate = require('next-translate')
+const bundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 // For building on vercel: https://github.com/Automattic/node-canvas/issues/1779
 if (
@@ -44,4 +47,4 @@ const config: BlitzConfig = {
   */
 }
 
-module.exports = nextTranslate(config)
+module.exports = bundleAnalyzer(nextTranslate(config))

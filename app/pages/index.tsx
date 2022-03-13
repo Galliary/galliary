@@ -5,14 +5,12 @@ import {
   PromiseReturnType,
   usePaginatedQuery,
 } from 'blitz'
-import { Box } from '@chakra-ui/react'
 import Layout from 'app/layouts/Layout'
 import { usePage } from 'app/data/hooks/usePage'
 import getAlbums from 'app/data/queries/albums/getAlbums'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
-import { GlobalMeta } from 'app/meta/GlobalMeta'
 
 const ITEMS_PER_PAGE = 32
 
@@ -57,14 +55,12 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   )
 
   return (
-    <>
-      <GalleryViewController
-        data={albums}
-        hasMore={hasMore}
-        addPrompt={<AddNewItem />}
-        onDisplay={(data) => <AlbumPreview item={data} />}
-      />
-    </>
+    <GalleryViewController
+      data={albums}
+      hasMore={hasMore}
+      addPrompt={<AddNewItem />}
+      onDisplay={(data) => <AlbumPreview item={data} />}
+    />
   )
 }
 

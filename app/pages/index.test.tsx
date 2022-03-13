@@ -1,8 +1,7 @@
 import { render } from 'test/utils'
 
-import Home from './index'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
-import { UserRole } from '@prisma/client'
+import Home from './index'
 
 jest.mock('app/core/hooks/useCurrentUser')
 const mockUseCurrentUser = useCurrentUser as jest.MockedFunction<
@@ -22,7 +21,16 @@ test.skip('renders blitz documentation link', () => {
     avatarUrl: '#',
   })
 
-  const { getByText } = render(<Home />)
+  const { getByText } = render(
+    <Home
+      initialData={{
+        count: 0,
+        albums: [],
+        hasMore: false,
+        nextPage: { skip: 0, take: 0 },
+      }}
+    />,
+  )
   const linkElement = getByText(/Documentation/i)
   expect(linkElement).toBeInTheDocument()
 })
