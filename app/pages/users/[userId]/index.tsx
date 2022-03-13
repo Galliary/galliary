@@ -41,6 +41,7 @@ import { useModal } from 'app/data/hooks/useModal'
 import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { getConnectionDetails } from 'app/auth/utils/getConnectionDetails'
+import { CogIcon } from 'app/components/icons/CogIcon'
 
 export interface UserPageProps {
   initialData: PromiseReturnType<typeof getUserProfile>
@@ -70,6 +71,7 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
   const [user] = useQuery(getUserProfile, { idOrUsername }, { initialData })
   const [logoutMutation] = useMutation(logout)
   const [openEditProfileModal] = useModal('editProfile')
+  const [openManageConnectionsModal] = useModal('manageConnections')
 
   const isOwnProfile = Boolean(currentUser && currentUser.id === user.id)
 
@@ -155,24 +157,17 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData }) => {
                     )
                   })}
                 {isOwnProfile && (
-                  <Menu>
-                    <MenuButton as={Button} w="full" rounded="0">
-                      Connect Account
-                    </MenuButton>
-                    <MenuList minW="200px">
-                      {ENABLED_AUTH_STRATEGIES.map((strategy) => (
-                        <MenuItem
-                          key={strategy}
-                          as={Link}
-                          href={`/api/connect/${strategy.toLowerCase()}`}
-                        >
-                          <HStack>
-                            <Text>{strategy}</Text>
-                          </HStack>
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
+                  <Button
+                    p={3}
+                    w="full"
+                    rounded={0}
+                    onClick={() => openManageConnectionsModal()}
+                  >
+                    <HStack w="full" justify="space-between">
+                      <Text>Manage Connections</Text>
+                      <CogIcon />
+                    </HStack>
+                  </Button>
                 )}
               </VStack>
               {hasFavourites && (

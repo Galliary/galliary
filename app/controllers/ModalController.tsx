@@ -6,6 +6,7 @@ import { ConfirmationModalProps } from 'app/components/modals/ConfirmationModal'
 import { NotUndefined } from 'types'
 import { EditProfileModalProps } from 'app/components/modals/EditProfileModal'
 import { Loader } from 'app/components/views/Loader'
+import { ManageConnectionsModalProps } from 'app/components/modals/ManageConnectionsModal'
 
 const dynamicOptions: DynamicOptions<
   ModalContextProps[keyof ModalContextProps]
@@ -27,11 +28,16 @@ const modals = {
     () => import('app/components/modals/EditProfileModal'),
     dynamicOptions,
   ),
+  manageConnections: dynamic(
+    () => import('app/components/modals/ManageConnectionsModal'),
+    dynamicOptions,
+  ),
 } as const
 
 export type ModalContextProps = {
   confirm: ConfirmationModalProps
   editProfile: EditProfileModalProps
+  manageConnections: ManageConnectionsModalProps
 }
 
 export type ModalContextNames = keyof typeof modals
