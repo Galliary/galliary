@@ -81,7 +81,7 @@ export default resolver.pipe(
                 id: true,
               },
               where: {
-                id: ctx.session.userId ?? '',
+                id: ctx.session?.userId ?? '',
               },
             },
           },
@@ -97,7 +97,7 @@ export default resolver.pipe(
                 id: true,
               },
               where: {
-                id: ctx.session.userId ?? '',
+                id: ctx.session?.userId ?? '',
               },
             },
           },

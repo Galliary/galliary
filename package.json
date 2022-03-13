@@ -34,7 +34,7 @@
     "test:watch": "jest --watch",
     "prepare": "husky install",
     "theme": "chakra-cli tokens app/theme/index.ts",
-    "postinstall": "yarn theme",
+    "postinstall": "blitz prisma generate && blitz codegen && yarn theme",
     "analyze": "cross-env ANALYZE=true yarn build"
   },
   "prisma": {
