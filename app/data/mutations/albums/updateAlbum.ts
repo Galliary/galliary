@@ -15,7 +15,7 @@ export default resolver.pipe(
   resolver.zod(UpdateAlbum),
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
-    const authorId = ctx.session.userId
+    const authorId = ctx.session?.userId
 
     if (!authorId) {
       return null

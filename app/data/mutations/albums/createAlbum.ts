@@ -18,7 +18,7 @@ export default resolver.pipe(
       data: {
         ...input,
         id: snowflake(),
-        authorId: ctx.session.userId,
+        authorId: ctx.session?.userId,
       },
     })
   },

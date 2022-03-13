@@ -11,13 +11,13 @@ export default resolver.pipe(
   resolver.zod(FavouriteAlbum),
   resolver.authorize(),
   async (input, ctx) => {
-    if (!ctx.session.userId) {
+    if (!ctx.session?.userId) {
       return null
     }
 
     return await db.user.update({
       where: {
-        id: ctx.session.userId,
+        id: ctx.session?.userId,
       },
       data: {
         favouriteAlbums: {

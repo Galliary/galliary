@@ -11,12 +11,12 @@ export default resolver.pipe(
   resolver.zod(UpdateCurrentUserBanner),
   resolver.authorize(),
   async (input, ctx) => {
-    if (!ctx.session.userId) {
+    if (!ctx.session?.userId) {
       return null
     }
 
     const user = await db.user.findFirst({
-      where: { id: ctx.session.userId },
+      where: { id: ctx.session?.userId },
       select: {
         bannerSourceId: true,
       },
@@ -31,7 +31,7 @@ export default resolver.pipe(
     }
 
     return await db.user.update({
-      where: { id: ctx.session.userId },
+      where: { id: ctx.session?.userId },
       data: {
         bannerSourceId: input.bannerSourceId,
       },

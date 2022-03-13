@@ -19,7 +19,7 @@ export default resolver.pipe(
     const image = await db.image.findFirst({
       where: {
         id,
-        authorId: ctx.session.userId,
+        authorId: ctx.session?.userId,
       },
       select: {
         sourceId: true,

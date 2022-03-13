@@ -23,7 +23,7 @@ export default resolver.pipe(
     await CDN.delete(image.sourceId)
 
     return await db.image.deleteMany({
-      where: { id, authorId: ctx.session.userId },
+      where: { id, authorId: ctx.session?.userId },
     })
   },
 )

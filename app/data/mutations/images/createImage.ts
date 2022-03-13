@@ -15,7 +15,7 @@ export default resolver.pipe(
   resolver.zod(CreateImage),
   resolver.authorize(),
   async (input, ctx) => {
-    if (!ctx.session.userId) {
+    if (!ctx.session?.userId) {
       return null
     }
 
@@ -23,7 +23,7 @@ export default resolver.pipe(
       data: {
         ...input,
         id: snowflake(),
-        authorId: ctx.session.userId,
+        authorId: ctx.session?.userId,
       },
     })
   },

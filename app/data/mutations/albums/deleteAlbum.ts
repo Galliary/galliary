@@ -11,7 +11,7 @@ export default resolver.pipe(
   resolver.zod(DeleteAlbum),
   resolver.authorize(),
   async ({ id }, ctx) => {
-    if (!ctx.session.userId) {
+    if (!ctx.session?.userId) {
       return null
     }
 
@@ -33,7 +33,7 @@ export default resolver.pipe(
     }
 
     return await db.album.deleteMany({
-      where: { id, authorId: ctx.session.userId },
+      where: { id, authorId: ctx.session?.userId },
     })
   },
 )
