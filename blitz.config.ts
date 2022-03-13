@@ -31,7 +31,7 @@ const config: BlitzConfig = {
   ],
   images: {
     // TODO: Change to "galliary.com" when supported
-    domains: ['synqat.gg'],
+    domains: ['cdn.galliary.com', 'vitals.vercel-insights.com'],
   },
   i18n: {
     locales,

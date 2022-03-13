@@ -19,7 +19,7 @@ export class CDN {
     id: string,
     type: ImageType = ImageType.Public,
   ): string {
-    return `https://synqat.gg/cdn-cgi/imagedelivery/${CLOUDFLARE_ACCOUNT_HASH}/${id}/${type}`
+    return `https://cdn.galliary.com/cdn-cgi/imagedelivery/${CLOUDFLARE_ACCOUNT_HASH}/${id}/${type}`
   }
 
   public static getPublicImageUrl(id: string): string {
