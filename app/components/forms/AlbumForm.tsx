@@ -8,9 +8,14 @@ import { useEffect, Suspense, lazy } from 'react'
 import { atom, useAtom } from 'jotai'
 import { MotionBox } from 'app/components/Motion'
 import { Loader } from 'app/components/views/Loader'
+import { dynamic } from 'blitz'
 
-const LabeledImageField = lazy(
+const LabeledImageField = dynamic(
   () => import('app/components/forms/fields/LabeledImageField'),
+  {
+    ssr: false,
+    loading: () => <Loader />,
+  },
 )
 
 const image = atom('')

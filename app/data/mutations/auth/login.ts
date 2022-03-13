@@ -1,6 +1,7 @@
 import { AuthenticationError, resolver, SecurePassword } from 'blitz'
 import db from 'db'
 import { Login } from 'app/auth/validations'
+import { UserRole } from '@prisma/client'
 
 export const authenticateUser = async (
   rawEmail: string,
@@ -34,7 +35,10 @@ export default resolver.pipe(
     // This throws an error if credentials are invalid
     const user = await authenticateUser(email, password)
 
-    await ctx.session.$create({ userId: user.id, role: user.role })
+    await ctx.session.$create({
+      userId: user.id,
+      role: user.role ?? UserRole.NONE,
+    })
 
     return user
   },

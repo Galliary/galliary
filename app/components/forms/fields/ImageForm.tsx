@@ -2,11 +2,16 @@ import { z } from 'zod'
 import { Text, VStack } from '@chakra-ui/react'
 import Form, { FormProps } from 'app/components/forms/Form'
 import LabeledTextField from 'app/components/forms/fields/LabeledTextField'
-import { Suspense, lazy } from 'react'
+import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
+import { dynamic } from 'blitz'
 
-const LabeledImageField = lazy(
+const LabeledImageField = dynamic(
   () => import('app/components/forms/fields/LabeledImageField'),
+  {
+    ssr: false,
+    loading: () => <Loader />,
+  },
 )
 
 export function ImageForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {

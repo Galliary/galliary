@@ -1,7 +1,12 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
-import { defaultLocale, locales } from './i18n.json'
 
 const nextTranslate = require('next-translate')
+const bundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+const translate = nextTranslate()
+const analyzer = bundleAnalyzer()
 
 const config: BlitzConfig = {
   eslint: {
@@ -18,18 +23,12 @@ const config: BlitzConfig = {
     // TODO: Change to "galliary.com" when supported
     domains: ['cdn.galliary.com', 'vitals.vercel-insights.com'],
   },
-  i18n: {
-    locales,
-    defaultLocale,
+  i18n: translate.i18n,
+  webpack: (config, ...args) => {
+    const [{ buildId, dev, isServer, defaultLoaders, webpack }] = args
+    const stage_0 = analyzer.webpack(config, ...args)
+    return translate.webpack(stage_0, ...args)
   },
-  /* Uncomment this to customize the webpack config
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Note: we provide webpack above, so you should not `require` it
-    // Perform customizations to webpack config
-    // Important: return the modified config
-    return config
-  },
-  */
 }
 
-module.exports = nextTranslate(config)
+module.exports = config
