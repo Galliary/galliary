@@ -26,7 +26,9 @@ import {
   transitionMediumConfig,
 } from 'app/components/Motion'
 import { CDN } from 'app/utils/cdn'
-import type { Palette } from 'color-thief-node'
+import { getPalette } from 'color-thief-react'
+
+type Palette = [number, number, number]
 
 export interface LabeledImageFieldProps
   extends PropsWithoutRef<JSX.IntrinsicElements['input']> {
@@ -45,15 +47,6 @@ const isColorSelected = (color: Palette, selected: Palette) => {
     color[1] === selected[1] &&
     color[2] === selected[2]
   )
-}
-
-const getColor = (body: string): Promise<Palette[]> => {
-  return fetch('/api/get-color', {
-    method: 'POST',
-    body,
-  })
-    .then((r) => r.json())
-    .then((r) => r.colors)
 }
 
 export const LabeledImageField = forwardRef<
@@ -90,9 +83,13 @@ export const LabeledImageField = forwardRef<
       setImageSrc(reader.result as string)
       setFieldValue(name, file)
 
-      const selectedColors = await getColor(reader.result as string)
-
-      console.log({ selectedColors })
+      const selectedColors = (await getPalette(
+        reader.result as string,
+        8,
+        'rgbArray',
+        null,
+        1,
+      )) as Palette[]
 
       // remove duplicate rgb colors
       const uniqueColors = selectedColors.filter(
