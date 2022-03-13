@@ -1,6 +1,7 @@
 import {
   BlitzPage,
   GetServerSideProps,
+  GetStaticProps,
   invokeWithMiddleware,
   PromiseReturnType,
   usePaginatedQuery,
@@ -11,6 +12,7 @@ import getAlbums from 'app/data/queries/albums/getAlbums'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
+import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 
 const ITEMS_PER_PAGE = 32
 
@@ -18,27 +20,25 @@ export interface HomeProps {
   initialData: PromiseReturnType<typeof getAlbums>
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
-  query,
-  req,
-  res,
-}) => {
-  const initialData = await invokeWithMiddleware(
-    getAlbums,
-    {
-      orderBy: { id: 'asc' },
-      skip: ITEMS_PER_PAGE * Number(query.page ?? 0) || 0,
-      take: ITEMS_PER_PAGE,
-    },
-    { req, res },
-  )
+export const getServerSideProps = getGlobalServerSideProps(
+  async ({ query, req, res }) => {
+    const initialData = await invokeWithMiddleware(
+      getAlbums,
+      {
+        orderBy: { id: 'asc' },
+        skip: ITEMS_PER_PAGE * Number(query.page ?? 0) || 0,
+        take: ITEMS_PER_PAGE,
+      },
+      { req, res },
+    )
 
-  return {
-    props: {
-      initialData,
-    },
-  }
-}
+    return {
+      props: {
+        initialData,
+      },
+    }
+  },
+)
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()

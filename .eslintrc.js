@@ -1,6 +1,7 @@
 module.exports = {
-  extends: ['blitz', 'plugin:prettier/recommended'],
+  extends: ['blitz', 'formatjs', 'plugin:prettier/recommended'],
   rules: {
+    'formatjs/no-offset': 'error',
     'react-hooks/exhaustive-deps': 'off',
     'react/no-array-index-key': 'off',
     'no-restricted-imports': [
