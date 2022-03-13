@@ -1,8 +1,6 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
 import { defaultLocale, locales } from './i18n.json'
 
-const nextTranslate = require('next-translate')
-
 const config: BlitzConfig = {
   eslint: {
     // TODO: we need to enable this later but eslint packages are being super cringe
@@ -24,4 +22,4 @@ const config: BlitzConfig = {
   },
 }
 
-module.exports = nextTranslate(config)
+module.exports = config

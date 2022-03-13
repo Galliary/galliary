@@ -1,5 +1,4 @@
 import packageJson from 'package.json'
-import useTranslation from 'next-translate/useTranslation'
 const { galliary } = packageJson
 
 interface SimpleMetaProps {
@@ -8,10 +7,8 @@ interface SimpleMetaProps {
 }
 
 export const SimpleMeta = (props: SimpleMetaProps) => {
-  const { t } = useTranslation('common')
-
   const title = props.title ?? galliary.name
-  const description = props.description ?? t('description')
+  const description = props.description ?? galliary.description
 
   return (
     <>

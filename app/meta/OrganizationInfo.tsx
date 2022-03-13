@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { galliary } from 'package.json'
 import { jsonLdScriptProps } from 'react-schemaorg'
-import useTranslation from 'next-translate/useTranslation'
 import type { Organization, WebPage, WebSite } from 'schema-dts'
 
 export interface OrganizationInfoProps {}
@@ -15,15 +14,13 @@ const WEB_SITE_STRUCTURED_DATA = jsonLdScriptProps<WebSite>({
 })
 
 export const OrganizationInfo = ({}: OrganizationInfoProps) => {
-  const { t } = useTranslation('common')
-
   const WEB_PAGE_STRUCTURED_DATA = useMemo(
     () =>
       jsonLdScriptProps<WebPage>({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        headline: t('headline'),
-        description: t('description'),
+        headline: galliary.headline,
+        description: galliary.description,
         url: galliary.url,
         about: [
           {
@@ -42,7 +39,7 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: galliary.name,
-        alternateName: t('long-name'),
+        alternateName: galliary.longName,
         url: galliary.url,
         logo: galliary.logo,
         email: galliary.email,

@@ -1,11 +1,10 @@
+import { useMemo } from 'react'
 import { useRouter } from 'blitz'
 import { Article } from 'schema-dts'
 import { galliary } from 'package.json'
 import { Image, User } from '@prisma/client'
 import { CDN, ImageType } from 'app/utils/cdn'
 import { jsonLdScriptProps } from 'react-schemaorg'
-import { useMemo } from 'react'
-import useTranslation from 'next-translate/useTranslation'
 
 interface ImagePageProps {
   image: Image & {
@@ -19,8 +18,6 @@ export const ImagePageMeta = ({
   tags = galliary.tags,
 }: ImagePageProps) => {
   const router = useRouter()
-  const { t } = useTranslation('common')
-
   const url = galliary.url + router.asPath
 
   const ARTICLE_STRUCTURED_DATA = useMemo(
@@ -30,8 +27,8 @@ export const ImagePageMeta = ({
         '@type': 'Article',
         author: image.author.username,
         creator: image.author.username,
-        headline: `${image.title ?? t('defaults.image-name')} | ${t('short')}`,
-        name: `${image.title ?? t('defaults.image-name')} | ${t('short')}`,
+        headline: `${image.title ?? 'Untitled Image'} | ${galliary.short}`,
+        name: `${image.title ?? 'Untitled Image'} | ${galliary.short}`,
         url,
         mainEntityOfPage: url,
         keywords: tags.toString(),
@@ -50,9 +47,9 @@ export const ImagePageMeta = ({
           '@type': 'ImageObject',
           author: image.author.username,
           creator: image.author.username,
-          name: `${image.title ?? t('defaults.image-name')} - ${t('short')}`,
+          name: `${image.title ?? 'Untitled Image'} - ${galliary.short}`,
           keywords: tags.toString(),
-          description: t('description'),
+          description: galliary.description,
           url,
           embedUrl: CDN.getImageUrl(image.sourceId, ImageType.Large),
           contentUrl: CDN.getImageUrl(image.sourceId, ImageType.Public),
