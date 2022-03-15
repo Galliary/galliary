@@ -42,6 +42,7 @@ import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { getConnectionDetails } from 'app/auth/utils/getConnectionDetails'
 import { CogIcon } from 'app/components/icons/CogIcon'
+import { CacheService } from 'app/services/cache.service'
 
 export interface UserPageProps {
   initialData: PromiseReturnType<typeof getUserProfile>
@@ -52,10 +53,13 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async ({
   req,
   res,
 }) => {
-  const initialData = await invokeWithMiddleware(
-    getUserProfile,
-    { idOrUsername: query.userId },
-    { req, res },
+  const params: Parameters<typeof getUserProfile>[0] = {
+    idOrUsername: query.userId as string,
+  }
+
+  const initialData = await CacheService.cached(
+    ['getUserProfile', params],
+    () => invokeWithMiddleware(getUserProfile, params, { req, res }),
   )
 
   return {
