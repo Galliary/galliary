@@ -13,7 +13,6 @@ import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
-import { CacheService, CacheTimeInSeconds } from 'app/services/cache.service'
 
 const ITEMS_PER_PAGE = 32
 
@@ -29,11 +28,10 @@ export const getServerSideProps = getGlobalServerSideProps(
       take: ITEMS_PER_PAGE,
     }
 
-    const initialData = await CacheService.cached(
-      ['getAlbums', params],
-      () => invokeWithMiddleware(getAlbums, params, { req, res }),
-      CacheTimeInSeconds.Long,
-    )
+    const initialData = await invokeWithMiddleware(getAlbums, params, {
+      req,
+      res,
+    })
 
     return {
       props: {
