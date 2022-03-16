@@ -29,9 +29,7 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
       </Head>
 
       <VStack spacing={0} boxSize="full">
-        <Suspense fallback={<Loader />}>
-          <VersionDisplay />
-        </Suspense>
+        <VersionDisplay />
         <Suspense fallback={<Loader />}>
           <Header />
         </Suspense>

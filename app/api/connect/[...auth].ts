@@ -11,7 +11,7 @@ const ConnectApi: BlitzApiHandler = async (req, res) => {
   }
 
   return passportAuth({
-    successRedirectUrl: `/users/${session.userId}`,
+    successRedirectUrl: `/users/${session.userId}?success=open-connections-modal`,
     errorRedirectUrl: `/users/${session.userId}?error=account-linking-error`,
     strategies: ConfigService.getStrategies(req, res, StrategyType.Connect),
   })(req, res)
