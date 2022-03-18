@@ -11,6 +11,12 @@ export const username = z
   .max(64)
   .transform((str) => str.trim())
 
+export const alias = z
+  .string()
+  .min(2)
+  .max(64)
+  .transform((str) => str.trim())
+
 export const password = z
   .string()
   .min(10)
@@ -21,6 +27,11 @@ export const Signup = z.object({
   email,
   username,
   password,
+})
+
+export const UserEdit = z.object({
+  alias,
+  username,
 })
 
 export const Login = z.object({

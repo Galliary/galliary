@@ -12,6 +12,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { UserEditForm } from 'app/components/forms/UserEditForm'
 
 export type EditProfileModalProps = PropsForModal<{}>
 
@@ -33,7 +34,7 @@ const EditProfileModal = ({ ...disclosure }: EditProfileModalProps) => {
           <Text>Edit your profile</Text>
         </ModalHeader>
         <ModalBody>
-          <Text>lol</Text>
+          <UserEditForm></UserEditForm>
         </ModalBody>
         <ModalFooter>
           <HStack spacing={4} w="full" justify="space-between">
