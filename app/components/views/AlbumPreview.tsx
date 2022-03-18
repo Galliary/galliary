@@ -1,7 +1,7 @@
 import { Album } from '@prisma/client'
 import { Routes } from 'blitz'
 import { Box, Center, Image as Img } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { Suspense, useRef } from 'react'
 import favouriteAlbum from 'app/data/mutations/albums/favouriteAlbum'
 import {
   MotionBox,
@@ -15,6 +15,7 @@ import { Favourite } from 'app/components/views/Favourite'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
+import { Loader } from 'app/components/views/Loader'
 
 export interface EntityPreviewProps {
   item: Album & {
@@ -104,7 +105,9 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
               bg="background.full"
             >
               <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
-                <Favourite item={album} mutation={favouriteAlbum} />
+                <Suspense fallback={<Loader />}>
+                  <Favourite item={album} mutation={favouriteAlbum} />
+                </Suspense>
               </Box>
               <MotionBox
                 pointerEvents="none"

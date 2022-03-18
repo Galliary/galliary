@@ -2,9 +2,9 @@ import { Head } from 'blitz'
 import { Center, Text, VStack } from '@chakra-ui/react'
 import Layout from 'app/layouts/Layout'
 
-export default function Page404() {
-  const statusCode = 404
-  const title = 'This page could not be found'
+export default function Page500() {
+  const statusCode = 500
+  const title = 'Internal Server Error'
   return (
     <>
       <Head>

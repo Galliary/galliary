@@ -1,12 +1,18 @@
 import { getAntiCSRFToken } from 'blitz'
 import { CLOUDFLARE_ACCOUNT_HASH } from 'app/constants'
 
+export enum StaticImages {
+  SocialPreview = 'c301acf6-b759-4b0e-f7e2-78c475360900',
+}
+
 export enum ImageType {
+  Social = 'social',
   Public = 'public',
   Small = '96',
   Medium = '128',
   Large = '192',
   ExtraLarge = '256',
+  UltraLarge = '516',
 }
 
 export class CDN {

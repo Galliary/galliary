@@ -1,8 +1,16 @@
-import { Box, Button, HStack, Text, VStack, Wrap } from '@chakra-ui/react'
-import { Album, Image } from '@prisma/client'
-import { Fragment, ReactNode } from 'react'
-import { usePage } from 'app/data/hooks/usePage'
 import { Link } from 'app/components/Link'
+import { Fragment, ReactNode } from 'react'
+import { Album, Image } from '@prisma/client'
+import { usePage } from 'app/data/hooks/usePage'
+import {
+  Box,
+  Text,
+  Wrap,
+  Button,
+  HStack,
+  VStack,
+  useBreakpointValue,
+} from '@chakra-ui/react'
 
 interface GalleryViewControllerProps<Data extends Album | Image> {
   title?: null | string
@@ -18,7 +26,7 @@ interface GalleryViewControllerProps<Data extends Album | Image> {
   itemsPerPage?: number
 }
 
-export const DEFAULT_ITEMS_PER_PAGE = 32
+export const DEFAULT_ITEMS_PER_PAGE = 30
 
 export function GalleryViewController<Data extends Album | Image>({
   title,
@@ -34,15 +42,26 @@ export function GalleryViewController<Data extends Album | Image>({
 }: GalleryViewControllerProps<Data>) {
   const { page, next, prev } = usePage()
 
+  const [firstCount, secondCount] = useBreakpointValue({
+    base: [2, 4],
+    sm: [4, 8],
+    md: [6, 12],
+    lg: [8, 16],
+  }) ?? [8, 16]
+
+  const first = data.slice(0, firstCount)
+  const second = data.slice(firstCount, secondCount)
+  const final = data.slice(secondCount, data.length)
+
   return (
     <VStack
       py={8}
-      align="start"
-      spacing={8}
-      w="full"
-      maxW="content.width"
       px={4}
+      w="full"
+      spacing={8}
+      align="start"
       pos="relative"
+      maxW="content.width"
     >
       <VStack align="start" spacing={1} w="full">
         <HStack justify="space-between" w="full">
@@ -74,12 +93,31 @@ export function GalleryViewController<Data extends Album | Image>({
         </HStack>
       </VStack>
 
-      <Wrap p={0} spacing={1} align="center" justify="center">
-        {data.map((item) => (
-          <Fragment key={item.id}>{onDisplay(item)}</Fragment>
-        ))}
-        {data.length < itemsPerPage && addPrompt}
-      </Wrap>
+      <VStack align="center" spacing={1}>
+        {/* <HStack align="center" spacing={1}>
+          {onFeatureDisplay(featured)}
+          <Wrap as="div" p={0} spacing={1} align="center" justify="center">
+            {first.map((item, index) => (
+              <Fragment key={item?.id ?? index}>{onDisplay(item)}</Fragment>
+            ))}
+          </Wrap>
+        </HStack>
+
+        <HStack align="center" spacing={1}>
+          <Wrap p={0} spacing={1} align="center" justify="center">
+            {second.map((item, index) => (
+              <Fragment key={item?.id ?? index}>{onDisplay(item)}</Fragment>
+            ))}
+          </Wrap>
+          {onFeatureDisplay(featured)}
+        </HStack>*/}
+
+        <Wrap p={0} spacing={1} align="center" justify="center">
+          {data.map((item, index) => (
+            <Fragment key={item?.id ?? index}>{onDisplay(item)}</Fragment>
+          ))}
+        </Wrap>
+      </VStack>
 
       <HStack spacing={2}>
         {page !== 0 && <Button onClick={prev}>Previous</Button>}
