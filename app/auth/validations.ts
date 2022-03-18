@@ -11,7 +11,7 @@ export const username = z
   .max(64)
   .transform((str) => str.trim())
 
-export const alias = z
+export const nickname = z
   .string()
   .min(2)
   .max(64)
@@ -30,7 +30,7 @@ export const Signup = z.object({
 })
 
 export const UserEdit = z.object({
-  alias,
+  nickname,
   username,
 })
 

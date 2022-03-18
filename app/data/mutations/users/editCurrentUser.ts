@@ -5,7 +5,7 @@ import { CDN } from 'app/utils/cdn'
 
 const EditCurrentUser = z.object({
   username: z.string().optional(),
-  alias: z.string().optional(),
+  nickname: z.string().optional(),
 })
 
 export default resolver.pipe(
@@ -32,7 +32,7 @@ export default resolver.pipe(
       where: { id: ctx.session?.userId },
       data: {
         username: input.username,
-        nickname: input.alias,
+        nickname: input.nickname,
       },
     })
   },
