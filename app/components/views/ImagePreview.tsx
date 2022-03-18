@@ -1,7 +1,7 @@
 import { Image } from '@prisma/client'
 import { Routes } from 'blitz'
 import { Box, Center, Image as Img } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { Suspense, useRef } from 'react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
 import favouriteImage from 'app/data/mutations/images/favouriteImage'
 import { CDN } from 'app/utils/cdn'
@@ -11,6 +11,7 @@ import { Favourite } from 'app/components/views/Favourite'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
+import { Loader } from 'app/components/views/Loader'
 
 export interface EntityPreviewProps {
   item: Image & {
@@ -60,7 +61,9 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
             boxSize={size}
           >
             <Box pos="absolute" zIndex={10} top={0} left={0} p={2}>
-              <Favourite item={image} mutation={favouriteImage} />
+              <Suspense fallback={<Loader />}>
+                <Favourite item={image} mutation={favouriteImage} />
+              </Suspense>
             </Box>
             <Img
               ref={ref}

@@ -10,10 +10,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Maybe } from 'types'
-import { MotionBox, transitionFastConfig } from 'app/components/Motion'
+import { Link } from 'app/components/Link'
 import { CDN, ImageType } from 'app/utils/cdn'
 import { Tooltip } from 'app/components/Tooltip'
-import { Link } from 'app/components/Link'
+import { MotionBox, transitionFastConfig } from 'app/components/Motion'
 
 type AnyItem =
   | { id: string; sourceId: string; title: Maybe<string> }
@@ -79,13 +79,13 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     <Link
       boxSize="full"
       href={href}
-      rounded={'username' in item ? 'full' : 'md'}
+      rounded={'username' in item ? 'full' : 'sm'}
     >
       <Tooltip label={label}>
         <AspectRatio boxSize="full" ratio={1}>
           <MotionBox
             bg="ui.5"
-            rounded={'username' in item ? 'full' : 'md'}
+            rounded={'username' in item ? 'full' : 'sm'}
             boxSize="full"
             transition={transitionFastConfig}
             whileHover={{ backgroundColor: ui10, opacity: 0.8 }}

@@ -84,7 +84,10 @@ const EditImagePage: BlitzPage<EditImagePageProps> = ({ initialData }) => {
               })
 
               if (updated) {
-                await setQueryData(updated)
+                await setQueryData({
+                  ...updated,
+                  author: image.author,
+                })
                 router.push(
                   Routes.ShowImagePage({
                     albumId: image.albumId,

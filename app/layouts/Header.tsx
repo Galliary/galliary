@@ -15,6 +15,9 @@ import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 import { LoginController } from 'app/controllers/LoginController'
+import { Suspense } from 'react'
+import { Loader } from 'app/components/views/Loader'
+import { CDN, ImageType } from 'app/utils/cdn'
 
 export interface HeaderProps {}
 
@@ -34,7 +37,11 @@ export const UserLoggedInHeaderButtons = () => {
         as={Link}
         href={Routes.UserPage({ userId: currentUser.id })}
         boxSize={12}
-        src={currentUser.avatarUrl ?? ''}
+        src={
+          CDN.getImageUrl(currentUser.avatarSourceId ?? '', ImageType.Large) ??
+          currentUser.avatarUrl ??
+          ''
+        }
       />
     </>
   )
@@ -57,30 +64,33 @@ export const Header = ({}: HeaderProps) => (
         <Button as={Link} href={Routes.Home()}>
           Browse
         </Button>
-        <LoginController
-          action={
-            <Menu>
-              <MenuButton as={Button} variant="primary">
-                Login
-              </MenuButton>
-              <MenuList minW="200px">
-                {ENABLED_AUTH_STRATEGIES.map((strategy) => (
-                  <MenuItem
-                    key={strategy}
-                    as={Link}
-                    href={`/api/auth/${strategy.toLowerCase()}`}
-                  >
-                    <HStack>
-                      <Text>{strategy}</Text>
-                    </HStack>
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
-          }
-        >
-          <UserLoggedInHeaderButtons />
-        </LoginController>
+
+        <Suspense fallback={<Loader />}>
+          <LoginController
+            action={
+              <Menu>
+                <MenuButton as={Button} variant="primary">
+                  Login
+                </MenuButton>
+                <MenuList minW="200px">
+                  {ENABLED_AUTH_STRATEGIES.map((strategy) => (
+                    <MenuItem
+                      key={strategy}
+                      as={Link}
+                      href={`/api/auth/${strategy.toLowerCase()}`}
+                    >
+                      <HStack>
+                        <Text>{strategy}</Text>
+                      </HStack>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            }
+          >
+            <UserLoggedInHeaderButtons />
+          </LoginController>
+        </Suspense>
       </HStack>
     </HStack>
   </Center>

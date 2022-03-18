@@ -1,21 +1,26 @@
 import {
   BlitzPage,
-  GetServerSideProps,
-  GetStaticProps,
-  invokeWithMiddleware,
   PromiseReturnType,
   usePaginatedQuery,
+  invokeWithMiddleware,
+  Head,
 } from 'blitz'
 import Layout from 'app/layouts/Layout'
+import { Box, HStack } from '@chakra-ui/react'
+import { CDN, ImageType, StaticImages } from 'app/utils/cdn'
+import { ImageMeta } from 'app/meta/ImageMeta'
 import { usePage } from 'app/data/hooks/usePage'
+import { SimpleMeta } from 'app/meta/SimpleMeta'
 import getAlbums from 'app/data/queries/albums/getAlbums'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
-import { CacheService, CacheTimeInSeconds } from 'app/services/cache.service'
+import packageJson from 'package.json'
+const { galliary } = packageJson
 
-const ITEMS_PER_PAGE = 32
+const ITEMS_PER_PAGE = 42
 
 export interface HomeProps {
   initialData: PromiseReturnType<typeof getAlbums>
@@ -29,11 +34,10 @@ export const getServerSideProps = getGlobalServerSideProps(
       take: ITEMS_PER_PAGE,
     }
 
-    const initialData = await CacheService.cached(
-      ['getAlbums', params],
-      () => invokeWithMiddleware(getAlbums, params, { req, res }),
-      CacheTimeInSeconds.Long,
-    )
+    const initialData = await invokeWithMiddleware(getAlbums, params, {
+      req,
+      res,
+    })
 
     return {
       props: {
@@ -45,6 +49,8 @@ export const getServerSideProps = getGlobalServerSideProps(
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
+  const [size] = useThumbnailSizing()
+
   const [{ albums, hasMore }] = usePaginatedQuery(
     getAlbums,
     {
@@ -57,13 +63,41 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
     },
   )
 
+  const filledAlbums = [
+    ...albums,
+    ...[...Array(ITEMS_PER_PAGE - albums.length)].fill(null),
+  ]
+
   return (
-    <GalleryViewController
-      data={albums}
-      hasMore={hasMore}
-      addPrompt={<AddNewItem />}
-      onDisplay={(data) => <AlbumPreview item={data} />}
-    />
+    <>
+      <Head>
+        <SimpleMeta title={galliary.name} description={galliary.description} />
+        <ImageMeta
+          imageWidth="1200"
+          imageHeight="630"
+          imageType="image/png"
+          imageAlt={galliary.name}
+          imageUrl={CDN.getImageUrl(
+            StaticImages.SocialPreview,
+            ImageType.Social,
+          )}
+        />
+      </Head>
+      <HStack spacing={8}>
+        <GalleryViewController
+          data={filledAlbums}
+          hasMore={hasMore}
+          addPrompt={<AddNewItem />}
+          onDisplay={(data) =>
+            data ? (
+              <AlbumPreview item={data} />
+            ) : (
+              <Box bg="ui.5" boxSize={size} />
+            )
+          }
+        />
+      </HStack>
+    </>
   )
 }
 
