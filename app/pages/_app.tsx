@@ -12,6 +12,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import LoginForm from 'app/components/forms/LoginForm'
 import { ModalController } from 'app/controllers/ModalController'
 import { LocaleController } from 'app/controllers/LocaleController'
+import Layout from 'app/layouts/Layout'
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
@@ -25,10 +26,12 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     )
   } else {
     return (
-      <ErrorComponent
-        statusCode={error.statusCode || 400}
-        title={error.message || error.name}
-      />
+      <Layout>
+        <ErrorComponent
+          statusCode={error.statusCode || 400}
+          title={error.message || error.name}
+        />
+      </Layout>
     )
   }
 }

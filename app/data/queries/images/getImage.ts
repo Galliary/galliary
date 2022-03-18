@@ -8,7 +8,12 @@ const GetImage = z.object({
 })
 
 export default resolver.pipe(resolver.zod(GetImage), async ({ id }) => {
-  const image = await db.image.findFirst({ where: { id } })
+  const image = await db.image.findFirst({
+    where: { id },
+    include: {
+      author: { select: { id: true, nickname: true, username: true } },
+    },
+  })
 
   if (!image) throw new NotFoundError()
 

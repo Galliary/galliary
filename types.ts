@@ -1,7 +1,14 @@
 import * as React from 'react'
-import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from 'blitz'
+import {
+  DefaultCtx,
+  PromiseReturnType,
+  SessionContext,
+  SimpleRolesIsAuthorized,
+} from 'blitz'
 import { User, UserRole } from 'db'
 import { UseDisclosureReturn } from '@chakra-ui/react'
+import { NextPage } from 'next'
+import getCurrentUser from 'app/data/queries/users/getCurrentUser'
 
 export type Maybe<T> = T | null | undefined
 export type NotUndefined<T> = T extends undefined ? never : T
@@ -12,6 +19,7 @@ declare module 'blitz' {
   export interface Ctx extends DefaultCtx {
     session: SessionContext
   }
+
   export interface Session {
     isAuthorized: SimpleRolesIsAuthorized<UserRole>
     PublicData: {
@@ -19,6 +27,12 @@ declare module 'blitz' {
       role: UserRole
     }
   }
+
+  export type GlobalPageProps = {
+    currentUser: PromiseReturnType<typeof getCurrentUser>
+  }
+
+  export type BlitzPage<P = {}, IP = P> = NextPage<P & GlobalPageProps, IP>
 }
 
 declare global {

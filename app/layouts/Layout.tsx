@@ -1,13 +1,11 @@
-import { Suspense } from 'react'
 import { Body } from 'app/layouts/Body'
 import { BlitzLayout, Head } from 'blitz'
+import { VStack } from '@chakra-ui/react'
 import { Header } from 'app/layouts/Header'
 import { Footer } from 'app/layouts/Footer'
-import { VStack } from '@chakra-ui/react'
-import { VersionDisplay } from 'app/components/views/VersionDisplay'
-import { Loader } from 'app/components/views/Loader'
 import { GlobalMeta } from 'app/meta/GlobalMeta'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
+import { VersionDisplay } from 'app/components/views/VersionDisplay'
 
 const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
   title,
@@ -25,22 +23,15 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
         />
 
         <GlobalMeta />
-        <SimpleMeta />
       </Head>
 
       <VStack spacing={0} boxSize="full">
         <VersionDisplay />
-        <Suspense fallback={<Loader />}>
-          <Header />
-        </Suspense>
-        <Body>
-          <Suspense fallback={<Loader />}>{children}</Suspense>
-        </Body>
-        {!hideFooter && (
-          <Suspense fallback={<Loader />}>
-            <Footer />
-          </Suspense>
-        )}
+        <Header />
+        <VStack boxSize="full">
+          <Body>{children}</Body>
+          {!hideFooter && <Footer />}
+        </VStack>
       </VStack>
     </>
   )

@@ -208,6 +208,7 @@ export const ProfileBanner = ({
                 <input hidden type="file" onChange={handleImageUpdate} />
                 {!isEditing && (
                   <MotionBox
+                    style={{ position: 'absolute', right: 0, bottom: 0 }}
                     transition={transitionConfig}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}

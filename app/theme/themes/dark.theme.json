@@ -37,6 +37,12 @@
     "banner": {
       "height": "196px"
     },
+    "featured": {
+      "base": "196px",
+      "sm": "260px",
+      "md": "388px",
+      "lg": "516px"
+    },
     "thumbnail": {
       "base": "96px",
       "sm": "128px",

@@ -1,6 +1,6 @@
 import {
   BlitzPage,
-  GetServerSideProps,
+  Head,
   invokeWithMiddleware,
   PromiseReturnType,
   Routes,
@@ -14,12 +14,13 @@ import {
   HStack,
   IconButton,
   Image as ChakraImage,
+  StackDivider,
   useBoolean,
   useDisclosure,
 } from '@chakra-ui/react'
 import { DeleteImageModal } from 'app/components/modals/DeleteImageModal'
 import { InvertCircleCornerIcon } from 'app/components/icons/InvertCircleCornerIcon'
-import { CDN } from 'app/utils/cdn'
+import { CDN, ImageType } from 'app/utils/cdn'
 import {
   MotionBox,
   transitionConfig,
@@ -34,30 +35,37 @@ import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import Layout from 'app/layouts/Layout'
+import { ImageMeta } from 'app/meta/ImageMeta'
+import { SimpleMeta } from 'app/meta/SimpleMeta'
+import packageJson from 'package.json'
+import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
+
+const { galliary } = packageJson
 
 export interface ImagePageProps {
   initialData: PromiseReturnType<typeof getImage>
 }
 
-export const getServerSideProps: GetServerSideProps<ImagePageProps> = async ({
-  query,
-  req,
-  res,
+export const getServerSideProps = getGlobalServerSideProps<ImagePageProps>(
+  async ({ query, req, res }) => {
+    const initialData = await invokeWithMiddleware(
+      getImage,
+      { id: query.imageId },
+      { req, res },
+    )
+
+    return {
+      props: {
+        initialData,
+      },
+    }
+  },
+)
+
+const ShowImagePage: BlitzPage<ImagePageProps> = ({
+  initialData,
+  currentUser,
 }) => {
-  const initialData = await invokeWithMiddleware(
-    getImage,
-    { id: query.imageId },
-    { req, res },
-  )
-
-  return {
-    props: {
-      initialData,
-    },
-  }
-}
-
-const ShowImagePage: BlitzPage<ImagePageProps> = ({ initialData }) => {
   const { goBack } = usePage()
   const deleteConfirmDisclosure = useDisclosure()
   const albumId = useParam('albumId', 'string')
@@ -67,169 +75,48 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({ initialData }) => {
   const [isLoaded, setLoaded] = useBoolean(false)
   const [isHovering, setHovering] = useBoolean(false)
 
+  const isAuthor = image.authorId === currentUser?.id
+
   return (
-    <Center boxSize="full" pos="relative">
-      <DeleteImageModal
-        imageId={image.id}
-        disclosure={deleteConfirmDisclosure}
-      />
-      <Center pos="relative" boxSize="full" overflow="hidden">
-        <Box
-          zIndex={-1}
-          pos="absolute"
-          inset={0}
-          boxSize="full"
-          bg={`rgb(${image.colors[0]}, ${image.colors[1]}, ${image.colors[2]})`}
+    <>
+      <Head>
+        <SimpleMeta
+          title={`${galliary.name} | ${image.title ?? 'Untitled Image'} by ${
+            image.author?.nickname ?? image.author?.username
+          }`}
+          description={image.description ?? galliary.description}
         />
-        {!isLoaded && (
-          <Center
-            pointerEvents="none"
-            userSelect="none"
-            pos="absolute"
-            zIndex={2}
-            inset={0}
-            margin="auto"
-          >
-            <LogoLoadingAnimation />
-          </Center>
-        )}
-        <MotionBox
-          transition={transitionConfig}
-          animate={{ opacity: Number(isLoaded) }}
-        >
-          <ChakraImage
-            pos="absolute"
-            boxSize="full"
-            inset={0}
+        <ImageMeta
+          imageWidth="1200"
+          imageHeight="630"
+          imageType="image/png"
+          imageAlt={image.title ?? 'Untitled Image'}
+          imageUrl={CDN.getImageUrl(image.sourceId, ImageType.Social)}
+        />
+      </Head>
+      <Center boxSize="full" pos="relative">
+        <DeleteImageModal
+          imageId={image.id}
+          disclosure={deleteConfirmDisclosure}
+        />
+        <Center pos="relative" boxSize="full" overflow="hidden">
+          <Box
             zIndex={-1}
-            src={CDN.getImageUrl(image.sourceId)}
-            objectFit="cover"
+            pos="absolute"
+            inset={0}
+            boxSize="full"
+            bg={`rgb(${image.colors[0]}, ${image.colors[1]}, ${image.colors[2]})`}
           />
-        </MotionBox>
-        <Center boxSize="full" backdropFilter="blur(45px)" bg="bg-overlay">
-          {albumId && imageId && (
-            <Center pos="absolute" top={0} left={0} right={0}>
-              <Box
-                pb={6}
-                overflow="hidden"
-                onPointerEnter={setHovering.on}
-                onPointerLeave={setHovering.off}
-              >
-                <MotionBox
-                  initial={{ y: '0%' }}
-                  animate={
-                    isHovering
-                      ? {
-                          y: '0%',
-                          transition: {
-                            ...transitionMediumConfig,
-                            delay: 0,
-                          },
-                        }
-                      : {
-                          y: '-100%',
-                          transition: {
-                            ...transitionConfig,
-                            delay: 2,
-                          },
-                        }
-                  }
-                  _hover={{
-                    transitionDelay: 0,
-                  }}
-                >
-                  <HStack spacing={0} align="start">
-                    <InvertCircleCornerIcon
-                      transform="rotate(90deg)"
-                      color="background.full-darker"
-                    />
-                    <Box
-                      pos="relative"
-                      p={4}
-                      bg="background.full-darker"
-                      roundedBottom="lg"
-                    >
-                      <MotionBox
-                        zIndex={-1}
-                        pos="absolute"
-                        bottom={-6}
-                        w="30%"
-                        h={6}
-                        roundedBottom="md"
-                        bg="background.full"
-                        insetX={0}
-                        marginX="auto"
-                        animate={
-                          isHovering
-                            ? {
-                                y: -6 * 4,
-                                transition: {
-                                  ...transitionMediumConfig,
-                                  delay: 0,
-                                },
-                              }
-                            : {
-                                y: 0,
-                                transition: {
-                                  ...transitionConfig,
-                                  delay: 2,
-                                },
-                              }
-                        }
-                      >
-                        <Box
-                          pos="absolute"
-                          insetX={3}
-                          bottom={4}
-                          rounded="md"
-                          bg="ui.5"
-                          h={1}
-                        />
-                        <Box
-                          pos="absolute"
-                          insetX={6}
-                          bottom={2}
-                          rounded="md"
-                          bg="ui.5"
-                          h={1}
-                        />
-                      </MotionBox>
-                      <HStack spacing={4}>
-                        <Button onClick={goBack}>Go back</Button>
-                        <Tooltip label="Edit Image">
-                          <IconButton
-                            p={3}
-                            as={Link}
-                            aria-label="Edit Image"
-                            icon={<EditIcon />}
-                            href={Routes.EditImagePage({
-                              albumId: albumId ?? '',
-                              imageId: image.id,
-                            })}
-                          />
-                        </Tooltip>
-                        <Tooltip label="Fullscreen">
-                          {/* TODO: Actually implement this */}
-                          <IconButton
-                            p={3}
-                            aria-label="Fullscreen"
-                            icon={<FullscreenIcon />}
-                          />
-                        </Tooltip>
-                        <Tooltip label="Delete Image">
-                          <IconButton
-                            p={3}
-                            aria-label="Delete Image"
-                            icon={<DeleteIcon color="status.bad" />}
-                            onClick={deleteConfirmDisclosure.onOpen}
-                          />
-                        </Tooltip>
-                      </HStack>
-                    </Box>
-                    <InvertCircleCornerIcon color="background.full-darker" />
-                  </HStack>
-                </MotionBox>
-              </Box>
+          {!isLoaded && (
+            <Center
+              pointerEvents="none"
+              userSelect="none"
+              pos="absolute"
+              zIndex={2}
+              inset={0}
+              margin="auto"
+            >
+              <LogoLoadingAnimation />
             </Center>
           )}
           <MotionBox
@@ -237,17 +124,167 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({ initialData }) => {
             animate={{ opacity: Number(isLoaded) }}
           >
             <ChakraImage
-              objectFit="contain"
+              pos="absolute"
+              boxSize="full"
+              inset={0}
+              zIndex={-1}
               src={CDN.getImageUrl(image.sourceId)}
-              onLoad={setLoaded.on}
+              objectFit="cover"
             />
           </MotionBox>
+          <Center boxSize="full" backdropFilter="blur(45px)" bg="bg-overlay">
+            {albumId && imageId && (
+              <Center pos="absolute" top={0} left={0} right={0}>
+                <Box
+                  pb={6}
+                  overflow="hidden"
+                  onPointerEnter={setHovering.on}
+                  onPointerLeave={setHovering.off}
+                >
+                  <MotionBox
+                    initial={{ y: '0%' }}
+                    animate={
+                      isHovering
+                        ? {
+                            y: '0%',
+                            transition: {
+                              ...transitionMediumConfig,
+                              delay: 0,
+                            },
+                          }
+                        : {
+                            y: '-100%',
+                            transition: {
+                              ...transitionConfig,
+                              delay: 2,
+                            },
+                          }
+                    }
+                    _hover={{
+                      transitionDelay: 0,
+                    }}
+                  >
+                    <HStack spacing={0} align="start">
+                      <InvertCircleCornerIcon
+                        transform="rotate(90deg)"
+                        color="background.full"
+                      />
+                      <Box
+                        pos="relative"
+                        p={4}
+                        bg="background.full"
+                        roundedBottom="lg"
+                      >
+                        <MotionBox
+                          zIndex={-1}
+                          pos="absolute"
+                          bottom={-6}
+                          w="30%"
+                          h={6}
+                          roundedBottom="md"
+                          bg="background.full"
+                          insetX={0}
+                          marginX="auto"
+                          animate={
+                            isHovering
+                              ? {
+                                  y: -6 * 4,
+                                  transition: {
+                                    ...transitionMediumConfig,
+                                    delay: 0,
+                                  },
+                                }
+                              : {
+                                  y: 0,
+                                  transition: {
+                                    ...transitionConfig,
+                                    delay: 2,
+                                  },
+                                }
+                          }
+                        >
+                          <Box
+                            pos="absolute"
+                            insetX={3}
+                            bottom={4}
+                            rounded="md"
+                            bg="ui.5"
+                            h={1}
+                          />
+                          <Box
+                            pos="absolute"
+                            insetX={6}
+                            bottom={2}
+                            rounded="md"
+                            bg="ui.5"
+                            h={1}
+                          />
+                        </MotionBox>
+                        <HStack
+                          spacing={4}
+                          divider={<StackDivider color="ui.5" />}
+                        >
+                          <HStack spacing={4}>
+                            <Button onClick={goBack}>Go back</Button>
+                            <Tooltip label="Fullscreen">
+                              {/* TODO: Actually implement this */}
+                              <IconButton
+                                p={3}
+                                aria-label="Fullscreen"
+                                icon={<FullscreenIcon />}
+                              />
+                            </Tooltip>
+                          </HStack>
+                          {isAuthor && (
+                            <HStack spacing={4}>
+                              <Tooltip label="Edit">
+                                <IconButton
+                                  p={3}
+                                  as={Link}
+                                  aria-label="Edit"
+                                  icon={<EditIcon />}
+                                  href={Routes.EditImagePage({
+                                    albumId: albumId ?? '',
+                                    imageId: image.id,
+                                  })}
+                                />
+                              </Tooltip>
+
+                              <Tooltip label="Delete">
+                                <IconButton
+                                  p={3}
+                                  aria-label="Delete"
+                                  icon={<DeleteIcon color="status.bad" />}
+                                  onClick={deleteConfirmDisclosure.onOpen}
+                                />
+                              </Tooltip>
+                            </HStack>
+                          )}
+                        </HStack>
+                      </Box>
+                      <InvertCircleCornerIcon color="background.full" />
+                    </HStack>
+                  </MotionBox>
+                </Box>
+              </Center>
+            )}
+            <MotionBox
+              transition={transitionConfig}
+              animate={{ opacity: Number(isLoaded) }}
+            >
+              <ChakraImage
+                objectFit="contain"
+                src={CDN.getImageUrl(image.sourceId, ImageType.Public)}
+                onLoad={setLoaded.on}
+              />
+            </MotionBox>
+          </Center>
         </Center>
       </Center>
-    </Center>
+    </>
   )
 }
 
-ShowImagePage.getLayout = (page) => <Layout>{page}</Layout>
+ShowImagePage.getLayout = (page) => <Layout hideFooter>{page}</Layout>
 
 export default ShowImagePage
