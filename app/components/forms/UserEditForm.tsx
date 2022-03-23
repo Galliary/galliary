@@ -10,7 +10,6 @@ import { User } from '@prisma/client'
 
 type UserEditFormProps = {
   onSuccess?: (user: PromiseReturnType<typeof userEdit>) => void
-  currentUser: User
 }
 
 export const UserEditForm = (props: UserEditFormProps) => {
@@ -18,14 +17,21 @@ export const UserEditForm = (props: UserEditFormProps) => {
 
   const currentUser = useCurrentUser()
 
+  if(!currentUser)
+  {
+    return (<Text as="span">
+      No user logged in, are you supposed to be here in the first place?
+    </Text>)
+  }
+
   return (
     <VStack align="start" spacing={8}>
       <Form
         submitText="Done"
         schema={UserEdit}
         initialValues={{
-          nickname: currentUser!.nickname!,
-          username: currentUser!.username,
+          nickname: currentUser.nickname!,
+          username: currentUser.username,
         }}
         onSubmit={async (values) => {
           await userEditMutation(values)

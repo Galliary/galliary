@@ -36,7 +36,7 @@ const EditProfileModal = ({ ...disclosure }: EditProfileModalProps) => {
           <Text>Edit your profile</Text>
         </ModalHeader>
         <ModalBody>
-          <UserEditForm initialValues={} />
+          <UserEditForm></UserEditForm>
         </ModalBody>
         <ModalFooter>
           <HStack spacing={4} w="full" justify="space-between">
