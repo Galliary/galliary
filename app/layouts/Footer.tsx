@@ -1,6 +1,7 @@
 import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react'
 import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
 import { Link } from 'app/components/Link'
+import { DISCORD_SUPPORT_SERVER_URL } from 'app/constants'
 
 export interface FooterProps {}
 
@@ -64,7 +65,7 @@ export const Footer = ({}: FooterProps) => (
               as={Text}
               rel="external"
               target="_blank"
-              href="https://discord.gg/sry29tvsbh"
+              href={DISCORD_SUPPORT_SERVER_URL}
               textStyle="label.medium"
             >
               discord.gg
@@ -94,7 +95,7 @@ export const Footer = ({}: FooterProps) => (
               as={Text}
               rel="external"
               target="_blank"
-              href="https://discord.gg/sry29tvsbh"
+              href={DISCORD_SUPPORT_SERVER_URL}
               textStyle="label.medium"
             >
               discord.gg

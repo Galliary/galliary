@@ -71,7 +71,7 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   return (
     <>
       <Head>
-        <SimpleMeta title={galliary.name} description={galliary.description} />
+        <SimpleMeta />
         <ImageMeta
           imageWidth="1200"
           imageHeight="630"
