@@ -1,7 +1,9 @@
 import { useRouter } from 'blitz'
-import { PropsWithChildren } from 'react'
-import { IntlProvider, MessageFormatElement } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 import i18n from 'i18n.json'
+
+import type { PropsWithChildren } from 'react'
+import type { MessageFormatElement } from 'react-intl'
 
 const { defaultLocale } = i18n
 

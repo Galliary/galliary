@@ -1,4 +1,4 @@
-import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react'
+import { Box, Center, HStack, Text, VStack } from '@chakra-ui/layout'
 import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
 import { Link } from 'app/components/Link'
 

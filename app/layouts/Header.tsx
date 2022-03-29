@@ -1,16 +1,8 @@
 import { Routes } from 'blitz'
-import {
-  Avatar,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from '@chakra-ui/react'
+import { Center, Heading, HStack, Text } from '@chakra-ui/layout'
+import { Avatar } from '@chakra-ui/avatar'
+import { Button } from '@chakra-ui/button'
+import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
 import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'

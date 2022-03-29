@@ -1,8 +1,7 @@
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
+import { Button } from '@chakra-ui/button'
+import { HStack, Text } from '@chakra-ui/layout'
 import {
-  Button,
-  HStack,
-  MenuItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,8 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
-} from '@chakra-ui/react'
+} from '@chakra-ui/modal'
 import { Link } from 'app/components/Link'
 import { PropsForModal } from 'types'
 

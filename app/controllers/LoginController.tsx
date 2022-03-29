@@ -1,8 +1,8 @@
 import { Routes } from 'blitz'
-import { Button } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/button'
 import { Link } from 'app/components/Link'
-import { PropsWithChildren, ReactNode } from 'react'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
+import type { PropsWithChildren, ReactNode } from 'react'
 
 interface LoginControllerProps {
   action?: ReactNode

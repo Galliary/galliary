@@ -1,7 +1,7 @@
 import { PropsForModal } from 'types'
+import { Button } from '@chakra-ui/button'
+import { HStack, Text } from '@chakra-ui/layout'
 import {
-  Button,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,9 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
+} from '@chakra-ui/modal'
 
 export type EditProfileModalProps = PropsForModal<{}>
 

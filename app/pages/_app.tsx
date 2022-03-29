@@ -7,8 +7,6 @@ import {
   ErrorFallbackProps,
   useQueryErrorResetBoundary,
 } from 'blitz'
-import { theme } from 'app/theme'
-import { ChakraProvider } from '@chakra-ui/react'
 import LoginForm from 'app/components/forms/LoginForm'
 import { ModalController } from 'app/controllers/ModalController'
 import { LocaleController } from 'app/controllers/LocaleController'
@@ -40,18 +38,16 @@ function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <ChakraProvider theme={theme}>
-      <ModalController>
-        <ErrorBoundary
-          FallbackComponent={RootErrorFallback}
-          onReset={useQueryErrorResetBoundary().reset}
-        >
-          <LocaleController messages={pageProps.translations}>
-            {getLayout(<Component {...pageProps} />)}
-          </LocaleController>
-        </ErrorBoundary>
-      </ModalController>
-    </ChakraProvider>
+    <ModalController>
+      <ErrorBoundary
+        FallbackComponent={RootErrorFallback}
+        onReset={useQueryErrorResetBoundary().reset}
+      >
+        <LocaleController messages={pageProps.translations}>
+          {getLayout(<Component {...pageProps} />)}
+        </LocaleController>
+      </ErrorBoundary>
+    </ModalController>
   )
 }
 
