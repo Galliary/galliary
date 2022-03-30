@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useRouter } from 'blitz'
 import { Article } from 'schema-dts'
-import { galliary } from 'package.json'
 import { Image, User } from '@prisma/client'
 import { CDN, ImageType } from 'app/utils/cdn'
 import { jsonLdScriptProps } from 'react-schemaorg'
+import { SiteDetails } from 'app/constants'
 
 interface ImagePageProps {
   image: Image & {
@@ -15,10 +15,10 @@ interface ImagePageProps {
 
 export const ImagePageMeta = ({
   image,
-  tags = galliary.tags,
+  tags = SiteDetails.Tags,
 }: ImagePageProps) => {
   const router = useRouter()
-  const url = galliary.url + router.asPath
+  const url = SiteDetails.Url + router.asPath
 
   const ARTICLE_STRUCTURED_DATA = useMemo(
     () =>
@@ -27,8 +27,12 @@ export const ImagePageMeta = ({
         '@type': 'Article',
         author: image.author.username,
         creator: image.author.username,
-        headline: `${image.title ?? 'Untitled Image'} | ${galliary.short}`,
-        name: `${image.title ?? 'Untitled Image'} | ${galliary.short}`,
+        headline: `${image.title ?? 'Untitled Image'} | ${
+          SiteDetails.DescriptionShort
+        }`,
+        name: `${image.title ?? 'Untitled Image'} | ${
+          SiteDetails.DescriptionShort
+        }`,
         url,
         mainEntityOfPage: url,
         keywords: tags.toString(),
@@ -36,20 +40,22 @@ export const ImagePageMeta = ({
         datePublished: image.createdAt.toISOString(),
         publisher: {
           '@type': 'Organization',
-          name: galliary.name,
+          name: SiteDetails.Name,
           logo: {
             '@type': 'ImageObject',
-            url: galliary.logo,
+            url: SiteDetails.Logo,
           },
-          sameAs: galliary.socials.map((social) => social.url),
+          sameAs: SiteDetails.Socials.map((social) => social.url),
         },
         image: {
           '@type': 'ImageObject',
           author: image.author.username,
           creator: image.author.username,
-          name: `${image.title ?? 'Untitled Image'} - ${galliary.short}`,
+          name: `${image.title ?? 'Untitled Image'} - ${
+            SiteDetails.DescriptionShort
+          }`,
           keywords: tags.toString(),
-          description: galliary.description,
+          description: SiteDetails.Description,
           url,
           embedUrl: CDN.getImageUrl(image.sourceId, ImageType.Large),
           contentUrl: CDN.getImageUrl(image.sourceId, ImageType.Public),

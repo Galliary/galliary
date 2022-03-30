@@ -1,5 +1,4 @@
-import packageJson from 'package.json'
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 interface SimpleMetaProps {
   title?: string
@@ -7,8 +6,8 @@ interface SimpleMetaProps {
 }
 
 export const SimpleMeta = (props: SimpleMetaProps) => {
-  const title = props.title ?? galliary.name
-  const description = props.description ?? galliary.description
+  const title = props.title ?? SiteDetails.Name
+  const description = props.description ?? SiteDetails.Description
 
   return (
     <>

@@ -19,10 +19,12 @@ test.skip('renders blitz documentation link', () => {
     username: 'synqat',
     nickname: 'Synqat',
     avatarUrl: '#',
+    avatarSourceId: '#',
   })
 
   const { getByText } = render(
     <Home
+      currentUser={mockUseCurrentUser()}
       initialData={{
         count: 0,
         albums: [],

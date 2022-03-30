@@ -6,12 +6,12 @@ import { DISCORD_SUPPORT_SERVER_URL } from 'app/constants'
 export interface FooterProps {}
 
 export const Footer = ({}: FooterProps) => (
-  <VStack w="full" spacing={0}>
+  <VStack as="footer" w="full" spacing={0}>
     <Center p={16} w="full" bg="flow.40">
       <HStack w="header.width" py={16} spacing={16} justify="space-between">
         <Box flexShrink={0}>
           <VStack align="start">
-            <Text as="h2" textStyle="display.medium" color="ui.80">
+            <Text as="h4" textStyle="display.medium" color="ui.80">
               Galliary
             </Text>
             <Text

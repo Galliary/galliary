@@ -37,10 +37,8 @@ import { Link } from 'app/components/Link'
 import Layout from 'app/layouts/Layout'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
-import packageJson from 'package.json'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
-
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 export interface ImagePageProps {
   initialData: PromiseReturnType<typeof getImage>
@@ -81,10 +79,10 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
     <>
       <Head>
         <SimpleMeta
-          title={`${galliary.name} | ${image.title ?? 'Untitled Image'} by ${
+          title={`${SiteDetails.Name} | ${image.title ?? 'Untitled Image'} by ${
             image.author?.nickname ?? image.author?.username
           }`}
-          description={image.description ?? galliary.description}
+          description={image.description ?? SiteDetails.Description}
         />
         <ImageMeta
           imageWidth="1200"

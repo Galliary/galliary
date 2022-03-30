@@ -1,17 +1,15 @@
 import { useMemo } from 'react'
 import { MiscMeta } from 'app/meta/MiscMeta'
 import { LocaleMeta } from 'app/meta/LocaleMeta'
-import packageJson from 'package.json'
-
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 export interface GlobalMetaProps {}
 
-const GALLIARY_TAGS = galliary.tags.join(',')
+const KEYWORDS = SiteDetails.Tags.join(',')
 
 export const GlobalMeta = ({}: GlobalMetaProps) => {
   const twitter = useMemo(
-    () => galliary.socials.find((social) => social.type === 'twitter'),
+    () => SiteDetails.Socials.find((social) => social.type === 'twitter'),
     [],
   )
 
@@ -20,13 +18,13 @@ export const GlobalMeta = ({}: GlobalMetaProps) => {
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <meta name="theme-color" content={galliary.color} />
-      <meta name="keywords" content={GALLIARY_TAGS} />
+      <meta name="theme-color" content={SiteDetails.BrandColor} />
+      <meta name="keywords" content={KEYWORDS} />
 
       <meta property="og:type" content="website" />
 
-      <meta property="og:url" content={galliary.url} />
-      <meta property="og:site_name" content={galliary.name} />
+      <meta property="og:url" content={SiteDetails.Url} />
+      <meta property="og:site_name" content={SiteDetails.Name} />
 
       <meta name="twitter:card" content="summary_large_image" />
 

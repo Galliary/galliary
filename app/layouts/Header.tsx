@@ -1,6 +1,7 @@
 import { Routes } from 'blitz'
 import {
   Avatar,
+  Box,
   Button,
   Center,
   Heading,
@@ -10,9 +11,10 @@ import {
   MenuItem,
   MenuList,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { Link } from 'app/components/Link'
-import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
+import { ENABLED_AUTH_STRATEGIES, SiteDetails } from 'app/constants'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 import { LoginController } from 'app/controllers/LoginController'
 import { Suspense } from 'react'
@@ -48,7 +50,7 @@ export const UserLoggedInHeaderButtons = () => {
 }
 
 export const Header = ({}: HeaderProps) => (
-  <Center bg="flow.20" w="full" px={4} flexShrink={0}>
+  <Center as="header" bg="flow.20" w="full" px={4} flexShrink={0}>
     <HStack
       justify="space-between"
       h="header.height"

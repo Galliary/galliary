@@ -2,32 +2,6 @@
   "private": true,
   "name": "galliary",
   "version": "1.0.0-beta",
-  "galliary": {
-    "name": "Galliary",
-    "longName": "Galliary Image App",
-    "short": "Explore and share images!",
-    "headline": "Explore and share photography, albums and images with others!",
-    "description": "Galliary - Upload photography for free and sort them in albums. Get user feedback and share high quality images to everyone.",
-    "email": "contact@galliary.com",
-    "url": "https://galliary.com",
-    "logo": "https://galliary.com/logo.png",
-    "color": "#3574D2",
-    "socials": [
-      {
-        "type": "twitter",
-        "handle": "GalliaryApp",
-        "url": "https://twitter.com/GalliaryApp"
-      }
-    ],
-    "tags": [
-      "photography",
-      "gallery",
-      "photo",
-      "album",
-      "image",
-      "free"
-    ]
-  },
   "scripts": {
     "dev": "blitz dev",
     "build": "blitz build",

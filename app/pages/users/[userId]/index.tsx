@@ -40,9 +40,7 @@ import { Loader } from 'app/components/views/Loader'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
-import packageJson from 'package.json'
-
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 export interface UserPageProps {
   initialData: PromiseReturnType<typeof getUserProfile>
@@ -100,14 +98,14 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
   return (
     <>
       <SimpleMeta
-        title={`${galliary.name} | ${user.nickname ?? user.username}`}
+        title={`${SiteDetails.Name} | ${user.nickname ?? user.username}`}
         description={user.bio ?? 'I am a new Galliary user!'}
       />
       <ImageMeta
         imageWidth="1200"
         imageHeight="630"
         imageType="image/png"
-        imageAlt={galliary.name}
+        imageAlt={SiteDetails.Name}
         imageUrl={
           user.avatarSourceId
             ? CDN.getImageUrl(user.avatarSourceId, ImageType.Social)

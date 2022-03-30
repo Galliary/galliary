@@ -29,8 +29,7 @@ import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { CDN, ImageType } from 'app/utils/cdn'
-import packageJson from 'package.json'
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 const ITEMS_PER_PAGE = 30
 
@@ -99,10 +98,10 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
     <>
       <Head>
         <SimpleMeta
-          title={`${galliary.name} | ${album.title ?? 'Untitled Album'} by ${
+          title={`${SiteDetails.Name} | ${album.title ?? 'Untitled Album'} by ${
             album.author?.nickname ?? album.author?.username
           }`}
-          description={album.description ?? galliary.description}
+          description={album.description ?? SiteDetails.Description}
         />
         <ImageMeta
           imageWidth="1200"
