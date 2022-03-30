@@ -77,21 +77,19 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
 
   return (
     <>
-      <Head>
-        <SimpleMeta
-          title={`${SiteDetails.Name} | ${image.title ?? 'Untitled Image'} by ${
-            image.author?.nickname ?? image.author?.username
-          }`}
-          description={image.description ?? SiteDetails.Description}
-        />
-        <ImageMeta
-          imageWidth="1200"
-          imageHeight="630"
-          imageType="image/png"
-          imageAlt={image.title ?? 'Untitled Image'}
-          imageUrl={CDN.getImageUrl(image.sourceId, ImageType.Social)}
-        />
-      </Head>
+      <SimpleMeta
+        title={`${SiteDetails.Name} | ${image.title ?? 'Untitled Image'} by ${
+          image.author?.nickname ?? image.author?.username
+        }`}
+        description={image.description ?? SiteDetails.Description}
+      />
+      <ImageMeta
+        imageWidth="1200"
+        imageHeight="630"
+        imageType="image/png"
+        imageAlt={image.title ?? 'Untitled Image'}
+        imageUrl={CDN.getImageUrl(image.sourceId, ImageType.Social)}
+      />
       <Center boxSize="full" pos="relative">
         <DeleteImageModal
           imageId={image.id}

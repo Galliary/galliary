@@ -5,6 +5,7 @@ import { Image, User } from '@prisma/client'
 import { CDN, ImageType } from 'app/utils/cdn'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import { SiteDetails } from 'app/constants'
+import { Head } from 'blitz'
 
 interface ImagePageProps {
   image: Image & {
@@ -71,7 +72,7 @@ export const ImagePageMeta = ({
   )
 
   return (
-    <>
+    <Head>
       <meta name="robots" content="index,follow" />
 
       <link rel="canonical" href={url} />
@@ -83,6 +84,6 @@ export const ImagePageMeta = ({
       />
 
       <script {...ARTICLE_STRUCTURED_DATA} />
-    </>
+    </Head>
   )
 }

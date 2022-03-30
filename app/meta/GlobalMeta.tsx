@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { MiscMeta } from 'app/meta/MiscMeta'
 import { LocaleMeta } from 'app/meta/LocaleMeta'
 import { SiteDetails } from 'app/constants'
+import { Head } from 'blitz'
 
 export interface GlobalMetaProps {}
 
@@ -15,23 +16,24 @@ export const GlobalMeta = ({}: GlobalMetaProps) => {
 
   return (
     <>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <meta name="theme-color" content={SiteDetails.BrandColor} />
-      <meta name="keywords" content={KEYWORDS} />
+        <meta name="theme-color" content={SiteDetails.BrandColor} />
+        <meta name="keywords" content={KEYWORDS} />
 
-      <meta property="og:type" content="website" />
+        <meta property="og:type" content="website" />
 
-      <meta property="og:url" content={SiteDetails.Url} />
-      <meta property="og:site_name" content={SiteDetails.Name} />
+        <meta property="og:url" content={SiteDetails.Url} />
+        <meta property="og:site_name" content={SiteDetails.Name} />
 
-      <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary_large_image" />
 
-      {twitter && (
-        <meta name="twitter:creator" content={`@${twitter.handle}`} />
-      )}
-
+        {twitter && (
+          <meta name="twitter:creator" content={`@${twitter.handle}`} />
+        )}
+      </Head>
       <MiscMeta />
       <LocaleMeta />
     </>

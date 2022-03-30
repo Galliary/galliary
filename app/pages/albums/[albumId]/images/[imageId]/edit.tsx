@@ -54,10 +54,6 @@ const EditImagePage: BlitzPage<EditImagePageProps> = ({ initialData }) => {
 
   return (
     <>
-      <Head>
-        <title>Edit Image {image.id}</title>
-      </Head>
-
       <div>
         <h1>Edit Image {image.id}</h1>
         <pre>{JSON.stringify(image, null, 2)}</pre>

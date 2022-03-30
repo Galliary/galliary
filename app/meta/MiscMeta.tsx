@@ -1,13 +1,13 @@
 import { SiteDetails } from 'app/constants'
+import { Head } from 'blitz'
 
 export const MiscMeta = () => (
-  <>
-    {/* Directs apps to our search page more details in our opensearch.xml file. */}
+  <Head>
     <link
       rel="search"
       type="application/opensearchdescription+xml"
       href="/opensearch.xml"
       title={SiteDetails.Name}
     />
-  </>
+  </Head>
 )

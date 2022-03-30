@@ -129,21 +129,16 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
 
   return (
     <>
-      <Head>
-        <SimpleMeta />
-        <ImageMeta
-          imageWidth="1200"
-          imageHeight="630"
-          imageType="image/png"
-          imageAlt={SiteDetails.Name}
-          imageUrl={CDN.getImageUrl(
-            StaticImages.SocialPreview,
-            ImageType.Social,
-          )}
-        />
-        <OrganizationInfo />
-      </Head>
-      <VStack spacing={8}>
+      <SimpleMeta />
+      <ImageMeta
+        imageWidth="1200"
+        imageHeight="630"
+        imageType="image/png"
+        imageAlt={SiteDetails.Name}
+        imageUrl={CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)}
+      />
+      <OrganizationInfo />
+      <VStack w="full" spacing={8}>
         <Center h="banner.height" w="full" pos="relative" overflow="hidden">
           <Text as="h2" fontSize="24px" zIndex={10} color="ui.100">
             {SiteDetails.Description}

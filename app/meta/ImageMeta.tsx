@@ -1,3 +1,5 @@
+import { Head } from 'blitz'
+
 export interface ImageMetaProps {
   imageUrl: string
   imageWidth: string
@@ -13,7 +15,7 @@ export const ImageMeta = ({
   imageWidth,
   imageType,
 }: ImageMetaProps) => (
-  <>
+  <Head>
     <meta name="twitter:image" content={imageUrl} />
     <meta property="og:image" content={imageUrl} />
     <meta property="og:image:secure_url" content={imageUrl} />
@@ -21,5 +23,5 @@ export const ImageMeta = ({
     <meta property="og:image:height" content={imageHeight} />
     <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:image:type" content={imageType} />
-  </>
+  </Head>
 )

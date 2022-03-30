@@ -1,4 +1,5 @@
 import i18n from 'i18n.json'
+import { Head } from 'blitz'
 const { defaultLocale, locales } = i18n
 
 export interface LocaleMetaProps {}
@@ -11,4 +12,4 @@ const LOCALE_META = locales.map((locale) => (
   />
 ))
 
-export const LocaleMeta = ({}: LocaleMetaProps) => <>{LOCALE_META}</>
+export const LocaleMeta = ({}: LocaleMetaProps) => <Head>{LOCALE_META}</Head>

@@ -96,21 +96,20 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
 
   return (
     <>
-      <Head>
-        <SimpleMeta
-          title={`${SiteDetails.Name} | ${album.title ?? 'Untitled Album'} by ${
-            album.author?.nickname ?? album.author?.username
-          }`}
-          description={album.description ?? SiteDetails.Description}
-        />
-        <ImageMeta
-          imageWidth="1200"
-          imageHeight="630"
-          imageType="image/png"
-          imageAlt={album.title ?? 'Untitled Album'}
-          imageUrl={CDN.getImageUrl(album.sourceId, ImageType.Social)}
-        />
-      </Head>
+      <SimpleMeta
+        title={`${SiteDetails.Name} | ${album.title ?? 'Untitled Album'} by ${
+          album.author?.nickname ?? album.author?.username
+        }`}
+        description={album.description ?? SiteDetails.Description}
+      />
+      <ImageMeta
+        imageWidth="1200"
+        imageHeight="630"
+        imageType="image/png"
+        imageAlt={album.title ?? 'Untitled Album'}
+        imageUrl={CDN.getImageUrl(album.sourceId, ImageType.Social)}
+      />
+
       <VStack spacing={0} boxSize="full">
         <Suspense fallback={<Loader />}>
           <DeleteAlbumModal

@@ -54,10 +54,6 @@ const EditAlbumPage: BlitzPage<EditAlbumPageProps> = () => {
 
   return (
     <>
-      <Head>
-        <title>Edit Album {album.id}</title>
-      </Head>
-
       <div>
         <h1>Edit Album {album.id}</h1>
         <pre>{JSON.stringify(album, null, 2)}</pre>

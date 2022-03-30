@@ -20,9 +20,9 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
           href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700&family=Style+Script&display=swap"
           rel="stylesheet"
         />
-
-        <GlobalMeta />
       </Head>
+
+      <GlobalMeta />
 
       <VStack spacing={0} boxSize="full">
         <Header />

@@ -1,7 +1,6 @@
 import { Routes } from 'blitz'
 import {
   Avatar,
-  Box,
   Button,
   Center,
   Heading,
@@ -11,10 +10,9 @@ import {
   MenuItem,
   MenuList,
   Text,
-  VStack,
 } from '@chakra-ui/react'
 import { Link } from 'app/components/Link'
-import { ENABLED_AUTH_STRATEGIES, SiteDetails } from 'app/constants'
+import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 import { LoginController } from 'app/controllers/LoginController'
 import { Suspense } from 'react'
@@ -39,6 +37,9 @@ export const UserLoggedInHeaderButtons = () => {
         as={Link}
         href={Routes.UserPage({ userId: currentUser.id })}
         boxSize={12}
+        name={currentUser.username}
+        iconLabel={currentUser.username}
+        aria-label={`${currentUser.username}'s profile`}
         src={
           CDN.getImageUrl(currentUser.avatarSourceId ?? '', ImageType.Large) ??
           currentUser.avatarUrl ??

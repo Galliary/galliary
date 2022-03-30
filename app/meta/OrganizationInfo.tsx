@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import type { Organization, WebPage, WebSite } from 'schema-dts'
 import { SiteDetails } from 'app/constants'
+import { Head } from 'blitz'
 
 export interface OrganizationInfoProps {}
 
@@ -48,9 +49,7 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
     [],
   )
 
-  return (
-    <>
-      {/* TODO: Contemplate whether this is necessary or not.
+  /* TODO: Contemplate whether this is necessary or not.
       <script
         {...jsonLdScriptProps<SoftwareApplication>({
           '@context': 'https://schema.org',
@@ -67,11 +66,13 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
             priceCurrency: 'USD',
           },
         })}
-      />*/}
+      />*/
 
+  return (
+    <Head>
       <script {...WEB_SITE_STRUCTURED_DATA} />
       <script {...WEB_PAGE_STRUCTURED_DATA} />
       <script {...ORGANIZATION_STRUCTURED_DATA} />
-    </>
+    </Head>
   )
 }

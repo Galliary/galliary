@@ -113,6 +113,7 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
               CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)
         }
       />
+
       <VStack boxSize="full" spacing={8}>
         <Suspense fallback={<Loader />}>
           <ProfileBanner

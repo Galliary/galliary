@@ -1,3 +1,4 @@
+import { Head } from 'blitz'
 import { SiteDetails } from 'app/constants'
 
 interface SimpleMetaProps {
@@ -10,14 +11,15 @@ export const SimpleMeta = (props: SimpleMetaProps) => {
   const description = props.description ?? SiteDetails.Description
 
   return (
-    <>
+    <Head>
       <title>{title}</title>
+
       <meta property="og:title" content={title} />
       <meta name="twitter:title" content={title} />
 
       <meta name="description" content={description} />
       <meta property="og:description" content={description} />
       <meta name="twitter:description" content={description} />
-    </>
+    </Head>
   )
 }
