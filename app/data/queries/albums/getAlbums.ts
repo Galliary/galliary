@@ -24,10 +24,16 @@ export default resolver.pipe(
           ...paginateArgs,
           where,
           orderBy,
-          include: {
+          select: {
+            id: true,
+            title: true,
+            sourceId: true,
+            createdAt: true,
+            colors: true,
             images: {
               select: {
                 id: true,
+                title: true,
                 sourceId: true,
                 createdAt: true,
               },

@@ -21,13 +21,14 @@ export interface EntityPreviewProps {
 
 export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
   const ref = useRef<HTMLImageElement>(null)
-  const [size, sizingName] = useThumbnailSizing()
   const hasImageLoaded = useHasImageLoaded(ref)
+  const [{ sizeStyle: size }, sizingName] = useThumbnailSizing()
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
       <Link
         d="flex"
+        aria-label={image.title ?? 'Untitled Image'}
         href={Routes.ShowImagePage({
           albumId: image.albumId,
           imageId: image.id,

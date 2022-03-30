@@ -32,5 +32,12 @@ export const useThumbnailSizing = (doubleSize: boolean = false) => {
         },
   )
 
-  return [size, sizingName] as const
+  const sizeStyle = {
+    base: 'thumbnail.base',
+    sm: 'thumbnail.sm',
+    md: 'thumbnail.md',
+    lg: 'thumbnail.lg',
+  }
+
+  return [{ size, sizeStyle }, sizingName] as const
 }

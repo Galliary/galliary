@@ -1,13 +1,8 @@
-import { Album } from '@prisma/client'
 import { Routes } from 'blitz'
 import { Box, Center, Image as Img } from '@chakra-ui/react'
 import { Suspense, useRef } from 'react'
 import favouriteAlbum from 'app/data/mutations/albums/favouriteAlbum'
-import {
-  MotionBox,
-  transitionConfig,
-  transitionMediumConfig,
-} from 'app/components/Motion'
+import { MotionBox, transitionMediumConfig } from 'app/components/Motion'
 import { CDN } from 'app/utils/cdn'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { useHasImageLoaded } from 'app/data/hooks/useHasImageLoaded'
@@ -16,17 +11,23 @@ import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
+import type { Album } from '@prisma/client'
 
 export interface EntityPreviewProps {
   item: Album & {
-    images: Array<{ id: string; sourceId: string; createdAt: Date }>
+    images: Array<{
+      id: string
+      title: string
+      sourceId: string
+      createdAt: Date
+    }>
   } & {
     userFavourites: Array<{ id: string }>
   }
 }
 
 export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
-  const [size, sizingName] = useThumbnailSizing()
+  const [{ sizeStyle: size }, sizingName] = useThumbnailSizing()
   const ref = useRef<HTMLImageElement>(null)
   const hasImageLoaded = useHasImageLoaded(ref)
 
@@ -68,6 +69,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
                 >
                   <Link
                     d="flex"
+                    aria-label={image.title ?? 'Untitled Image'}
                     href={Routes.ShowImagePage({
                       albumId: album.id,
                       imageId: image.id ?? '',
@@ -94,6 +96,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
           <Link
             d="flex"
             boxSize={size}
+            aria-label={album.title ?? 'Untitled Album'}
             href={Routes.ShowAlbumPage({ albumId: album.id })}
           >
             <MotionBox

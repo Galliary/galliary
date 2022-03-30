@@ -8,7 +8,7 @@ export const LinkStyle: ComponentStyleConfig = {
     cursor: 'pointer',
     textDecoration: 'none',
     outline: 'none',
-    color: 'ui.40',
+    color: 'ui.60',
     _hover: {
       color: 'brand.secondary.100',
       textDecoration: 'none',

@@ -58,12 +58,16 @@ interface AlbumShowcaseCarouselProps {
 const SHOWCASE_INCREMENT_TIME = 30000
 
 const AlbumShowcaseCarousel = ({ albums }: AlbumShowcaseCarouselProps) => {
+  const [hasDoneFirstLoop, setHasDoneFirstLoop] = useState(false)
   const [currentIndex, setIndex] = useState(0)
 
   const incIndex = () =>
     setIndex((c) => {
       if (c === albums.length - 1) {
         return 0
+      }
+      if (!hasDoneFirstLoop) {
+        setHasDoneFirstLoop(true)
       }
       return c + 1
     })
@@ -91,7 +95,10 @@ const AlbumShowcaseCarousel = ({ albums }: AlbumShowcaseCarouselProps) => {
               alt={SiteDetails.Name}
               transition={transitionConfig}
               src={CDN.getImageUrl(album.sourceId, ImageType.Small)}
-              initial={{ opacity: 0, x: '100%' }}
+              initial={{
+                opacity: Number(!hasDoneFirstLoop),
+                x: !hasDoneFirstLoop ? '0%' : '100%',
+              }}
               animate={{ opacity: 1, x: '0%' }}
               exit={{ opacity: 0, x: '-100%' }}
             />
@@ -103,7 +110,7 @@ const AlbumShowcaseCarousel = ({ albums }: AlbumShowcaseCarouselProps) => {
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
-  const [size] = useThumbnailSizing()
+  const [{ sizeStyle: size }] = useThumbnailSizing()
 
   const [{ albums, hasMore }] = usePaginatedQuery(
     getAlbums,
@@ -139,7 +146,14 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
       />
       <OrganizationInfo />
       <VStack w="full" spacing={8}>
-        <Center h="banner.height" w="full" pos="relative" overflow="hidden">
+        <Center
+          p={8}
+          w="full"
+          pos="relative"
+          overflow="hidden"
+          h="banner.height"
+          textAlign="center"
+        >
           <Text as="h2" fontSize="24px" zIndex={10} color="ui.100">
             {SiteDetails.Description}
           </Text>
@@ -151,9 +165,11 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
           addPrompt={<AddNewItem />}
           onDisplay={(data) =>
             data ? (
-              <AlbumPreview item={data} />
+              <Box as="li">
+                <AlbumPreview item={data} />
+              </Box>
             ) : (
-              <Box bg="ui.5" boxSize={size} />
+              <Box as="li" bg="ui.5" boxSize={size} />
             )
           }
         />

@@ -8,7 +8,7 @@ import {
   useQueryErrorResetBoundary,
 } from 'blitz'
 import { theme } from 'app/theme'
-import { ChakraProvider } from '@chakra-ui/react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import LoginForm from 'app/components/forms/LoginForm'
 import { ModalController } from 'app/controllers/ModalController'
 import { LocaleController } from 'app/controllers/LocaleController'
