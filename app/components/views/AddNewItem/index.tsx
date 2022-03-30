@@ -6,7 +6,7 @@ import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { Link } from 'app/components/Link'
 
 export const AddNewItem = () => {
-  const [size] = useThumbnailSizing()
+  const [{ sizeStyle: size }] = useThumbnailSizing()
   const [isHovering, setHovering] = useBoolean(false)
 
   return (

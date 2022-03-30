@@ -17,7 +17,7 @@ export interface EntityPreviewProps {
   item: Album & {
     images: Array<{
       id: string
-      title: string
+      title: string | null
       sourceId: string
       createdAt: Date
     }>

@@ -69,6 +69,7 @@ export default resolver.pipe(
             images: {
               select: {
                 id: true,
+                title: true,
                 albumId: true,
                 sourceId: true,
                 createdAt: true,
