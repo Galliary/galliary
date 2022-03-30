@@ -1,5 +1,5 @@
-import { Center } from '@chakra-ui/react'
-import { PropsWithChildren } from 'react'
+import { Center } from '@chakra-ui/layout'
+import type { PropsWithChildren } from 'react'
 
 export interface BodyProps {}
 

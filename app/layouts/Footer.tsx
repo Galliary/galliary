@@ -1,7 +1,7 @@
-import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react'
-import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
 import { Link } from 'app/components/Link'
 import { DISCORD_SUPPORT_SERVER_URL } from 'app/constants'
+import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
+import { Box, Center, HStack, Text, VStack } from '@chakra-ui/layout'
 
 export interface FooterProps {}
 

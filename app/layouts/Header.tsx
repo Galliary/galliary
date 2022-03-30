@@ -1,29 +1,30 @@
-import { Routes } from 'blitz'
-import {
-  Avatar,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from '@chakra-ui/react'
+import { dynamic, Routes } from 'blitz'
+import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
+import { Center, Heading, HStack, Text } from '@chakra-ui/layout'
+import { Avatar } from '@chakra-ui/avatar'
+import { Button } from '@chakra-ui/button'
 import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
-import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
-import { LoginController } from 'app/controllers/LoginController'
 import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
 import { CDN, ImageType } from 'app/utils/cdn'
+import type { CurrentUserType } from 'app/controllers/LoginController'
+
+const LoginController = dynamic(
+  () => import('app/controllers/LoginController'),
+  {
+    ssr: false,
+    loading: () => <Loader />,
+  },
+)
 
 export interface HeaderProps {}
 
-export const UserLoggedInHeaderButtons = () => {
-  const currentUser = useCurrentUser()
-
+export const UserLoggedInHeaderButtons = ({
+  currentUser,
+}: {
+  currentUser: CurrentUserType
+}) => {
   if (!currentUser) {
     return null
   }
@@ -70,7 +71,7 @@ export const Header = ({}: HeaderProps) => (
 
         <Suspense fallback={<Loader />}>
           <LoginController
-            action={
+            action={() => (
               <Menu>
                 <MenuButton as={Button} variant="primary">
                   Login
@@ -89,9 +90,11 @@ export const Header = ({}: HeaderProps) => (
                   ))}
                 </MenuList>
               </Menu>
-            }
+            )}
           >
-            <UserLoggedInHeaderButtons />
+            {(currentUser) => (
+              <UserLoggedInHeaderButtons currentUser={currentUser} />
+            )}
           </LoginController>
         </Suspense>
       </HStack>

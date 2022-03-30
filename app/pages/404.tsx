@@ -1,6 +1,6 @@
 import { Head } from 'blitz'
-import { Center, Text, VStack } from '@chakra-ui/react'
 import Layout from 'app/layouts/Layout'
+import { Center, Text, VStack } from '@chakra-ui/layout'
 
 export default function Page404() {
   const statusCode = 404

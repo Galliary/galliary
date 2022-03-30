@@ -1,6 +1,6 @@
 import { Body } from 'app/layouts/Body'
 import { BlitzLayout, Head } from 'blitz'
-import { VStack } from '@chakra-ui/react'
+import { VStack } from '@chakra-ui/layout'
 import { Header } from 'app/layouts/Header'
 import { Footer } from 'app/layouts/Footer'
 import { GlobalMeta } from 'app/meta/GlobalMeta'

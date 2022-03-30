@@ -82,7 +82,6 @@ const LogoutButton = () => {
 }
 
 const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
-  console.log({ currentUser })
   const idOrUsername = useParam('userId', 'string')
   const [user] = useQuery(getUserProfile, { idOrUsername }, { initialData })
   const [openEditProfileModal] = useModal('editProfile')

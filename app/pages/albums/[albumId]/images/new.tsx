@@ -34,8 +34,6 @@ const NewImagePage: BlitzPage = () => {
           try {
             const sourceId = await CDN.upload(values.file)
 
-            console.log(values.__image_color)
-
             const image = await createImageMutation({
               ...values,
               sourceId,
