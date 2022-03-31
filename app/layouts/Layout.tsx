@@ -1,5 +1,5 @@
 import { Body } from 'app/layouts/Body'
-import { BlitzLayout, Head } from 'blitz'
+import { BlitzLayout, Head, Script } from 'blitz'
 import { VStack } from '@chakra-ui/layout'
 import { Header } from 'app/layouts/Header'
 import { Footer } from 'app/layouts/Footer'
@@ -23,6 +23,21 @@ const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
         </VStack>
         <VersionDisplay />
       </VStack>
+
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-J19QYFHHPN"
+        strategy="afterInteractive"
+      />
+
+      <Script id="ga" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-J19QYFHHPN');
+        `}
+      </Script>
     </>
   )
 }
