@@ -106,20 +106,6 @@ export const Footer = ({}: FooterProps) => (
             >
               discord.gg
             </Link>
-            <Button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: 'Galliary',
-                    text: 'Galliary is a simple image gallery app made with React and Chakra UI. Check it out!',
-                    url: 'https://galliary.com',
-                  })
-                }
-              }}
-              textStyle="label.medium"
-            >
-              Share
-            </Button>
           </VStack>
         </HStack>
       </HStack>
