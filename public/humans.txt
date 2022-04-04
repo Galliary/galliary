@@ -1,0 +1,16 @@
+/* TEAM */
+    Founder: Synqat
+    Site: https://synqat.dev
+    Twitter: @Synqat
+
+/* THANKS */
+    Friend and Contributor: DrFineSir
+    Site: https://jwp.digital
+    Twitter: @DrFineSir
+
+/* SITE */
+    Last update: 4/04/2022
+    Language: English (sorry)
+    Contact: contact [at] galliary.com
+
+Built with <3 by a programming hobbyist team using the Blitz framework!

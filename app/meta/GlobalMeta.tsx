@@ -23,6 +23,8 @@ export const GlobalMeta = ({}: GlobalMetaProps) => {
         <meta name="theme-color" content={SiteDetails.BrandColor} />
         <meta name="keywords" content={KEYWORDS} />
 
+        <link rel="author" href="/humans.txt" />
+
         <meta property="og:type" content="website" />
 
         <meta property="og:url" content={SiteDetails.Url} />
