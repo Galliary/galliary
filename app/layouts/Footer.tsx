@@ -2,6 +2,7 @@ import { Link } from 'app/components/Link'
 import { DISCORD_SUPPORT_SERVER_URL } from 'app/constants'
 import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
 import { Box, Center, HStack, Text, VStack } from '@chakra-ui/layout'
+import { Button } from '@chakra-ui/react'
 
 export interface FooterProps {}
 
@@ -105,6 +106,20 @@ export const Footer = ({}: FooterProps) => (
             >
               discord.gg
             </Link>
+            <Button
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: 'Galliary',
+                    text: 'Galliary is a simple image gallery app made with React and Chakra UI. Check it out!',
+                    url: 'https://galliary.com',
+                  })
+                }
+              }}
+              textStyle="label.medium"
+            >
+              Share
+            </Button>
           </VStack>
         </HStack>
       </HStack>
