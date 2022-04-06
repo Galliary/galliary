@@ -10,6 +10,7 @@ export const ENABLED_AUTH_STRATEGIES = [
 ]
 
 export const BrandColor = '#3574D2'
+export const BackgroundColor = '#1B1F2F'
 
 export const Domain = 'galliary.com'
 
@@ -36,6 +37,7 @@ export const SiteDetails = {
   Url: `https://${Domain}`,
   Email: `contact@${Domain}`,
   BrandColor,
+  BackgroundColor,
 
   // Domain related information
   Domain,
