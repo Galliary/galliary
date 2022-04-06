@@ -65,13 +65,7 @@ export const Favourite = ({
   const render = useMemo(
     () =>
       !isLoggedIn ? null : (
-        <Button
-          aria-label="Favourite"
-          size="none"
-          variant="none"
-          onClick={onFavourite}
-          _focus={focus}
-        >
+        <Button size="none" variant="none" onClick={onFavourite} _focus={focus}>
           <HeartIcon
             boxSize={10}
             strokeWidth={2}

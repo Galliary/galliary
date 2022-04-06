@@ -13,7 +13,6 @@ import LoginForm from 'app/components/forms/LoginForm'
 import { ModalController } from 'app/controllers/ModalController'
 import { LocaleController } from 'app/controllers/LocaleController'
 import Layout from 'app/layouts/Layout'
-import { useEffect } from 'react'
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
@@ -39,24 +38,6 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
 
 function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
-
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/serviceWorker.js').then(
-          function (registration) {
-            console.log(
-              'Galliary service worker registration successful with scope: ',
-              registration.scope,
-            )
-          },
-          function (err) {
-            console.log('Galliary service worker registration failed: ', err)
-          },
-        )
-      })
-    }
-  }, [])
 
   return (
     <ChakraProvider theme={theme}>

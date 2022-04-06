@@ -1,10 +1,8 @@
-import withPWA from 'next-pwa'
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
 import { defaultLocale, locales } from './i18n.json'
 import { DISCORD_SUPPORT_SERVER_URL } from './app/constants'
 
 const config: BlitzConfig = {
-  productionBrowserSourceMaps: true,
   eslint: {
     // TODO: we need to enable this later but eslint packages are being super cringe
     ignoreDuringBuilds: true,
@@ -34,4 +32,4 @@ const config: BlitzConfig = {
   },
 }
 
-module.exports = withPWA(config)
+module.exports = config
