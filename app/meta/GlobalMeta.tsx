@@ -33,6 +33,7 @@ export const GlobalMeta = ({}: GlobalMetaProps) => {
 
         <meta name="twitter:card" content="summary_large_image" />
 
+        <link href="/manifest.json" rel="manifest" />
         <link
           href="/favicon-16x16.png"
           rel="icon"

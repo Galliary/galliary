@@ -43,7 +43,7 @@ function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/serviceWorker.js').then(
+        navigator.serviceWorker.register('/sw.js').then(
           function (registration) {
             console.log(
               'Galliary service worker registration successful with scope: ',
