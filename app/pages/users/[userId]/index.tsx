@@ -5,6 +5,7 @@ import {
   useMutation,
   useParam,
   useQuery,
+  useRouter,
 } from 'blitz'
 import {
   Avatar,
@@ -66,10 +67,15 @@ export const getServerSideProps = getGlobalServerSideProps<UserPageProps>(
 )
 
 const LogoutButton = () => {
+  const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
   return (
-    <IconButton aria-label="Logout" p={2} onClick={() => logoutMutation()}>
+    <IconButton
+      aria-label="Logout"
+      p={2}
+      onClick={() => logoutMutation().then(() => router.reload())}
+    >
       <LogoutIcon
         boxSize={8}
         cursor="pointer"

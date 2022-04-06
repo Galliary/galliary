@@ -79,6 +79,7 @@ export const handleAuthType = async (
         update: {
           email,
           handle,
+          avatarUrl,
         },
       })
     }

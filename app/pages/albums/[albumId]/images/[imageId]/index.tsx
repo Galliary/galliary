@@ -17,6 +17,7 @@ import {
   StackDivider,
   useBoolean,
   useDisclosure,
+  useToken,
 } from '@chakra-ui/react'
 import { DeleteImageModal } from 'app/components/modals/DeleteImageModal'
 import { InvertCircleCornerIcon } from 'app/components/icons/InvertCircleCornerIcon'
@@ -39,6 +40,8 @@ import { ImageMeta } from 'app/meta/ImageMeta'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SiteDetails } from 'app/constants'
+import { Controlled as ControlledZoom } from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 
 export interface ImagePageProps {
   initialData: PromiseReturnType<typeof getImage>
@@ -65,12 +68,14 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
   currentUser,
 }) => {
   const { goBack } = usePage()
+  const bgFull = useToken('colors', 'background.full')
   const deleteConfirmDisclosure = useDisclosure()
+  const [isFullscreen, setIsFullscreen] = useBoolean(false)
   const albumId = useParam('albumId', 'string')
   const imageId = useParam('imageId', 'string')
   const [image] = useQuery(getImage, { id: imageId }, { initialData })
-
   const [isLoaded, setLoaded] = useBoolean(false)
+
   const [isHovering, setHovering] = useBoolean(false)
 
   const isAuthor = image.authorId === currentUser?.id
@@ -223,8 +228,8 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
                           <HStack spacing={4}>
                             <Button onClick={goBack}>Go back</Button>
                             <Tooltip label="Fullscreen">
-                              {/* TODO: Actually implement this */}
                               <IconButton
+                                onClick={setIsFullscreen.toggle}
                                 p={3}
                                 aria-label="Fullscreen"
                                 icon={<FullscreenIcon />}
@@ -267,12 +272,20 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
             <MotionBox
               transition={transitionConfig}
               animate={{ opacity: Number(isLoaded) }}
+              onClick={setIsFullscreen.toggle}
             >
-              <ChakraImage
-                objectFit="contain"
-                src={CDN.getImageUrl(image.sourceId, ImageType.Public)}
-                onLoad={setLoaded.on}
-              />
+              <ControlledZoom
+                isZoomed={isFullscreen}
+                overlayBgColorStart="transparent"
+                overlayBgColorEnd={bgFull}
+                onZoomChange={console.log}
+              >
+                <ChakraImage
+                  objectFit="contain"
+                  src={CDN.getImageUrl(image.sourceId, ImageType.Public)}
+                  onLoad={setLoaded.on}
+                />
+              </ControlledZoom>
             </MotionBox>
           </Center>
         </Center>

@@ -1,7 +1,7 @@
-import type { GetServerSideProps } from 'blitz'
-import { invokeWithMiddleware } from 'blitz'
-import getCurrentUser from 'app/data/queries/users/getCurrentUser'
 import deepmerge from 'deepmerge'
+import { invokeWithMiddleware } from 'blitz'
+import type { GetServerSideProps } from 'blitz'
+import getCurrentUser from 'app/data/queries/users/getCurrentUser'
 
 export const getGlobalServerSideProps = <Props>(
   callback: GetServerSideProps<Props>,

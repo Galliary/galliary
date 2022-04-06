@@ -7,6 +7,7 @@ interface UpdateUserConnectionProps {
   update: {
     email: string
     handle?: string
+    avatarUrl?: string
   }
   tokens?: {
     accessToken?: string
@@ -35,6 +36,7 @@ export const updateUserConnection = async ({
         id: user.id,
       },
       data: {
+        avatarUrl: update.avatarUrl,
         connections: {
           create: {
             type,
@@ -58,6 +60,7 @@ export const updateUserConnection = async ({
         id: user.id,
       },
       data: {
+        avatarUrl: update.avatarUrl,
         connections: {
           update: {
             where: {
