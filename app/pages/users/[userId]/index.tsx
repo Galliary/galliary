@@ -151,14 +151,12 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                     transform="scaleX(-1)"
                   />
                   <Avatar
+                    bg="flow.10"
                     boxSize="256px"
                     src={
-                      CDN.getImageUrl(
-                        user.avatarSourceId ?? '',
-                        ImageType.Large,
-                      ) ??
-                      user.avatarUrl ??
-                      ''
+                      user.avatarSourceId
+                        ? CDN.getImageUrl(user.avatarSourceId, ImageType.Large)
+                        : user.avatarUrl ?? ''
                     }
                   />
                   <InvertCircleLongIcon
