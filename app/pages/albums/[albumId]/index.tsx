@@ -165,7 +165,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
               w="full"
               h="full"
               objectFit="cover"
-              objectPosition="center"
+              objectPosition="center calc(50% + 90px)"
               alt={album.title ?? 'Untitled Album'}
               src={CDN.getImageUrl(album.sourceId, ImageType.Public)}
             />

@@ -74,7 +74,7 @@ export const AutoImageCarousel = ({ items = [] }: AutoImageCarouselProps) => {
             w="full"
             h="full"
             objectFit="cover"
-            objectPosition="center"
+            objectPosition="center calc(50% + 90px)"
             alt={SiteDetails.Name}
             transition={transitionConfig}
             src={CDN.getImageUrl(item.sourceId, ImageType.Public)}
