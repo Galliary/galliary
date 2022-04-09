@@ -63,9 +63,16 @@ export function GalleryViewController<Data extends Album | Image>({
       pos="relative"
       maxW="content.width"
     >
-      <VStack align="start" spacing={1} w="full">
+      <VStack align={['center', null, 'start']} spacing={1} w="full">
         <HStack justify="space-between" w="full">
-          <Text textStyle="heading.large">{title}</Text>
+          <Text
+            textStyle="heading.medium"
+            bgGradient="linear(to-br, brand.primary.100, brand.secondary.100)"
+            backgroundClip="text"
+            color="transparent"
+          >
+            {title}
+          </Text>
           <Box>{actions}</Box>
         </HStack>
         <HStack justify="space-between" w="full">

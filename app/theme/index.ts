@@ -109,7 +109,7 @@ export const theme = {
     },
   },
   shadows: {
-    outline: '0 0 0 4px var(--galliary-colors-brand-secondary-100)',
+    outline: '0 0 0 4px var(--galliary-colors-brand-primary-100)',
   },
   radii: themeData.radius,
   sizes: {

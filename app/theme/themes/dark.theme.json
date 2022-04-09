@@ -35,7 +35,12 @@
     "23": "92px",
     "24": "96px",
     "banner": {
-      "height": "196px"
+      "height": "420px",
+      "height-with-header": "510px"
+    },
+    "banner-mobile": {
+      "height": "220px",
+      "height-with-header": "310px"
     },
     "featured": {
       "base": "196px",

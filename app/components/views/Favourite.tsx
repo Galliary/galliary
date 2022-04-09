@@ -35,39 +35,32 @@ export const Favourite = ({
       userHasLoved
         ? {
             color: 'special.heart',
-            _hover: {
-              opacity: 0.8,
-            },
-            stroke: 'special.heart',
           }
         : {
             color: 'background.full',
-            _hover: {
-              color: 'special.heart',
-            },
-            stroke: 'background.full',
           },
     [userHasLoved],
   )
 
   const styleProps = useMemo(() => style(userHasLoved), [userHasLoved])
 
-  const focus = useMemo(
-    () => ({
-      '> svg': {
-        strokeWidth: 2,
-        stroke: userHasLoved ? 'background.full' : 'special.heart',
-      },
-    }),
-    [userHasLoved],
-  )
-
-  const render = useMemo(
+  return useMemo(
     () =>
       !isLoggedIn ? null : (
-        <Button size="none" variant="none" onClick={onFavourite} _focus={focus}>
+        <Button
+          size="none"
+          variant="none"
+          onClick={onFavourite}
+          _focus={{
+            '> svg': {
+              strokeWidth: 2,
+              stroke: 'brand.secondary.100',
+            },
+          }}
+        >
           <HeartIcon
             boxSize={10}
+            stroke="background.full"
             strokeWidth={2}
             cursor="pointer"
             transitionDuration="fast"
@@ -79,6 +72,4 @@ export const Favourite = ({
       ),
     [isLoggedIn, userHasLoved],
   )
-
-  return render
 }

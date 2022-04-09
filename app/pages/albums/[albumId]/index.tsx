@@ -9,7 +9,14 @@ import {
   useParam,
   useQuery,
 } from 'blitz'
-import { HStack, IconButton, Text, VStack } from '@chakra-ui/react'
+import {
+  Center,
+  HStack,
+  IconButton,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { DeleteAlbumModal } from 'app/components/modals/DeleteAlbumModal'
 import getAlbumImages from 'app/data/queries/albums/getAlbumImages'
 import { EditIcon } from 'app/components/icons/EditIcon'
@@ -30,6 +37,8 @@ import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { CDN, ImageType } from 'app/utils/cdn'
 import { SiteDetails } from 'app/constants'
+import { MotionImage, transitionConfig } from 'app/components/Motion'
+import { Box } from '@chakra-ui/layout'
 
 const ITEMS_PER_PAGE = 30
 
@@ -111,6 +120,50 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
       />
 
       <VStack spacing={0} boxSize="full">
+        <Center
+          p={8}
+          w="full"
+          pos="relative"
+          overflow="hidden"
+          textAlign="center"
+          h={[
+            'banner-mobile.height-with-header',
+            null,
+            'banner.height-with-header',
+          ]}
+          mt="-header.height"
+        >
+          <Text
+            as="h2"
+            fontSize="24px"
+            zIndex={10}
+            color="ui.100"
+            pt="header.height"
+          >
+            {album.title ?? 'Untitled Album'}
+          </Text>
+          <Box pos="absolute" inset={0} opacity={0.6} boxSize="full">
+            <Box
+              pos="absolute"
+              inset={0}
+              zIndex={1}
+              boxSize="full"
+              bg="background.full"
+              opacity={0.5}
+            />
+            <Image
+              pos="absolute"
+              inset={0}
+              w="full"
+              h="full"
+              objectFit="cover"
+              objectPosition="center"
+              alt={album.title ?? 'Untitled Album'}
+              src={CDN.getImageUrl(album.sourceId, ImageType.Public)}
+            />
+          </Box>
+        </Center>
+
         <Suspense fallback={<Loader />}>
           <DeleteAlbumModal
             albumId={album.id}

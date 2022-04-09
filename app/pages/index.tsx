@@ -1,6 +1,6 @@
 import {
   BlitzPage,
-  Head,
+  dynamic,
   invokeWithMiddleware,
   PromiseReturnType,
   usePaginatedQuery,
@@ -19,10 +19,15 @@ import { GalleryViewController } from 'app/controllers/GalleryViewController'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { OrganizationInfo } from 'app/meta/OrganizationInfo'
 import { SiteDetails } from 'app/constants'
-import { Center, Image } from '@chakra-ui/react'
-import { AnimatePresence } from 'framer-motion'
-import { MotionImage, transitionConfig } from 'app/components/Motion'
-import { useEffect, useMemo, useState } from 'react'
+import { Center } from '@chakra-ui/react'
+import { useMemo } from 'react'
+
+const AutoImageCarousel = dynamic(
+  () => import('app/components/views/AutoImageCarousel'),
+  {
+    ssr: false,
+  },
+)
 
 const ITEMS_PER_PAGE = 42
 
@@ -50,63 +55,6 @@ export const getServerSideProps = getGlobalServerSideProps(
     }
   },
 )
-
-interface AlbumShowcaseCarouselProps {
-  albums: HomeProps['initialData']['albums']
-}
-
-const SHOWCASE_INCREMENT_TIME = 30000
-
-const AlbumShowcaseCarousel = ({ albums }: AlbumShowcaseCarouselProps) => {
-  const [hasDoneFirstLoop, setHasDoneFirstLoop] = useState(false)
-  const [currentIndex, setIndex] = useState(0)
-
-  const incIndex = () =>
-    setIndex((c) => {
-      if (c === albums.length - 1) {
-        return 0
-      }
-      if (!hasDoneFirstLoop) {
-        setHasDoneFirstLoop(true)
-      }
-      return c + 1
-    })
-
-  useEffect(() => {
-    const interval = setInterval(incIndex, SHOWCASE_INCREMENT_TIME)
-    return () => clearInterval(interval)
-  }, [])
-
-  return (
-    <Box pos="absolute" inset={0} opacity={0.6} boxSize="full">
-      <AnimatePresence>
-        {albums
-          .filter((_, i) => i === currentIndex)
-          .map((album, index) => (
-            <MotionImage
-              key={album.id}
-              layoutId={album.id}
-              pos="absolute"
-              inset={0}
-              w="full"
-              h="full"
-              objectFit="cover"
-              filter="blur(32px)"
-              alt={SiteDetails.Name}
-              transition={transitionConfig}
-              src={CDN.getImageUrl(album.sourceId, ImageType.Small)}
-              initial={{
-                opacity: Number(!hasDoneFirstLoop),
-                x: !hasDoneFirstLoop ? '0%' : '100%',
-              }}
-              animate={{ opacity: 1, x: '0%' }}
-              exit={{ opacity: 0, x: '-100%' }}
-            />
-          ))}
-      </AnimatePresence>
-    </Box>
-  )
-}
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
@@ -145,21 +93,34 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
         imageUrl={CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)}
       />
       <OrganizationInfo />
-      <VStack w="full" spacing={8}>
+
+      <VStack w="full" spacing={0}>
         <Center
           p={8}
           w="full"
           pos="relative"
           overflow="hidden"
-          h="banner.height"
           textAlign="center"
+          h={[
+            'banner-mobile.height-with-header',
+            null,
+            'banner.height-with-header',
+          ]}
+          mt="-header.height"
         >
-          <Text as="h2" fontSize="24px" zIndex={10} color="ui.100">
+          <Text
+            as="h2"
+            fontSize="24px"
+            zIndex={10}
+            color="ui.100"
+            pt="header.height"
+          >
             {SiteDetails.Description}
           </Text>
-          <AlbumShowcaseCarousel albums={randomFeaturedAlbums} />
+          <AutoImageCarousel items={randomFeaturedAlbums} />
         </Center>
         <GalleryViewController
+          title="Featured Albums"
           data={filledAlbums}
           hasMore={hasMore}
           addPrompt={<AddNewItem />}

@@ -2,16 +2,22 @@ import { Link } from 'app/components/Link'
 import { DISCORD_SUPPORT_SERVER_URL } from 'app/constants'
 import { PixelArtIcon } from 'app/components/icons/PixelArtIcon'
 import { Box, Center, HStack, Text, VStack } from '@chakra-ui/layout'
-import { Button } from '@chakra-ui/react'
+import { Button, Stack } from '@chakra-ui/react'
 
 export interface FooterProps {}
 
 export const Footer = ({}: FooterProps) => (
   <VStack as="footer" w="full" spacing={0}>
     <Center p={16} w="full" bg="flow.40">
-      <HStack w="header.width" py={16} spacing={16} justify="space-between">
+      <Stack
+        direction={['column', null, 'row']}
+        w={['full', null, 'header.width']}
+        py={16}
+        spacing={16}
+        justify="space-between"
+      >
         <Box flexShrink={0}>
-          <VStack align="start">
+          <VStack align={['center', null, 'start']}>
             <Text
               as="h3"
               textStyle="display.small"
@@ -30,85 +36,140 @@ export const Footer = ({}: FooterProps) => (
             </Text>
           </VStack>
         </Box>
-        <HStack w="full" align="start">
-          <VStack flexGrow={1} align="end">
-            <Text as="h4" color="ui.100" textStyle="heading.small">
+        <Stack
+          direction={['column', null, 'row']}
+          w="full"
+          spacing={[16, null, 2]}
+          align={['end', null, 'start']}
+        >
+          <VStack w="full" flexGrow={1} align="end">
+            <Text
+              w="full"
+              textAlign={['center', null, 'end']}
+              p={[4, null, 0]}
+              as="h4"
+              color="ui.100"
+              textStyle="heading.small"
+            >
               Important
             </Text>
-            <Link as={Text} rel="external" href="/tos" textStyle="label.medium">
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              as={Link}
+              p={[4, null, 0]}
+              rel="external"
+              href="/tos"
+              textStyle="label.medium"
+            >
               Terms of Service
-            </Link>
-            <Link
-              as={Text}
+            </Text>
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              as={Link}
+              p={[4, null, 0]}
               rel="external"
               href="/privacy"
               textStyle="label.medium"
             >
               Privacy Policy
-            </Link>
+            </Text>
           </VStack>
-          <VStack flexGrow={1} align="end">
-            <Text as="h4" color="ui.100" textStyle="heading.small">
+          <VStack w="full" flexGrow={1} align="end">
+            <Text
+              w="full"
+              textAlign={['center', null, 'end']}
+              p={[4, null, 0]}
+              as="h4"
+              color="ui.100"
+              textStyle="heading.small"
+            >
               Other
             </Text>
-            <Link
-              as={Text}
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               href="https://github.com/synqat/galliary"
               textStyle="label.medium"
             >
               About Galliary
-            </Link>
-            <Link
-              as={Text}
+            </Text>
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               href="https://twitter.com/GalliaryApp"
               textStyle="label.medium"
             >
               twitter.com
-            </Link>
-            <Link
-              as={Text}
+            </Text>
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               target="_blank"
               href={DISCORD_SUPPORT_SERVER_URL}
               textStyle="label.medium"
             >
               discord.gg
-            </Link>
+            </Text>
           </VStack>
-          <VStack flexGrow={1} align="end">
-            <Text as="h4" color="ui.100" textStyle="heading.small">
+          <VStack w="full" flexGrow={1} align="end">
+            <Text
+              w="full"
+              textAlign={['center', null, 'end']}
+              p={[4, null, 0]}
+              as="h4"
+              color="ui.100"
+              textStyle="heading.small"
+            >
               Links
             </Text>
-            <Link
-              as={Text}
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               href="https://github.com/synqat/galliary"
               textStyle="label.medium"
             >
               github.com
-            </Link>
-            <Link
-              as={Text}
+            </Text>
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               href="https://twitter.com/GalliaryApp"
               textStyle="label.medium"
             >
               twitter.com
-            </Link>
-            <Link
-              as={Text}
+            </Text>
+            <Text
+              textAlign={['center', null, 'end']}
+              w="full"
+              p={[4, null, 0]}
+              as={Link}
               rel="external"
               target="_blank"
               href={DISCORD_SUPPORT_SERVER_URL}
               textStyle="label.medium"
             >
               discord.gg
-            </Link>
+            </Text>
           </VStack>
-        </HStack>
-      </HStack>
+        </Stack>
+      </Stack>
     </Center>
     <Center p={8} w="full" bg="flow.80">
       <Text textStyle="paragraph.large" color="ui.100">

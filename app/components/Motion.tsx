@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 export const DEFAULT_DURATION = 0.85
-export const DEFAULT_EASING = [0.33, 1.08, 0, 0.96]
+export const DEFAULT_EASING = [0.04, 0.91, 0.6, 0.99]
 
 export const transitionConfig: MotionProps['transition'] = {
   ease: DEFAULT_EASING,

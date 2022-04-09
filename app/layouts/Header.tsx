@@ -31,10 +31,12 @@ export const UserLoggedInHeaderButtons = ({
 
   return (
     <>
-      <Button as={Link} href={Routes.NewAlbumPage()}>
+      <Button d={['none', null, 'flex']} as={Link} href={Routes.NewAlbumPage()}>
         Create
       </Button>
       <Avatar
+        bg="ui.5"
+        _hover={{ color: 'ui.100', bg: 'ui.10' }}
         as={Link}
         href={Routes.UserPage({ userId: currentUser.id })}
         boxSize={12}
@@ -52,7 +54,15 @@ export const UserLoggedInHeaderButtons = ({
 }
 
 export const Header = ({}: HeaderProps) => (
-  <Center as="header" bg="flow.20" w="full" px={4} flexShrink={0}>
+  <Center
+    as="header"
+    zIndex={10}
+    backdropFilter="blur(45px)"
+    bg="flow.20"
+    w="full"
+    px={4}
+    flexShrink={0}
+  >
     <HStack
       justify="space-between"
       h="header.height"
@@ -60,12 +70,16 @@ export const Header = ({}: HeaderProps) => (
       maxW="header.width"
     >
       <Link href={Routes.Home()} py={3} px={6} ml={-6} rounded="md">
-        <Heading as="h1" textStyle="display.small" color="ui.100">
+        <Heading
+          as="h1"
+          textStyle={['display.small-mobile', null, 'display.small']}
+          color="ui.100"
+        >
           Galliary
         </Heading>
       </Link>
       <HStack spacing={4}>
-        <Button as={Link} href={Routes.Home()}>
+        <Button d={['none', null, 'flex']} as={Link} href={Routes.Home()}>
           Browse
         </Button>
 
