@@ -39,8 +39,8 @@ import { CDN, ImageType } from 'app/utils/cdn'
 import { SiteDetails } from 'app/constants'
 import { MotionImage, transitionConfig } from 'app/components/Motion'
 import { Box } from '@chakra-ui/layout'
-
-const ITEMS_PER_PAGE = 30
+import { AlbumPreview } from 'app/components/views/AlbumPreview'
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 
 export interface AlbumPageProps {
   initialAlbum: PromiseReturnType<typeof getAlbum>
@@ -75,12 +75,15 @@ export const getServerSideProps = getGlobalServerSideProps<AlbumPageProps>(
   },
 )
 
+const ITEMS_PER_PAGE = 42
+
 const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
   initialAlbum,
   initialAlbumImages,
   currentUser,
 }) => {
   const deleteConfirmDisclosure = useDisclosure()
+  const [{ sizeStyle: size }] = useThumbnailSizing()
   const albumId = useParam('albumId', 'string')
   const [album] = useQuery(
     getAlbum,
@@ -102,6 +105,11 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
       initialData: initialAlbumImages,
     },
   )
+
+  const filledImages = [
+    ...images,
+    ...[...Array(ITEMS_PER_PAGE - images.length)].fill(null),
+  ]
 
   return (
     <>
@@ -220,10 +228,18 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
               </>
             )
           }
-          data={images}
+          data={filledImages}
           hasMore={hasMore}
           addPrompt={<AddNewItem />}
-          onDisplay={(data) => <ImagePreview item={data} />}
+          onDisplay={(data) =>
+            data ? (
+              <Box as="li">
+                <ImagePreview item={data} />
+              </Box>
+            ) : (
+              <Box as="li" bg="ui.5" boxSize={size} />
+            )
+          }
         />
       </VStack>
     </>

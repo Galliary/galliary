@@ -44,9 +44,9 @@ export const UserLoggedInHeaderButtons = ({
         iconLabel={currentUser.username}
         aria-label={`${currentUser.username}'s profile`}
         src={
-          CDN.getImageUrl(currentUser.avatarSourceId ?? '', ImageType.Small) ??
-          currentUser.avatarUrl ??
-          ''
+          currentUser.avatarSourceId
+            ? CDN.getImageUrl(currentUser.avatarSourceId, ImageType.Small)
+            : currentUser.avatarUrl ?? ''
         }
       />
     </>
