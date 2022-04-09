@@ -11,6 +11,7 @@ const AuthApi: BlitzApiHandler = async (req, res) => {
   }
 
   return passportAuth({
+    secureProxy: ConfigService.get('NODE_ENV') === 'production',
     successRedirectUrl: '/',
     errorRedirectUrl: '/',
     strategies: ConfigService.getStrategies(req, res, StrategyType.Create),
