@@ -48,6 +48,7 @@ export const Favourite = ({
     () =>
       !isLoggedIn ? null : (
         <Button
+          aria-label="Favourite"
           size="none"
           variant="none"
           onClick={onFavourite}
