@@ -1,5 +1,5 @@
 import db, { User, UserConnection, UserConnectionType } from 'db'
-import { Session } from 'blitz'
+import { PublicData, Session } from 'blitz'
 
 interface UpdateUserConnectionProps {
   type: UserConnectionType
@@ -25,9 +25,9 @@ export const updateUserConnection = async ({
     (conn) => conn.type === type && conn.email === update.email,
   )
 
-  const publicData = {
+  const publicData: PublicData = {
     userId: user.id,
-    role: user.role,
+    permissions: user.permissions,
   }
 
   if (!existingConnection) {

@@ -7,7 +7,6 @@ import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
 import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
-import { CDN, ImageType } from 'app/utils/cdn'
 import type { CurrentUserType } from 'app/controllers/LoginController'
 
 const LoginController = dynamic(
@@ -43,11 +42,7 @@ export const UserLoggedInHeaderButtons = ({
         name={currentUser.username}
         iconLabel={currentUser.username}
         aria-label={`${currentUser.username}'s profile`}
-        src={
-          currentUser.avatarSourceId
-            ? CDN.getImageUrl(currentUser.avatarSourceId, ImageType.Small)
-            : currentUser.avatarUrl ?? ''
-        }
+        src={currentUser.avatarUrl ?? ''}
       />
     </>
   )

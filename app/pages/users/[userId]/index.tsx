@@ -17,7 +17,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import { CDN, ImageType, StaticImages } from 'app/utils/cdn'
 import getUserProfile from 'app/data/queries/users/getUserProfile'
 import { LogoutIcon } from 'app/components/icons/LogoutIcon'
 import { ImagePreview } from 'app/components/views/ImagePreview'
@@ -111,23 +110,12 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
         imageHeight="630"
         imageType="image/png"
         imageAlt={SiteDetails.Name}
-        imageUrl={
-          user.avatarSourceId
-            ? CDN.getImageUrl(user.avatarSourceId, ImageType.Social)
-            : user.avatarUrl ??
-              CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)
-        }
+        imageUrl={user.avatarUrl ?? ''}
       />
 
       <VStack boxSize="full" spacing={8}>
         <Suspense fallback={<Loader />}>
-          <ProfileBanner
-            isOwnProfile={isOwnProfile}
-            bannerUrl={
-              user.bannerSourceId &&
-              CDN.getImageUrl(user.bannerSourceId, ImageType.Public)
-            }
-          />
+          <ProfileBanner user={user} isOwnProfile={isOwnProfile} />
         </Suspense>
         <HStack
           spacing={0}
@@ -153,11 +141,7 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                   <Avatar
                     bg="flow.10"
                     boxSize="256px"
-                    src={
-                      user.avatarSourceId
-                        ? CDN.getImageUrl(user.avatarSourceId, ImageType.Large)
-                        : user.avatarUrl ?? ''
-                    }
+                    src={user.avatarUrl ?? ''}
                   />
                   <InvertCircleLongIcon
                     pos="absolute"

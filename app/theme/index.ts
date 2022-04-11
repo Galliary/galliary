@@ -9,8 +9,8 @@ import { LinkStyle } from './components/Link'
 import { InputStyle } from './components/Input'
 import { ModalStyle } from './components/Modal'
 import { ButtonStyle } from './components/Button'
+import { CheckboxStyle } from './components/Checkbox'
 import { TextareaStyle } from './components/TextareaStyle'
-import { cssVar } from '@chakra-ui/theme-tools'
 
 export const DEFAULT_MODE = 'dark'
 
@@ -58,6 +58,7 @@ export const theme = {
     Modal: ModalStyle,
     Textarea: TextareaStyle,
     Button: ButtonStyle,
+    Checkbox: CheckboxStyle,
     Container: {
       baseStyle: {
         p: 0,

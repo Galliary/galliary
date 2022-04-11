@@ -3,24 +3,17 @@ import { Box } from '@chakra-ui/layout'
 import { AnimatePresence } from 'framer-motion'
 import { MotionImage, transitionConfig } from 'app/components/Motion'
 import { SiteDetails } from 'app/constants'
-import { CDN, ImageType } from 'app/utils/cdn'
 import { useBoolean } from '@chakra-ui/react'
+import {
+  BaseImageItemType,
+  getImageUrlFromItem,
+} from 'app/services/cdn/client.service'
 
 interface AutoImageCarouselProps {
-  items: Array<{ id: string; sourceId: string }>
+  items: Array<BaseImageItemType>
 }
 
 const SHOWCASE_INCREMENT_TIME = 30000
-
-const preloadNextImage = (sourceId: string) =>
-  new Promise((resolve, reject) => {
-    const image = new Image()
-
-    image.onload = () => resolve(image.src)
-    image.onerror = (e) => reject(e)
-
-    image.src = CDN.getImageUrl(sourceId, ImageType.Public)
-  })
 
 const nextIndex = (length: number) => (index: number) => (index + 1) % length
 
@@ -30,6 +23,16 @@ export const AutoImageCarousel = ({ items = [] }: AutoImageCarouselProps) => {
   const [allImagesAreLoaded, setAllImagesAreLoaded] = useBoolean(false)
 
   const next = useMemo(() => nextIndex(items.length), [items.length])
+
+  const preloadNextImage = (item: BaseImageItemType) =>
+    new Promise((resolve, reject) => {
+      const image = new Image()
+
+      image.onload = () => resolve(image.src)
+      image.onerror = (e) => reject(e)
+
+      image.src = getImageUrlFromItem(item)
+    })
 
   const incrementIndex = () => {
     const nextIndex = next(currentIndex)
@@ -44,13 +47,11 @@ export const AutoImageCarousel = ({ items = [] }: AutoImageCarouselProps) => {
     }
 
     if (isEndOfLoop || allImagesAreLoaded) {
-      console.log('showing next index')
       setIndex(nextIndex)
     } else {
       const nextItem = items[nextIndex]
       if (nextItem) {
-        console.log('preloading next image')
-        preloadNextImage(nextItem.sourceId)
+        preloadNextImage(nextItem)
           .then(() => setIndex(nextIndex))
           .catch(() => setIndex(nextIndex + 1))
       }
@@ -74,10 +75,10 @@ export const AutoImageCarousel = ({ items = [] }: AutoImageCarouselProps) => {
             w="full"
             h="full"
             objectFit="cover"
-            objectPosition="center calc(50% + 90px)"
+            objectPosition="center calc(50% + 45px)"
             alt={SiteDetails.Name}
             transition={transitionConfig}
-            src={CDN.getImageUrl(item.sourceId, ImageType.Public)}
+            src={getImageUrlFromItem(item)}
             initial={{
               opacity: Number(!doneFirstIteration),
               x: !doneFirstIteration ? '0%' : '100%',

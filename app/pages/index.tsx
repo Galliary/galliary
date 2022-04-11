@@ -7,20 +7,19 @@ import {
 } from 'blitz'
 import Layout from 'app/layouts/Layout'
 import { Box, Text, VStack } from '@chakra-ui/layout'
-import { CDN, ImageType, StaticImages } from 'app/utils/cdn'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { usePage } from 'app/data/hooks/usePage'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import getAlbums from 'app/data/queries/albums/getAlbums'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { OrganizationInfo } from 'app/meta/OrganizationInfo'
 import { SiteDetails } from 'app/constants'
 import { Center } from '@chakra-ui/react'
 import { useMemo } from 'react'
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 
 const AutoImageCarousel = dynamic(
   () => import('app/components/views/AutoImageCarousel'),
@@ -58,7 +57,7 @@ export const getServerSideProps = getGlobalServerSideProps(
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
-  const [{ sizeStyle: size }] = useThumbnailSizing()
+  const boxSize = useThumbnailSizing()
 
   const [{ albums, hasMore }] = usePaginatedQuery(
     getAlbums,
@@ -90,7 +89,7 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
         imageHeight="630"
         imageType="image/png"
         imageAlt={SiteDetails.Name}
-        imageUrl={CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)}
+        imageUrl="CHANGE ME"
       />
       <OrganizationInfo />
 
@@ -130,7 +129,7 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
                 <AlbumPreview item={data} />
               </Box>
             ) : (
-              <Box as="li" bg="ui.5" boxSize={size} />
+              <Box as="li" bg="ui.5" boxSize={boxSize} />
             )
           }
         />

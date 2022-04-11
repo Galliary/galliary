@@ -25,7 +25,6 @@ import {
   MotionButton,
   transitionMediumConfig,
 } from 'app/components/Motion'
-import { CDN } from 'app/utils/cdn'
 import { getPalette } from 'color-thief-react'
 
 type Palette = [number, number, number]
@@ -55,12 +54,9 @@ export const LabeledImageField = forwardRef<
 >(({ name, label, outerProps, ratio, imageProps, ...props }, ref) => {
   const [{ onChange: _, value, ...input }] = useField(name)
   const { isSubmitting, errors, values, setFieldValue } =
-    useFormikContext<{ sourceId: string; __image_color: Palette }>()
-  const [isFocused, setFocusing] = useBoolean(false)
+    useFormikContext<{ __image_color: Palette }>()
   const [isHovering, setHovering] = useBoolean(false)
-  const [imageSrc, setImageSrc] = useState(
-    values.sourceId ? CDN.getImageUrl(values.sourceId) : '',
-  )
+  const [imageSrc, setImageSrc] = useState('')
   const [colors, setColors] = useState<Palette[] | undefined>()
 
   const sizeProps: BoxProps = {

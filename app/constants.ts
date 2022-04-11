@@ -1,4 +1,14 @@
-export const CLOUDFLARE_ACCOUNT_HASH = '8yAzsAP1tGpuA0gIh26SsA'
+export const MAX_UPLOAD_FILE_SIZE = 64 * 1024 * 1024
+
+export const CDN_URL = 'https://cdn.galliary.com'
+
+export const SUPPORTED_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'image/bmp',
+]
 
 export const DISCORD_SUPPORT_SERVER_URL = 'https://discord.gg/9txsZrHcme'
 

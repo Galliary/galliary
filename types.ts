@@ -1,14 +1,20 @@
 import * as React from 'react'
-import {
-  DefaultCtx,
-  PromiseReturnType,
-  SessionContext,
-  SimpleRolesIsAuthorized,
-} from 'blitz'
-import { User, UserRole } from 'db'
+import { DefaultCtx, PromiseReturnType, SessionContext } from 'blitz'
+import { User } from 'db'
 import { UseDisclosureReturn } from '@chakra-ui/react'
-import { NextPage } from 'next'
+import {
+  RedirectAuthenticatedTo,
+  RedirectAuthenticatedToFn,
+  RouteUrlObject,
+} from 'next'
 import getCurrentUser from 'app/data/queries/users/getCurrentUser'
+import { Permissions } from 'app/utils/permissions'
+import {
+  AppPropsType,
+  NextComponentType,
+  NextPageContext,
+} from 'next/dist/shared/lib/utils'
+import { Router } from 'next/router'
 
 export type Maybe<T> = T | null | undefined
 export type NotUndefined<T> = T extends undefined ? never : T
@@ -21,10 +27,9 @@ declare module 'blitz' {
   }
 
   export interface Session {
-    isAuthorized: SimpleRolesIsAuthorized<UserRole>
     PublicData: {
       userId: User['id']
-      role: UserRole
+      permissions: number
     }
   }
 
@@ -32,9 +37,28 @@ declare module 'blitz' {
     currentUser: PromiseReturnType<typeof getCurrentUser>
   }
 
+  export type NextPage<P = {}, IP = P> = NextComponentType<
+    NextPageContext,
+    IP,
+    P
+  > & {
+    getLayout?: (component: JSX.Element) => JSX.Element
+    getPermissions?: () => Permissions[]
+    authenticate?: boolean | { redirectTo?: string | RouteUrlObject }
+    suppressFirstRenderFlicker?: boolean
+    redirectAuthenticatedTo?:
+      | RedirectAuthenticatedTo
+      | RedirectAuthenticatedToFn
+  }
+
   export type BlitzPage<P = {}, IP = P> = NextPage<P & GlobalPageProps, IP>
+
+  export type AppProps<P = {}> = AppPropsType<Router, P> & {
+    Component: BlitzPage
+  }
 }
 
+// svg cringe
 declare global {
   namespace JSX {
     interface IntrinsicElements {

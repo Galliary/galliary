@@ -21,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { DeleteImageModal } from 'app/components/modals/DeleteImageModal'
 import { InvertCircleCornerIcon } from 'app/components/icons/InvertCircleCornerIcon'
-import { CDN, ImageType } from 'app/utils/cdn'
 import {
   MotionBox,
   transitionConfig,
@@ -42,6 +41,7 @@ import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SiteDetails } from 'app/constants'
 import { Controlled as ControlledZoom } from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 
 export interface ImagePageProps {
   initialData: PromiseReturnType<typeof getImage>
@@ -93,7 +93,7 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
         imageHeight="630"
         imageType="image/png"
         imageAlt={image.title ?? 'Untitled Image'}
-        imageUrl={CDN.getImageUrl(image.sourceId, ImageType.Social)}
+        imageUrl={getImageUrlFromItem(image)}
       />
       <Center boxSize="full" pos="relative">
         <DeleteImageModal
@@ -129,13 +129,13 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
               boxSize="full"
               inset={0}
               zIndex={-1}
-              src={CDN.getImageUrl(image.sourceId)}
+              src={getImageUrlFromItem(image)}
               objectFit="cover"
             />
           </MotionBox>
           <Center boxSize="full" backdropFilter="blur(45px)" bg="bg-overlay">
             {albumId && imageId && (
-              <Center pos="absolute" top={0} left={0} right={0}>
+              <Center pos="absolute" zIndex={1} top={0} left={0} right={0}>
                 <Box
                   pb={6}
                   overflow="hidden"
@@ -238,7 +238,7 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
                           </HStack>
                           {isAuthor && (
                             <HStack spacing={4}>
-                              <Tooltip label="Edit">
+                              {/*<Tooltip label="Edit">
                                 <IconButton
                                   p={3}
                                   as={Link}
@@ -249,7 +249,7 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
                                     imageId: image.id,
                                   })}
                                 />
-                              </Tooltip>
+                              </Tooltip>*/}
 
                               <Tooltip label="Delete">
                                 <IconButton
@@ -270,6 +270,7 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
               </Center>
             )}
             <MotionBox
+              d="flex"
               transition={transitionConfig}
               animate={{ opacity: Number(isLoaded) }}
               onClick={setIsFullscreen.toggle}
@@ -281,8 +282,9 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
                 onZoomChange={console.log}
               >
                 <ChakraImage
+                  maxH="calc(100vh - 90px)"
                   objectFit="contain"
-                  src={CDN.getImageUrl(image.sourceId, ImageType.Public)}
+                  src={getImageUrlFromItem(image)}
                   onLoad={setLoaded.on}
                 />
               </ControlledZoom>

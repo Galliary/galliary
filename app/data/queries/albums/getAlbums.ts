@@ -35,8 +35,9 @@ export default resolver.pipe(
           select: {
             id: true,
             title: true,
-            sourceId: true,
+            coverExt: true,
             createdAt: true,
+            authorId: true,
             colors: true,
             userFavourites: {
               select: {

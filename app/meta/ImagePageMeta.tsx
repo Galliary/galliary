@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { useRouter } from 'blitz'
 import { Article } from 'schema-dts'
 import { Image, User } from '@prisma/client'
-import { CDN, ImageType } from 'app/utils/cdn'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import { SiteDetails } from 'app/constants'
 import { Head } from 'blitz'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 
 interface ImagePageProps {
   image: Image & {
@@ -58,9 +58,9 @@ export const ImagePageMeta = ({
           keywords: tags.toString(),
           description: SiteDetails.Description,
           url,
-          embedUrl: CDN.getImageUrl(image.sourceId, ImageType.Large),
-          contentUrl: CDN.getImageUrl(image.sourceId, ImageType.Public),
-          thumbnailUrl: CDN.getImageUrl(image.sourceId, ImageType.Medium),
+          embedUrl: getImageUrlFromItem(image),
+          contentUrl: getImageUrlFromItem(image),
+          thumbnailUrl: getImageUrlFromItem(image),
           width: '256',
           height: '256',
           dateCreated: image.createdAt.toISOString(),
@@ -80,7 +80,7 @@ export const ImagePageMeta = ({
       <link
         className="dynamic"
         rel="image_src"
-        href={CDN.getImageUrl(image.sourceId, ImageType.Public)}
+        href={getImageUrlFromItem(image)}
       />
 
       <script {...ARTICLE_STRUCTURED_DATA} />

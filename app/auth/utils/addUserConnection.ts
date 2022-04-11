@@ -1,5 +1,5 @@
 import db, { User, UserConnection, UserConnectionType } from 'db'
-import { Session } from 'blitz'
+import { PublicData, Session } from 'blitz'
 
 interface AddUserConnectionProps {
   type: UserConnectionType
@@ -27,9 +27,9 @@ export const addUserConnection = async ({
     throw new Error('You already have this connection.')
   }
 
-  const publicData = {
+  const publicData: PublicData = {
     userId: user.id,
-    role: user.role,
+    permissions: user.permissions,
   }
 
   const connectionAlreadyExists = await db.userConnection.findFirst({

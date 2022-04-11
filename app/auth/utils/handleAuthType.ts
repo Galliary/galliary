@@ -1,10 +1,10 @@
 import db, { UserConnectionType } from 'db'
 import { StrategyType } from 'app/auth/utils/strategyWithApi'
 import { createNewUser } from 'app/auth/utils/createNewUser'
-import { UserRole } from '@prisma/client'
 import { addUserConnection } from 'app/auth/utils/addUserConnection'
 import { updateUserConnection } from 'app/auth/utils/updateUserConnection'
 import { Session } from 'blitz'
+import { USER_DEFAULT_PERMISSIONS } from 'app/utils/permissions'
 
 type UserInfo = {
   userId: string
@@ -57,7 +57,7 @@ export const handleAuthType = async (
 
     return {
       userId,
-      role: UserRole.NONE,
+      permissions: USER_DEFAULT_PERMISSIONS,
     }
   }
 

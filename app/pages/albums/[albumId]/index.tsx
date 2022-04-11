@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import {
   BlitzPage,
-  Head,
   invokeWithMiddleware,
   PromiseReturnType,
   Routes,
@@ -35,12 +34,10 @@ import { Loader } from 'app/components/views/Loader'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
-import { CDN, ImageType } from 'app/utils/cdn'
 import { SiteDetails } from 'app/constants'
-import { MotionImage, transitionConfig } from 'app/components/Motion'
 import { Box } from '@chakra-ui/layout'
-import { AlbumPreview } from 'app/components/views/AlbumPreview'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 
 export interface AlbumPageProps {
   initialAlbum: PromiseReturnType<typeof getAlbum>
@@ -83,7 +80,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
   currentUser,
 }) => {
   const deleteConfirmDisclosure = useDisclosure()
-  const [{ sizeStyle: size }] = useThumbnailSizing()
+  const boxSize = useThumbnailSizing()
   const albumId = useParam('albumId', 'string')
   const [album] = useQuery(
     getAlbum,
@@ -124,7 +121,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
         imageHeight="630"
         imageType="image/png"
         imageAlt={album.title ?? 'Untitled Album'}
-        imageUrl={CDN.getImageUrl(album.sourceId, ImageType.Social)}
+        imageUrl={getImageUrlFromItem(album)}
       />
 
       <VStack spacing={0} boxSize="full">
@@ -167,7 +164,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
               objectFit="cover"
               objectPosition="center calc(50% + 90px)"
               alt={album.title ?? 'Untitled Album'}
-              src={CDN.getImageUrl(album.sourceId, ImageType.Public)}
+              src={getImageUrlFromItem(album)}
             />
           </Box>
         </Center>
@@ -196,7 +193,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
                     icon={<UploadIcon />}
                   />
                 </Tooltip>
-                <Tooltip label="Edit Album">
+                {/*<Tooltip label="Edit Album">
                   <IconButton
                     as={Link}
                     href={Routes.EditAlbumPage({ albumId: album.id })}
@@ -204,7 +201,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
                     p={3}
                     icon={<EditIcon />}
                   />
-                </Tooltip>
+                </Tooltip>*/}
                 <Tooltip label="Delete Album">
                   <IconButton
                     aria-label="Delete Album"
@@ -237,7 +234,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
                 <ImagePreview item={data} />
               </Box>
             ) : (
-              <Box as="li" bg="ui.5" boxSize={size} />
+              <Box as="li" bg="ui.5" boxSize={boxSize} />
             )
           }
         />

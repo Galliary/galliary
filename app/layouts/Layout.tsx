@@ -6,8 +6,7 @@ import { Footer } from 'app/layouts/Footer'
 import { GlobalMeta } from 'app/meta/GlobalMeta'
 import { VersionDisplay } from 'app/components/views/VersionDisplay'
 
-const Layout: BlitzLayout<{ title?: string; hideFooter?: boolean }> = ({
-  title,
+const Layout: BlitzLayout<{ hideFooter?: boolean }> = ({
   hideFooter = false,
   children,
 }) => {

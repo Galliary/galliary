@@ -11,13 +11,19 @@ import {
 } from '@chakra-ui/react'
 import { Maybe } from 'types'
 import { Link } from 'app/components/Link'
-import { CDN, ImageType } from 'app/utils/cdn'
 import { Tooltip } from 'app/components/Tooltip'
 import { MotionBox, transitionFastConfig } from 'app/components/Motion'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 
 type AnyItem =
-  | { id: string; sourceId: string; title: Maybe<string> }
-  | { id: string; sourceId: string; albumId: string; title: Maybe<string> }
+  | { id: string; authorId: string; coverExt: string; title: Maybe<string> }
+  | {
+      id: string
+      authorId: string
+      imageExt: string
+      albumId: string
+      title: Maybe<string>
+    }
   | {
       id: string
       avatarUrl: Maybe<string>
@@ -59,7 +65,7 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     if ('username' in item) {
       return item.avatarUrl ?? ''
     } else {
-      return CDN.getImageUrl(item.sourceId, ImageType.Small)
+      return getImageUrlFromItem(item)
     }
   }, [])
 

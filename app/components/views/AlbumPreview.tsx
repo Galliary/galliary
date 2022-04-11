@@ -1,11 +1,15 @@
 import { Routes } from 'blitz'
-import { Box, Center, Image as Img } from '@chakra-ui/react'
-import { Suspense, useMemo, useRef } from 'react'
+import {
+  Box,
+  Center,
+  useBoolean,
+  useBreakpointValue,
+  useToken,
+} from '@chakra-ui/react'
+import { Suspense } from 'react'
 import favouriteAlbum from 'app/data/mutations/albums/favouriteAlbum'
-import { inOut, MotionBox, transitionMediumConfig } from 'app/components/Motion'
-import { CDN } from 'app/utils/cdn'
+import { MotionBox, transitionMediumConfig } from 'app/components/Motion'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import { useHasImageLoaded } from 'app/data/hooks/useHasImageLoaded'
 import { Favourite } from 'app/components/views/Favourite'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
@@ -13,24 +17,19 @@ import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
 import type { Album } from '@prisma/client'
 import { AnimatePresence } from 'framer-motion'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { Image } from 'app/components/Image'
 
 export interface EntityPreviewProps {
   item: Album & {
-    images: Array<{
-      id: string
-      title: string | null
-      sourceId: string
-      createdAt: Date
-    }>
-  } & {
     userFavourites: Array<{ id: string }>
   }
 }
 
 export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
-  const [{ sizeStyle: size }, sizingName] = useThumbnailSizing()
-  const ref = useRef<HTMLImageElement>(null)
-  const hasImageLoaded = useHasImageLoaded(ref)
+  const boxSize = useThumbnailSizing()
+  const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
+  const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
 
   return (
     <Tooltip label={album.title ?? 'Untitled Album'}>
@@ -39,7 +38,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
           d="flex"
           pos="relative"
           overflow="hidden"
-          boxSize={size}
+          boxSize={boxSize}
           aria-label={album.title ?? 'Untitled Album'}
           href={Routes.ShowAlbumPage({ albumId: album.id })}
         >
@@ -95,13 +94,15 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
             inset={0}
             animate={{ opacity: Number(hasImageLoaded) }}
           >
-            <Img
-              ref={ref}
+            <Image
+              loading="lazy"
               overflow="hidden"
               objectFit="cover"
-              boxSize={size}
+              height={boxSizeImage}
+              width={boxSizeImage}
               alt={album.title ?? album.id}
-              src={CDN.getImageUrl(album.sourceId ?? '', sizingName)}
+              src={getImageUrlFromItem(album)}
+              onLoadComplete={setHasImageLoaded.on}
             />
           </MotionBox>
         </Link>

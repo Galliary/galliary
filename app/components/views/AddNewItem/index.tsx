@@ -2,15 +2,13 @@ import { Routes } from 'blitz'
 import { Box, Center, Text, useBoolean } from '@chakra-ui/react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
 import { NewGraphicIcon } from 'app/components/icons/NewGraphicIcon'
-import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { Link } from 'app/components/Link'
 
 export const AddNewItem = () => {
-  const [{ sizeStyle: size }] = useThumbnailSizing()
   const [isHovering, setHovering] = useBoolean(false)
 
   return (
-    <Box boxSize={size} p={4}>
+    <Box p={4}>
       <Link
         boxSize="full"
         d="flex"

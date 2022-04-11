@@ -1,7 +1,6 @@
 import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
-import { CDN } from 'app/utils/cdn'
 
 const DeleteAlbum = z.object({
   id: z.string(),
@@ -17,7 +16,7 @@ export default resolver.pipe(
 
     const album = await db.album.findFirst({
       where: { id },
-      select: { sourceId: true, images: true },
+      select: { images: true },
     })
 
     if (!album) {
@@ -26,10 +25,6 @@ export default resolver.pipe(
 
     if (album.images.length !== 0) {
       return null
-    }
-
-    if (album.sourceId) {
-      await CDN.delete(album.sourceId)
     }
 
     return await db.album.deleteMany({

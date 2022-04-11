@@ -1,10 +1,16 @@
 import { Image } from '@prisma/client'
 import { Routes } from 'blitz'
-import { Box, Center, Image as Img } from '@chakra-ui/react'
+import {
+  Box,
+  Center,
+  Image as Img,
+  useBoolean,
+  useBreakpointValue,
+  useToken,
+} from '@chakra-ui/react'
 import { Suspense, useRef } from 'react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
 import favouriteImage from 'app/data/mutations/images/favouriteImage'
-import { CDN } from 'app/utils/cdn'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { useHasImageLoaded } from 'app/data/hooks/useHasImageLoaded'
 import { Favourite } from 'app/components/views/Favourite'
@@ -13,7 +19,11 @@ import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
 import { AnimatePresence } from 'framer-motion'
-import favouriteAlbum from 'app/data/mutations/albums/favouriteAlbum'
+import {
+  getImageUrl,
+  getImageUrlFromItem,
+} from 'app/services/cdn/client.service'
+import { Image as ImageComponent } from 'app/components/Image'
 
 export interface EntityPreviewProps {
   item: Image & {
@@ -22,9 +32,9 @@ export interface EntityPreviewProps {
 }
 
 export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
-  const ref = useRef<HTMLImageElement>(null)
-  const hasImageLoaded = useHasImageLoaded(ref)
-  const [{ sizeStyle: size }, sizingName] = useThumbnailSizing()
+  const boxSize = useThumbnailSizing()
+  const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
+  const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
@@ -66,7 +76,7 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
               </Suspense>
             </MotionBox>
           </AnimatePresence>
-          <Box pos="relative" boxSize={size} bg="flow.20" overflow="hidden">
+          <Box pos="relative" boxSize={boxSize} bg="flow.20" overflow="hidden">
             <Box
               pos="absolute"
               inset={0}
@@ -90,16 +100,17 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
               animate={{ opacity: Number(hasImageLoaded) }}
               pos="absolute"
               inset={0}
-              boxSize={size}
+              boxSize={boxSize}
             >
-              <Img
-                ref={ref}
+              <ImageComponent
                 loading="lazy"
                 overflow="hidden"
                 objectFit="cover"
-                boxSize={size}
+                height={boxSizeImage}
+                width={boxSizeImage}
                 alt={image.title ?? image.id}
-                src={CDN.getImageUrl(image.sourceId ?? '', sizingName)}
+                src={getImageUrlFromItem(image)}
+                onLoadComplete={setHasImageLoaded.on}
               />
             </MotionBox>
           </Box>
