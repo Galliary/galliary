@@ -10,7 +10,6 @@ export const useHasImageLoaded = (ref: RefObject<HTMLImageElement>) => {
 
   // onLoad doesn't reliably fire on the first load, so we use a ref to check for 'complete'
   useEffect(() => {
-    console.log(ref.current?.complete)
     if (ref.current) {
       if (ref.current?.complete && !isLoaded) {
         hasLoaded()

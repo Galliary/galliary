@@ -9,8 +9,8 @@ import { LinkStyle } from './components/Link'
 import { InputStyle } from './components/Input'
 import { ModalStyle } from './components/Modal'
 import { ButtonStyle } from './components/Button'
+import { CheckboxStyle } from './components/Checkbox'
 import { TextareaStyle } from './components/TextareaStyle'
-import { cssVar } from '@chakra-ui/theme-tools'
 
 export const DEFAULT_MODE = 'dark'
 
@@ -58,6 +58,7 @@ export const theme = {
     Modal: ModalStyle,
     Textarea: TextareaStyle,
     Button: ButtonStyle,
+    Checkbox: CheckboxStyle,
     Container: {
       baseStyle: {
         p: 0,
@@ -76,7 +77,7 @@ export const theme = {
   transition,
   fonts: {
     heading: `'Style Script', cursive, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
-    body: `'Montserrat Alternates', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
+    body: `'Poppins', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
     mono: `SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace`,
   },
   layerStyles: {
@@ -109,7 +110,7 @@ export const theme = {
     },
   },
   shadows: {
-    outline: '0 0 0 4px var(--galliary-colors-brand-secondary-100)',
+    outline: '0 0 0 4px var(--galliary-colors-brand-primary-100)',
   },
   radii: themeData.radius,
   sizes: {

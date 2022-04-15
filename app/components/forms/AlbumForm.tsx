@@ -44,7 +44,6 @@ const SetImageAsBackground = () => {
   useEffect(() => {
     getImageBase64(formik.values.file)
       .then((imgUrl) => {
-        console.log({ imgUrl })
         setImageUrl(imgUrl)
       })
       .catch(() => {})

@@ -111,7 +111,10 @@ model User {
 
   bio String?
 
+  // WARNING: DEPRECATED - Use 'permissions' instead.
   role UserRole @default(NONE)
+
+  permissions    Int @default(130048) // 130048 = USER_DEFAULT_PERMISSIONS
 
   email          String  @unique
   hashedPassword String?
@@ -119,7 +122,7 @@ model User {
   avatarUrl String?
   avatarSourceId String? // Overrides the 'avatarUrl' from outside connections
 
-  bannerSourceId String?
+  bannerExt String @default("png") // The ext of the user's banner
 
   badges UserBadge[]
 
@@ -224,7 +227,8 @@ model Image {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sourceId String
+  imageExt String
+
   colors   Int[]
 
   title       String?
@@ -256,7 +260,7 @@ model Album {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  sourceId String
+  coverExt String
   colors   Int[]
 
   title       String?

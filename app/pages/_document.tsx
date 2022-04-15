@@ -1,11 +1,4 @@
-import {
-  Html,
-  Main,
-  Document,
-  BlitzScript,
-  DocumentHead,
-  /*DocumentContext*/
-} from 'blitz'
+import { BlitzScript, Document, DocumentHead, Html, Main } from 'blitz'
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
@@ -17,7 +10,18 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <DocumentHead />
+        <DocumentHead>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Style+Script&display=swap"
+            rel="stylesheet"
+          />
+        </DocumentHead>
         <body>
           <Main />
           <BlitzScript />

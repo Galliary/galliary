@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import {
   BlitzPage,
-  Head,
   invokeWithMiddleware,
   PromiseReturnType,
   Routes,
@@ -9,7 +8,14 @@ import {
   useParam,
   useQuery,
 } from 'blitz'
-import { HStack, IconButton, Text, VStack } from '@chakra-ui/react'
+import {
+  Center,
+  HStack,
+  IconButton,
+  Image,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { DeleteAlbumModal } from 'app/components/modals/DeleteAlbumModal'
 import getAlbumImages from 'app/data/queries/albums/getAlbumImages'
 import { EditIcon } from 'app/components/icons/EditIcon'
@@ -28,11 +34,10 @@ import { Loader } from 'app/components/views/Loader'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
-import { CDN, ImageType } from 'app/utils/cdn'
-import packageJson from 'package.json'
-const { galliary } = packageJson
-
-const ITEMS_PER_PAGE = 30
+import { SiteDetails } from 'app/constants'
+import { Box } from '@chakra-ui/layout'
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
+import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 
 export interface AlbumPageProps {
   initialAlbum: PromiseReturnType<typeof getAlbum>
@@ -67,12 +72,15 @@ export const getServerSideProps = getGlobalServerSideProps<AlbumPageProps>(
   },
 )
 
+const ITEMS_PER_PAGE = 42
+
 const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
   initialAlbum,
   initialAlbumImages,
   currentUser,
 }) => {
   const deleteConfirmDisclosure = useDisclosure()
+  const boxSize = useThumbnailSizing()
   const albumId = useParam('albumId', 'string')
   const [album] = useQuery(
     getAlbum,
@@ -95,24 +103,72 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
     },
   )
 
+  const filledImages = [
+    ...images,
+    ...[...Array(ITEMS_PER_PAGE - images.length)].fill(null),
+  ]
+
   return (
     <>
-      <Head>
-        <SimpleMeta
-          title={`${galliary.name} | ${album.title ?? 'Untitled Album'} by ${
-            album.author?.nickname ?? album.author?.username
-          }`}
-          description={album.description ?? galliary.description}
-        />
-        <ImageMeta
-          imageWidth="1200"
-          imageHeight="630"
-          imageType="image/png"
-          imageAlt={album.title ?? 'Untitled Album'}
-          imageUrl={CDN.getImageUrl(album.sourceId, ImageType.Social)}
-        />
-      </Head>
+      <SimpleMeta
+        title={`${SiteDetails.Name} | ${album.title ?? 'Untitled Album'} by ${
+          album.author?.nickname ?? album.author?.username
+        }`}
+        description={album.description ?? SiteDetails.Description}
+      />
+      <ImageMeta
+        imageWidth="1200"
+        imageHeight="630"
+        imageType="image/png"
+        imageAlt={album.title ?? 'Untitled Album'}
+        imageUrl={getImageUrlFromItem(album)}
+      />
+
       <VStack spacing={0} boxSize="full">
+        <Center
+          p={8}
+          w="full"
+          pos="relative"
+          overflow="hidden"
+          textAlign="center"
+          h={[
+            'banner-mobile.height-with-header',
+            null,
+            'banner.height-with-header',
+          ]}
+          mt="-header.height"
+        >
+          <Text
+            as="h2"
+            fontSize="24px"
+            zIndex={10}
+            color="ui.100"
+            pt="header.height"
+          >
+            {album.title ?? 'Untitled Album'}
+          </Text>
+          <Box pos="absolute" inset={0} opacity={0.6} boxSize="full">
+            <Box
+              pos="absolute"
+              inset={0}
+              zIndex={1}
+              boxSize="full"
+              bg="background.full"
+              opacity={0.5}
+            />
+            <Image
+              pos="absolute"
+              inset={0}
+              w="full"
+              h="full"
+              objectFit="cover"
+              objectPosition="center calc(50% + 90px)"
+              alt={album.title ?? 'Untitled Album'}
+              src={getImageUrlFromItem(album)}
+            />
+          </Box>
+        </Center>
+
         <Suspense fallback={<Loader />}>
           <DeleteAlbumModal
             albumId={album.id}
@@ -137,7 +193,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
                     icon={<UploadIcon />}
                   />
                 </Tooltip>
-                <Tooltip label="Edit Album">
+                {/*<Tooltip label="Edit Album">
                   <IconButton
                     as={Link}
                     href={Routes.EditAlbumPage({ albumId: album.id })}
@@ -145,7 +201,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
                     p={3}
                     icon={<EditIcon />}
                   />
-                </Tooltip>
+                </Tooltip>*/}
                 <Tooltip label="Delete Album">
                   <IconButton
                     aria-label="Delete Album"
@@ -169,10 +225,18 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
               </>
             )
           }
-          data={images}
+          data={filledImages}
           hasMore={hasMore}
           addPrompt={<AddNewItem />}
-          onDisplay={(data) => <ImagePreview item={data} />}
+          onDisplay={(data) =>
+            data ? (
+              <Box as="li">
+                <ImagePreview item={data} />
+              </Box>
+            ) : (
+              <Box as="li" bg="ui.5" boxSize={boxSize} />
+            )
+          }
         />
       </VStack>
     </>

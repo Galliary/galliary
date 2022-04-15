@@ -41,7 +41,10 @@ export const TwitterStrategy = (
         )
       }
 
-      const avatarUrl = profile.photos?.[0]?.value
+      const avatarUrl = (profile.photos?.[0]?.value ?? '').replace(
+        '_normal',
+        '',
+      )
 
       try {
         done(undefined, {

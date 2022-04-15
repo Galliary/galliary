@@ -1,54 +1,63 @@
-import { Routes } from 'blitz'
-import {
-  Avatar,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from '@chakra-ui/react'
+import { dynamic, Routes } from 'blitz'
+import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
+import { Center, Heading, HStack, Text } from '@chakra-ui/layout'
+import { Avatar } from '@chakra-ui/avatar'
+import { Button } from '@chakra-ui/button'
 import { Link } from 'app/components/Link'
 import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
-import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
-import { LoginController } from 'app/controllers/LoginController'
 import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
-import { CDN, ImageType } from 'app/utils/cdn'
+import type { CurrentUserType } from 'app/controllers/LoginController'
+
+const LoginController = dynamic(
+  () => import('app/controllers/LoginController'),
+  {
+    ssr: false,
+    loading: () => <Loader />,
+  },
+)
 
 export interface HeaderProps {}
 
-export const UserLoggedInHeaderButtons = () => {
-  const currentUser = useCurrentUser()
-
+export const UserLoggedInHeaderButtons = ({
+  currentUser,
+}: {
+  currentUser: CurrentUserType
+}) => {
   if (!currentUser) {
     return null
   }
 
   return (
     <>
-      <Button as={Link} href={Routes.NewAlbumPage()}>
+      <Button d={['none', null, 'flex']} as={Link} href={Routes.NewAlbumPage()}>
         Create
       </Button>
       <Avatar
+        bg="ui.5"
+        _hover={{ color: 'ui.100', bg: 'ui.10' }}
         as={Link}
         href={Routes.UserPage({ userId: currentUser.id })}
         boxSize={12}
-        src={
-          CDN.getImageUrl(currentUser.avatarSourceId ?? '', ImageType.Large) ??
-          currentUser.avatarUrl ??
-          ''
-        }
+        name={currentUser.username}
+        iconLabel={currentUser.username}
+        aria-label={`${currentUser.username}'s profile`}
+        src={currentUser.avatarUrl ?? ''}
       />
     </>
   )
 }
 
 export const Header = ({}: HeaderProps) => (
-  <Center bg="flow.20" w="full" px={4} flexShrink={0}>
+  <Center
+    as="header"
+    zIndex={10}
+    backdropFilter="blur(45px)"
+    bg="flow.20"
+    w="full"
+    px={4}
+    flexShrink={0}
+  >
     <HStack
       justify="space-between"
       h="header.height"
@@ -56,18 +65,22 @@ export const Header = ({}: HeaderProps) => (
       maxW="header.width"
     >
       <Link href={Routes.Home()} py={3} px={6} ml={-6} rounded="md">
-        <Heading as="h1" textStyle="display.small" color="ui.100">
+        <Heading
+          as="h1"
+          textStyle={['display.small-mobile', null, 'display.small']}
+          color="ui.100"
+        >
           Galliary
         </Heading>
       </Link>
       <HStack spacing={4}>
-        <Button as={Link} href={Routes.Home()}>
+        <Button d={['none', null, 'flex']} as={Link} href={Routes.Home()}>
           Browse
         </Button>
 
         <Suspense fallback={<Loader />}>
           <LoginController
-            action={
+            action={() => (
               <Menu>
                 <MenuButton as={Button} variant="primary">
                   Login
@@ -86,9 +99,11 @@ export const Header = ({}: HeaderProps) => (
                   ))}
                 </MenuList>
               </Menu>
-            }
+            )}
           >
-            <UserLoggedInHeaderButtons />
+            {(currentUser) => (
+              <UserLoggedInHeaderButtons currentUser={currentUser} />
+            )}
           </LoginController>
         </Suspense>
       </HStack>

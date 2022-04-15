@@ -5,6 +5,7 @@ import {
   useMutation,
   useParam,
   useQuery,
+  useRouter,
 } from 'blitz'
 import {
   Avatar,
@@ -16,7 +17,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import { CDN, ImageType, StaticImages } from 'app/utils/cdn'
 import getUserProfile from 'app/data/queries/users/getUserProfile'
 import { LogoutIcon } from 'app/components/icons/LogoutIcon'
 import { ImagePreview } from 'app/components/views/ImagePreview'
@@ -40,9 +40,7 @@ import { Loader } from 'app/components/views/Loader'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
-import packageJson from 'package.json'
-
-const { galliary } = packageJson
+import { SiteDetails } from 'app/constants'
 
 export interface UserPageProps {
   initialData: PromiseReturnType<typeof getUserProfile>
@@ -68,10 +66,15 @@ export const getServerSideProps = getGlobalServerSideProps<UserPageProps>(
 )
 
 const LogoutButton = () => {
+  const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
   return (
-    <IconButton aria-label="Logout" p={2} onClick={() => logoutMutation()}>
+    <IconButton
+      aria-label="Logout"
+      p={2}
+      onClick={() => logoutMutation().then(() => router.reload())}
+    >
       <LogoutIcon
         boxSize={8}
         cursor="pointer"
@@ -84,7 +87,6 @@ const LogoutButton = () => {
 }
 
 const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
-  console.log({ currentUser })
   const idOrUsername = useParam('userId', 'string')
   const [user] = useQuery(getUserProfile, { idOrUsername }, { initialData })
   const [openEditProfileModal] = useModal('editProfile')
@@ -100,30 +102,20 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
   return (
     <>
       <SimpleMeta
-        title={`${galliary.name} | ${user.nickname ?? user.username}`}
+        title={`${SiteDetails.Name} | ${user.nickname ?? user.username}`}
         description={user.bio ?? 'I am a new Galliary user!'}
       />
       <ImageMeta
         imageWidth="1200"
         imageHeight="630"
         imageType="image/png"
-        imageAlt={galliary.name}
-        imageUrl={
-          user.avatarSourceId
-            ? CDN.getImageUrl(user.avatarSourceId, ImageType.Social)
-            : user.avatarUrl ??
-              CDN.getImageUrl(StaticImages.SocialPreview, ImageType.Social)
-        }
+        imageAlt={SiteDetails.Name}
+        imageUrl={user.avatarUrl ?? ''}
       />
+
       <VStack boxSize="full" spacing={8}>
         <Suspense fallback={<Loader />}>
-          <ProfileBanner
-            isOwnProfile={isOwnProfile}
-            bannerUrl={
-              user.bannerSourceId &&
-              CDN.getImageUrl(user.bannerSourceId, ImageType.Public)
-            }
-          />
+          <ProfileBanner user={user} isOwnProfile={isOwnProfile} />
         </Suspense>
         <HStack
           spacing={0}
@@ -147,15 +139,9 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                     transform="scaleX(-1)"
                   />
                   <Avatar
+                    bg="flow.10"
                     boxSize="256px"
-                    src={
-                      CDN.getImageUrl(
-                        user.avatarSourceId ?? '',
-                        ImageType.Large,
-                      ) ??
-                      user.avatarUrl ??
-                      ''
-                    }
+                    src={user.avatarUrl ?? ''}
                   />
                   <InvertCircleLongIcon
                     pos="absolute"

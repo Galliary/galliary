@@ -1,13 +1,13 @@
-import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
+import { resolver } from 'blitz'
 import { snowflake } from 'app/utils/snowflake'
 
 const CreateAlbum = z.object({
-  sourceId: z.string(),
   title: z.string().max(50).optional(),
   description: z.string().max(150).optional(),
   colors: z.array(z.number()),
+  coverExt: z.string(),
 })
 
 export default resolver.pipe(

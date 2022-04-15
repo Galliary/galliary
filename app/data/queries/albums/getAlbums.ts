@@ -1,5 +1,6 @@
 import { paginate, resolver } from 'blitz'
 import db, { Prisma } from 'db'
+import { z } from 'zod'
 
 interface GetAlbumsInput
   extends Pick<
@@ -8,8 +9,15 @@ interface GetAlbumsInput
   > {}
 
 export default resolver.pipe(
+  resolver.zod(
+    z.object({
+      where: z.any(),
+      orderBy: z.any(),
+      skip: z.number(),
+      take: z.number(),
+    }),
+  ),
   async ({ where, orderBy, skip = 0, take = 100 }: GetAlbumsInput, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const {
       items: albums,
       hasMore,
@@ -24,16 +32,13 @@ export default resolver.pipe(
           ...paginateArgs,
           where,
           orderBy,
-          include: {
-            images: {
-              select: {
-                id: true,
-                sourceId: true,
-                createdAt: true,
-              },
-              take: 3,
-              orderBy: { createdAt: 'asc' },
-            },
+          select: {
+            id: true,
+            title: true,
+            coverExt: true,
+            createdAt: true,
+            authorId: true,
+            colors: true,
             userFavourites: {
               select: {
                 id: true,

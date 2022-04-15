@@ -2,6 +2,12 @@ import { ChakraTheme } from '@chakra-ui/react'
 
 export const textStyles: ChakraTheme['textStyles'] = {
   display: {
+    'small-mobile': {
+      weight: 'bold',
+      fontSize: '36px',
+      lineHeight: '48px',
+      fontFamily: 'heading',
+    },
     small: {
       weight: 'bold',
       fontSize: '48px',

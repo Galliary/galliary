@@ -1,4 +1,4 @@
-import { motion, MotionProps } from 'framer-motion'
+import { motion, MotionProps, Target } from 'framer-motion'
 import {
   Box,
   BoxProps,
@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 export const DEFAULT_DURATION = 0.85
-export const DEFAULT_EASING = [0.33, 1.08, 0, 0.96]
+export const DEFAULT_EASING = [0.04, 0.91, 0.6, 0.99]
 
 export const transitionConfig: MotionProps['transition'] = {
   ease: DEFAULT_EASING,
@@ -46,3 +46,36 @@ export const MotionButton = motion<
 export const MotionImage = motion<
   Omit<ImageProps, keyof MotionProps> & MotionProps
 >(Image as any)
+
+type InOutProps<T extends keyof Target = keyof Target> = Partial<
+  Record<T, [Target[T], Target[T], Target[T]]>
+>
+
+type InOutReturn = {
+  animate: MotionProps['animate']
+  initial: MotionProps['initial']
+  exit: MotionProps['exit']
+}
+
+/**
+ * For use with simple in->out animations.
+ * Each animation prop takes an array with 3 properties, [initial, animate, exit]
+ */
+export const inOut = (customAnimateProps: InOutProps): InOutReturn => {
+  const initial = {}
+  const animate = {}
+  const exit = {}
+
+  for (const key of Object.keys(customAnimateProps)) {
+    const [i, a, e] = customAnimateProps[key as keyof InOutProps] || []
+    initial[key] = i
+    animate[key] = a
+    exit[key] = e
+  }
+
+  return {
+    initial,
+    animate,
+    exit,
+  }
+}

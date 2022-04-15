@@ -1,24 +1,32 @@
 import {
   BlitzPage,
+  dynamic,
+  invokeWithMiddleware,
   PromiseReturnType,
   usePaginatedQuery,
-  invokeWithMiddleware,
-  Head,
 } from 'blitz'
 import Layout from 'app/layouts/Layout'
-import { Box, HStack } from '@chakra-ui/react'
-import { CDN, ImageType, StaticImages } from 'app/utils/cdn'
+import { Box, Text, VStack } from '@chakra-ui/layout'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { usePage } from 'app/data/hooks/usePage'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import getAlbums from 'app/data/queries/albums/getAlbums'
 import { AddNewItem } from 'app/components/views/AddNewItem'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
-import packageJson from 'package.json'
-const { galliary } = packageJson
+import { OrganizationInfo } from 'app/meta/OrganizationInfo'
+import { SiteDetails } from 'app/constants'
+import { Center } from '@chakra-ui/react'
+import { useMemo } from 'react'
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
+
+const AutoImageCarousel = dynamic(
+  () => import('app/components/views/AutoImageCarousel'),
+  {
+    ssr: false,
+  },
+)
 
 const ITEMS_PER_PAGE = 42
 
@@ -49,7 +57,7 @@ export const getServerSideProps = getGlobalServerSideProps(
 
 const Home: BlitzPage<HomeProps> = ({ initialData }) => {
   const { page } = usePage()
-  const [size] = useThumbnailSizing()
+  const boxSize = useThumbnailSizing()
 
   const [{ albums, hasMore }] = usePaginatedQuery(
     getAlbums,
@@ -68,35 +76,64 @@ const Home: BlitzPage<HomeProps> = ({ initialData }) => {
     ...[...Array(ITEMS_PER_PAGE - albums.length)].fill(null),
   ]
 
+  const randomFeaturedAlbums = useMemo(
+    () => [...albums].sort(() => 0.5 - Math.random()),
+    [],
+  )
+
   return (
     <>
-      <Head>
-        <SimpleMeta title={galliary.name} description={galliary.description} />
-        <ImageMeta
-          imageWidth="1200"
-          imageHeight="630"
-          imageType="image/png"
-          imageAlt={galliary.name}
-          imageUrl={CDN.getImageUrl(
-            StaticImages.SocialPreview,
-            ImageType.Social,
-          )}
-        />
-      </Head>
-      <HStack spacing={8}>
+      <SimpleMeta />
+      <ImageMeta
+        imageWidth="1200"
+        imageHeight="630"
+        imageType="image/png"
+        imageAlt={SiteDetails.Name}
+        imageUrl="CHANGE ME"
+      />
+      <OrganizationInfo />
+
+      <VStack w="full" spacing={0}>
+        <Center
+          p={8}
+          w="full"
+          pos="relative"
+          overflow="hidden"
+          textAlign="center"
+          h={[
+            'banner-mobile.height-with-header',
+            null,
+            'banner.height-with-header',
+          ]}
+          mt="-header.height"
+        >
+          <Text
+            as="h2"
+            fontSize="24px"
+            zIndex={10}
+            color="ui.100"
+            pt="header.height"
+          >
+            {SiteDetails.Description}
+          </Text>
+          <AutoImageCarousel items={randomFeaturedAlbums} />
+        </Center>
         <GalleryViewController
+          title="Featured Albums"
           data={filledAlbums}
           hasMore={hasMore}
           addPrompt={<AddNewItem />}
           onDisplay={(data) =>
             data ? (
-              <AlbumPreview item={data} />
+              <Box as="li">
+                <AlbumPreview item={data} />
+              </Box>
             ) : (
-              <Box bg="ui.5" boxSize={size} />
+              <Box as="li" bg="ui.5" boxSize={boxSize} />
             )
           }
         />
-      </HStack>
+      </VStack>
     </>
   )
 }

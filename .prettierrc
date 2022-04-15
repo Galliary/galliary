@@ -3,5 +3,6 @@
   "noSemi": true,
   "semi": false,
   "trailingComma": "all",
-  "printWidth": 80
+  "printWidth": 80,
+  "endOfLine": "crlf"
 }

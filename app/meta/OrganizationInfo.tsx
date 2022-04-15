@@ -1,16 +1,17 @@
 import { useMemo } from 'react'
-import { galliary } from 'package.json'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import type { Organization, WebPage, WebSite } from 'schema-dts'
+import { SiteDetails } from 'app/constants'
+import { Head } from 'blitz'
 
 export interface OrganizationInfoProps {}
 
 const WEB_SITE_STRUCTURED_DATA = jsonLdScriptProps<WebSite>({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  '@id': galliary.url + '#web',
-  url: galliary.url,
-  name: galliary.name,
+  '@id': SiteDetails.Url + '#web',
+  url: SiteDetails.Url,
+  name: SiteDetails.Name,
 })
 
 export const OrganizationInfo = ({}: OrganizationInfoProps) => {
@@ -19,14 +20,14 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
       jsonLdScriptProps<WebPage>({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        headline: galliary.headline,
-        description: galliary.description,
-        url: galliary.url,
+        headline: SiteDetails.DescriptionLong,
+        description: SiteDetails.Description,
+        url: SiteDetails.Url,
         about: [
           {
             '@type': 'Thing',
-            name: galliary.name,
-            sameAs: galliary.socials.map((social) => social.url),
+            name: SiteDetails.Name,
+            sameAs: SiteDetails.Socials.map((social) => social.url),
           },
         ],
       }),
@@ -38,19 +39,17 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
       jsonLdScriptProps<Organization>({
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: galliary.name,
-        alternateName: galliary.longName,
-        url: galliary.url,
-        logo: galliary.logo,
-        email: galliary.email,
-        sameAs: galliary.socials.map((social) => social.url),
+        name: SiteDetails.Name,
+        alternateName: SiteDetails.NameLong,
+        url: SiteDetails.Url,
+        logo: SiteDetails.Logo,
+        email: SiteDetails.Email,
+        sameAs: SiteDetails.Socials.map((social) => social.url),
       }),
     [],
   )
 
-  return (
-    <>
-      {/* TODO: Contemplate whether this is necessary or not.
+  /* TODO: Contemplate whether this is necessary or not.
       <script
         {...jsonLdScriptProps<SoftwareApplication>({
           '@context': 'https://schema.org',
@@ -67,11 +66,13 @@ export const OrganizationInfo = ({}: OrganizationInfoProps) => {
             priceCurrency: 'USD',
           },
         })}
-      />*/}
+      />*/
 
+  return (
+    <Head>
       <script {...WEB_SITE_STRUCTURED_DATA} />
       <script {...WEB_PAGE_STRUCTURED_DATA} />
       <script {...ORGANIZATION_STRUCTURED_DATA} />
-    </>
+    </Head>
   )
 }

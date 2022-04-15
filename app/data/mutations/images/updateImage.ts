@@ -1,7 +1,6 @@
 import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
-import { CDN } from 'app/utils/cdn'
 
 const UpdateImage = z.object({
   id: z.string(),
@@ -21,17 +20,10 @@ export default resolver.pipe(
         id,
         authorId: ctx.session?.userId,
       },
-      select: {
-        sourceId: true,
-      },
     })
 
     if (!image) {
       return null
-    }
-
-    if (data.sourceId && image.sourceId !== data.sourceId) {
-      await CDN.delete(image.sourceId)
     }
 
     return await db.image.update({ where: { id }, data })

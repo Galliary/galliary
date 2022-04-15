@@ -4,23 +4,28 @@ import {
   CenterProps,
   forwardRef,
   useBoolean,
+  useConst,
 } from '@chakra-ui/react'
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import AvatarEditor from 'react-avatar-editor'
 import { useMutation } from 'blitz'
-import { Maybe } from 'types'
 import { EditIcon } from 'app/components/icons/EditIcon'
 import { MotionBox, MotionImage, transitionConfig } from 'app/components/Motion'
-import { CDN, ImageType } from 'app/utils/cdn'
 import { CancelIcon } from 'app/components/icons/CancelIcon'
 import { SaveIcon } from 'app/components/icons/SaveIcon'
 import updateCurrentUserBanner from 'app/data/mutations/users/updateCurrentUserBanner'
 import { Tooltip } from 'app/components/Tooltip'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
+import {
+  getBannerImageUrl,
+  postNextUpload,
+  UploadType,
+} from 'app/services/cdn/client.service'
+import { snowflake } from 'app/utils/snowflake'
 
 interface ProfileBannerProps {
-  bannerUrl: Maybe<string>
+  user: { id: string; username: string; bannerExt: string; updatedAt: Date }
   isOwnProfile: boolean
 }
 
@@ -48,15 +53,13 @@ const ClickableIcon = forwardRef<
   </Box>
 ))
 
-export const ProfileBanner = ({
-  bannerUrl: currentBannerUrl,
-  isOwnProfile,
-}: ProfileBannerProps) => {
+export const ProfileBanner = ({ user, isOwnProfile }: ProfileBannerProps) => {
+  const currentBannerUrl = useConst(getBannerImageUrl(user.id, user.bannerExt))
+
   const ref = useRef<HTMLDivElement>(null)
   const avatarEditorRef = useRef<AvatarEditor>(null)
   const [isEditing, setEditing] = useBoolean(false)
   const [bannerUrl, setBannerUrl] = useState(currentBannerUrl)
-  const [updateCurrentUserBannerMutation] = useMutation(updateCurrentUserBanner)
   const [isLoading, setLoading] = useBoolean(false)
 
   const onCancel = async () => {
@@ -82,28 +85,14 @@ export const ProfileBanner = ({
           type: 'image/png',
         })
 
-        const sourceId = await CDN.upload(file)
-
-        if (sourceId) {
-          updateCurrentUserBannerMutation(
-            {
-              bannerSourceId: sourceId,
-            },
-            {
-              onError() {
-                setBannerUrl(currentBannerUrl)
-              },
-            },
-          )
-
-          const image = new Image()
-          image.src = CDN.getImageUrl(sourceId, ImageType.Public)
-
-          image.onload = () => {
-            setBannerUrl(image.src)
+        postNextUpload(UploadType.Banner, user, { id: 'banner' }, file)
+          .then(() => {
+            setBannerUrl(currentBannerUrl + `?r=${snowflake()}`)
             setLoading.off()
-          }
-        }
+          })
+          .catch(() => {
+            console.error("Failed to update user's banner")
+          })
       }
     })
   }
@@ -127,6 +116,14 @@ export const ProfileBanner = ({
     reader.readAsDataURL(file)
   }
 
+  useEffect(() => {
+    if (currentBannerUrl !== bannerUrl) {
+      setBannerUrl(currentBannerUrl)
+    }
+  }, [currentBannerUrl])
+
+  const freshBannerUrl = `${bannerUrl}?=${user.updatedAt.getTime()}`
+
   return (
     <Box w="full">
       <AnimatePresence exitBeforeEnter>
@@ -144,7 +141,7 @@ export const ProfileBanner = ({
             filter="blur(45px)"
             bgGradient="linear(to-b, transparent, flow.60)"
             pointerEvents="none"
-            src={bannerUrl ?? ''}
+            src={freshBannerUrl}
             animate={{ opacity: 1 }}
           />
         )}
@@ -162,7 +159,7 @@ export const ProfileBanner = ({
           inset={0}
           boxSize="full"
           objectFit="cover"
-          src={bannerUrl ?? ''}
+          src={freshBannerUrl}
           onLoad={setLoading.off}
           animate={{ opacity: Number(!isLoading) }}
         />

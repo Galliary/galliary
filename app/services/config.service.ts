@@ -15,13 +15,18 @@ export const StrategyMap = {
   [UserConnectionType.LINKEDIN]: LinkedInStrategy,
 } as const
 
+type IsDefinedByBoolean<T> = T extends true ? string : string | undefined
+
 export class ConfigService {
-  static get(key: keyof NodeJS.ProcessEnv, throwIfEmpty = false) {
+  static get<T extends true | false>(
+    key: keyof NodeJS.ProcessEnv,
+    throwIfEmpty?: T,
+  ): IsDefinedByBoolean<T> {
     const value = process.env[key]
     if (throwIfEmpty && (value === undefined || value === null)) {
       throw new Error(`'${key}' is not defined in the env-vars.`)
     }
-    return value
+    return value as IsDefinedByBoolean<T>
   }
 
   static getStrategyConfig(
@@ -33,12 +38,12 @@ export class ConfigService {
     }
 
     return {
-      clientId: this.get(`${type}_CLIENT_ID`) ?? '',
-      clientSecret: this.get(`${type}_CLIENT_SECRET`) ?? '',
+      clientId: this.get(`${type}_CLIENT_ID`, true),
+      clientSecret: this.get(`${type}_CLIENT_SECRET`, true),
       callbackUrl:
         strategyType === StrategyType.Create
-          ? this.get(`${type}_CALLBACK_URL`) ?? ''
-          : this.get(`${type}_CONNECT_CALLBACK_URL`) ?? '',
+          ? this.get(`${type}_CALLBACK_URL`, true)
+          : this.get(`${type}_CONNECT_CALLBACK_URL`, true),
     }
   }
 
