@@ -32,6 +32,8 @@ export const UserEditForm = (props: UserEditFormProps) => {
         initialValues={{
           nickname: currentUser.nickname!,
           username: currentUser.username,
+          email: currentUser.email,
+          bio: currentUser.bio!
         }}
         onSubmit={async (values) => {
           await userEditMutation(values)
@@ -46,6 +48,16 @@ export const UserEditForm = (props: UserEditFormProps) => {
           name="nickname"
           label="Nickname"
           placeholder="Nickname"
+        />
+        <LabeledTextField
+          name="email"
+          label="E-Mail"
+          placeholder="E-Mail"
+        />
+        <LabeledTextField
+          name="bio"
+          label="Bio"
+          placeholder="Bio"
         />
       </Form>
     </VStack>

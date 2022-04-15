@@ -6,6 +6,8 @@ import { CDN } from 'app/utils/cdn'
 const EditCurrentUser = z.object({
   username: z.string().optional(),
   nickname: z.string().optional(),
+  email: z.string().optional(),
+  bio: z.string().optional()
 })
 
 export default resolver.pipe(
@@ -21,6 +23,8 @@ export default resolver.pipe(
       select: {
         username: true,
         nickname: true,
+        email: true,
+        bio: true
       },
     })
 
@@ -33,6 +37,8 @@ export default resolver.pipe(
       data: {
         username: input.username,
         nickname: input.nickname,
+        email: input.email,
+        bio: input.bio
       },
     })
   },
