@@ -13,7 +13,9 @@
     "prepare": "husky install",
     "theme": "chakra-cli tokens app/theme/index.ts",
     "postinstall": "blitz prisma generate && blitz codegen && yarn theme",
-    "analyze": "cross-env ANALYZE=true yarn build"
+    "analyze": "cross-env ANALYZE=true yarn build",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -40,7 +42,7 @@
     "formidable": "2.0.1",
     "formidable-serverless": "1.1.1",
     "formik": "2.2.9",
-    "framer-motion": "^6.2.8",
+    "framer-motion": "^4.1.17",
     "immer": "9.0.12",
     "ioredis": "4.28.5",
     "jotai": "1.6.0",
@@ -69,6 +71,14 @@
     "@chakra-ui/theme-tools": "^1.3.6",
     "@eslint/eslintrc": "1.2.0",
     "@next/bundle-analyzer": "12.1.0",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-interactions": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/addons": "6.4.22",
+    "@storybook/react": "^6.4.22",
+    "@storybook/testing-library": "^0.0.9",
+    "@storybook/theming": "6.4.22",
     "@types/formidable": "2.0.4",
     "@types/ioredis": "4.28.8",
     "@types/lodash": "4.14.179",
@@ -83,6 +93,7 @@
     "@types/preview-email": "2.0.1",
     "@types/react": "17.x",
     "@types/react-avatar-editor": "12.0.0",
+    "babel-loader": "^8.2.4",
     "cross-env": "7.0.3",
     "eslint": "7.32.0",
     "eslint-config-blitz": "0.45.3",
@@ -97,6 +108,8 @@
     "pretty-quick": "3.1.3",
     "preview-email": "3.0.5",
     "prisma": "^3.10.0",
+    "react-docgen-typescript-loader": "3.7.2",
+    "tsconfig-paths-webpack-plugin": "3.5.2",
     "typescript": "^4.6.2",
     "webpack": "5.70.0"
   }

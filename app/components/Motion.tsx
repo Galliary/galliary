@@ -10,6 +10,7 @@ import {
   StackProps,
   Image,
   ImageProps,
+  forwardRef,
 } from '@chakra-ui/react'
 
 export const DEFAULT_DURATION = 0.85
@@ -30,10 +31,10 @@ export const transitionFastConfig: MotionProps['transition'] = {
   duration: 0.2,
 }
 
+type MotionBoxProps = Omit<BoxProps, keyof MotionProps> & MotionProps
+
 // This sucks
-export const MotionBox = motion<
-  Omit<BoxProps, keyof MotionProps> & MotionProps
->(Box as any)
+export const MotionBox = motion<MotionBoxProps>(Box as any)
 export const MotionFlex = motion<
   Omit<FlexProps, keyof MotionProps> & MotionProps
 >(Flex as any)
@@ -79,3 +80,16 @@ export const inOut = (customAnimateProps: InOutProps): InOutReturn => {
     exit,
   }
 }
+
+export const MotionSpinner = forwardRef<MotionBoxProps, typeof MotionBox>(
+  (props, ref) => (
+    <MotionBox
+      ref={ref}
+      {...props}
+      d="flex"
+      transition={{ duration: 0.8, ease: 'linear', repeat: Infinity }}
+      initial={{ rotate: 0 }}
+      animate={{ rotate: 360 }}
+    />
+  ),
+)

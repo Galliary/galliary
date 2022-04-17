@@ -1,6 +1,5 @@
 import {
   AppProps,
-  AuthenticationError,
   AuthorizationError,
   ErrorBoundary,
   ErrorComponent,
@@ -8,9 +7,8 @@ import {
   useQueryErrorResetBoundary,
 } from 'blitz'
 import { theme } from 'app/theme'
-import { Box, ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import { ModalController } from 'app/controllers/ModalController'
-import { LocaleController } from 'app/controllers/LocaleController'
 import Layout from 'app/layouts/Layout'
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
@@ -43,9 +41,7 @@ function App({ Component, pageProps }: AppProps) {
           FallbackComponent={RootErrorFallback}
           onReset={useQueryErrorResetBoundary().reset}
         >
-          <LocaleController messages={pageProps.translations}>
-            {getLayout(<Component {...pageProps} />)}
-          </LocaleController>
+          {getLayout(<Component {...pageProps} />)}
         </ErrorBoundary>
       </ModalController>
     </ChakraProvider>

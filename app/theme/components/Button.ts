@@ -12,6 +12,14 @@ export const ButtonStyle: ComponentStyleConfig = {
   },
   variants: {
     none: {},
+    ghost: {
+      color: 'ui.80',
+      bg: 'transparent',
+      _hover: {
+        color: 'ui.100',
+        bg: 'ui.10',
+      },
+    },
     default: {
       color: 'ui.80',
       bg: 'ui.5',
