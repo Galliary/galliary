@@ -178,7 +178,7 @@ const NewAlbumPage: BlitzPage = () => {
   )
 }
 
-NewAlbumPage.authenticate = true
+// NewAlbumPage.authenticate = true
 NewAlbumPage.getLayout = (page) => (
   <Layout>
     <Suspense fallback={<Loader />}>{page}</Suspense>
