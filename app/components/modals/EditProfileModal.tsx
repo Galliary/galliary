@@ -38,14 +38,6 @@ const EditProfileModal = ({ ...disclosure }: EditProfileModalProps) => {
         <ModalBody>
           <UserEditForm></UserEditForm>
         </ModalBody>
-        <ModalFooter>
-          <HStack spacing={4} w="full" justify="space-between">
-            <Button variant="primary" onClick={onDone}>
-              Done
-            </Button>
-            <Button onClick={onCancel}>Cancel</Button>
-          </HStack>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )

@@ -38,26 +38,36 @@ export const UserEditForm = (props: UserEditFormProps) => {
         onSubmit={async (values) => {
           await userEditMutation(values)
         }}
+        style={{width: "100%"}}
+        
       >
         <LabeledTextField
           name="username"
           label="Username"
           placeholder="Username"
+          p={2}
+          width="100%"
         />
         <LabeledTextField
           name="nickname"
           label="Nickname"
           placeholder="Nickname"
+          p={2}
+          width="100%"
         />
         <LabeledTextField
           name="email"
           label="E-Mail"
           placeholder="E-Mail"
+          p={2}
+          width="100%"
         />
         <LabeledTextField
           name="bio"
           label="Bio"
           placeholder="Bio"
+          p={2}
+          width="100%"
         />
       </Form>
     </VStack>
