@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['blitz', 'plugin:prettier/recommended'],
+  extends: ['plugin:prettier/recommended'],
   rules: {
     'react-hooks/exhaustive-deps': 'off',
     'react/no-array-index-key': 'off',
@@ -8,7 +8,7 @@ module.exports = {
       {
         paths: [
           {
-            name: 'blitz',
+            name: 'next/link',
             importNames: ['Link'],
             message: 'Use custom Link component instead.',
           },
@@ -27,13 +27,6 @@ module.exports = {
     'react/prop-types': 'off',
     'import/no-cycle': 'off',
     'no-multi-assign': 'off',
-    'import/imports-first': ['error', 'absolute-first'],
-    'react/jsx-filename-extension': [
-      1,
-      {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
-    ],
     semi: ['error', 'never'],
   },
 }

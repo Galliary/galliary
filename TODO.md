@@ -1,5 +1,5 @@
 - Shared albums between users
-  - Add contributors to albums for shared experiences
+- Add contributors to albums for shared experiences
 - Implement the category system
 - Add ability to make super categories
 - Add/design edit user page / profile page

@@ -1,5 +1,5 @@
 import { SiteDetails } from 'app/constants'
-import { Head } from 'blitz'
+import Head from 'next/head'
 
 export const MiscMeta = () => (
   <Head>

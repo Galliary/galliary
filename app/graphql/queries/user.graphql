@@ -1,0 +1,14 @@
+query CurrentUser {
+  user {
+    id
+    bio
+    email
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    permissions
+  }
+}

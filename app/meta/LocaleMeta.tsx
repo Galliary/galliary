@@ -1,5 +1,5 @@
 import i18n from 'i18n.json'
-import { Head } from 'blitz'
+import Head from 'next/head'
 const { defaultLocale, locales } = i18n
 
 export interface LocaleMetaProps {}

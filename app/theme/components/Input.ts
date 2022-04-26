@@ -33,7 +33,7 @@ export const InputStyle: ComponentMultiStyleConfig = {
   sizes: {
     default: {
       field: {
-        p: 8,
+        p: 4,
       },
     },
   },

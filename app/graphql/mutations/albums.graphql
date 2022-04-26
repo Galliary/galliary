@@ -1,0 +1,12 @@
+
+mutation CreateAlbum($title: String!, $description: String!, $colors: [Int!]!) {
+  createAlbum(title: $title, description: $description, colors: $colors) {
+    id
+    title
+    description
+  }
+}
+
+mutation UploadAlbumCover($albumId: String!, $file: Upload!) {
+  success: updateAlbumCover(albumId: $albumId, coverImage: $file)
+}

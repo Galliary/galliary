@@ -1,0 +1,12 @@
+
+query GetAlbum($id: String!) {
+  album(id: $id) {
+    id
+  }
+}
+
+query GetAlbums {
+  albums {
+    id
+  }
+}

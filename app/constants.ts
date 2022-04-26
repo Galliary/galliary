@@ -10,6 +10,8 @@ export const SUPPORTED_MIME_TYPES = [
   'image/bmp',
 ]
 
+export const AUTH_COOKIE_NAME = 'x-g-a'
+
 export const DISCORD_SUPPORT_SERVER_URL = 'https://discord.gg/9txsZrHcme'
 
 export const ENABLED_AUTH_STRATEGIES = [

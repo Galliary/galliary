@@ -1,7 +1,7 @@
-import { useQuery } from 'blitz'
-import getCurrentUser from 'app/data/queries/users/getCurrentUser'
+import { useContext } from "react";
+import { AppContext } from "pages/_app";
 
 export const useCurrentUser = () => {
-  const [user] = useQuery(getCurrentUser, null)
-  return user
+  const { currentUser } = useContext(AppContext)
+  return currentUser
 }

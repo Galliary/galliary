@@ -8,29 +8,33 @@ import { EditProfileModalProps } from 'app/components/modals/EditProfileModal'
 import { Loader } from 'app/components/views/Loader'
 import { ManageConnectionsModalProps } from 'app/components/modals/ManageConnectionsModal'
 
-const dynamicOptions: DynamicOptions<
-  ModalContextProps[keyof ModalContextProps]
-> = {
-  ssr: false,
-  loading: () => (
-    <Center pos="fixed" inset={0} m="auto">
-      <Loader />
-    </Center>
-  ),
-}
+const loading = () => (
+  <Center pos="fixed" inset={0} m="auto">
+    <Loader />
+  </Center>
+)
 
 const modals = {
   confirm: dynamic(
     () => import('app/components/modals/ConfirmationModal'),
-    dynamicOptions,
+    {
+      ssr: false,
+      loading,
+    },
   ),
   editProfile: dynamic(
     () => import('app/components/modals/EditProfileModal'),
-    dynamicOptions,
+    {
+      ssr: false,
+      loading,
+    },
   ),
   manageConnections: dynamic(
     () => import('app/components/modals/ManageConnectionsModal'),
-    dynamicOptions,
+    {
+      ssr: false,
+      loading,
+    },
   ),
 } as const
 

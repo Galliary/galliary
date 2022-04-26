@@ -1,16 +1,6 @@
-import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import {
-  Box,
-  Button,
-  Center,
-  chakra,
-  HStack,
-  IconButton,
-  Image,
-  Text,
-  useBoolean,
-} from '@chakra-ui/react'
-import { UploadIcon } from 'app/components/icons/UploadIcon'
+import { useThumbnailSizing } from "app/data/hooks/useThumbnailSizing";
+import { Box, Button, Center, chakra, HStack, IconButton, Image, Text, useBoolean } from "@chakra-ui/react";
+import { UploadIcon } from "app/components/icons/UploadIcon";
 import {
   DragEventHandler,
   FormEventHandler,
@@ -18,22 +8,16 @@ import {
   PropsWithChildren,
   useEffect,
   useRef,
-  useState,
-} from 'react'
-import { AnimatePresence } from 'framer-motion'
-import {
-  MotionBox,
-  MotionFlex,
-  MotionImage,
-  MotionSpinner,
-  MotionStack,
-  transitionMediumConfig,
-} from 'app/components/Motion'
-import { Tooltip } from 'app/components/Tooltip'
-import { UploadIndicatorIcon } from 'app/components/icons/UploadIndicatorIcon'
-import { UploadCompleteIcon } from 'app/components/icons/UploadCompleteIcon'
-import { DeleteIcon } from 'app/components/icons/DeleteIcon'
-import { EditIcon } from 'app/components/icons/EditIcon'
+  useState
+} from "react";
+import { AnimatePresence } from "framer-motion";
+import { MotionBox, MotionFlex, MotionSpinner, MotionStack, transitionMediumConfig } from "app/components/Motion";
+import { Tooltip } from "app/components/Tooltip";
+import { UploadIndicatorIcon } from "app/components/icons/UploadIndicatorIcon";
+import { UploadCompleteIcon } from "app/components/icons/UploadCompleteIcon";
+import { DeleteIcon } from "app/components/icons/DeleteIcon";
+import { EditIcon } from "app/components/icons/EditIcon";
+import { ImageUploadStateType, useUploadState } from "app/data/hooks/useUploadState";
 
 export interface ImageUploaderProps {
   uploadedImageSrc?: string
@@ -102,8 +86,9 @@ export const ImageUploader = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useBoolean(false)
   const [currentDataUri, setCurrentDataUri] = useState('')
-  const [isUploading, setIsUploading] = useBoolean(false)
-  const [uploadPercent, setUploadPercent] = useState(0)
+  const { state, setUploadProgress, setStartUpload, setFinishUpload, setComplete } = useUploadState()
+
+  const isUploading = [ImageUploadStateType.StartUpload, ImageUploadStateType.UploadProgress, ImageUploadStateType.FinishUpload].includes(state.type)
 
   useEffect(() => {
     if (uploadedImageSrc && uploadedImageSrc !== currentDataUri) {
@@ -114,7 +99,7 @@ export const ImageUploader = ({
         )
       }
 
-      setIsUploading.on()
+      setStartUpload()
       setCurrentDataUri(uploadedImageSrc)
     }
   }, [uploadedImageSrc])
@@ -122,7 +107,7 @@ export const ImageUploader = ({
   const onUpload: FormEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault()
     _onUpload?.(e.currentTarget.files)
-    setIsUploading.on()
+    setStartUpload()
   }
 
   const onKeyboardUpload: KeyboardEventHandler<HTMLButtonElement> = (e) => {
@@ -136,43 +121,42 @@ export const ImageUploader = ({
   const onDropUpload: DragEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
     _onUpload?.(e.dataTransfer.files)
-    setIsUploading.on()
+    setStartUpload()
   }
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>
 
-    if (isUploading && uploadPercent !== DONE_PERCENT) {
+    if (isUploading && state.percent !== DONE_PERCENT) {
       interval = setInterval(() => {
-        setUploadPercent((percent) => {
-          const newPercent = percent + Math.floor(Math.random() * 10) + 1
+        const newPercent = (state.percent ?? 0) + Math.floor(Math.random() * 10) + 1
 
-          if (newPercent >= DONE_PERCENT) {
-            return DONE_PERCENT
-          }
+        if (newPercent >= DONE_PERCENT) {
+          return setFinishUpload()
+        }
 
-          return newPercent
-        })
-      }, 400)
+        setUploadProgress(newPercent)
+      }, 200)
     }
 
     return () => clearInterval(interval)
-  }, [isUploading])
+  }, [isUploading, state])
 
-  const isUploadComplete = uploadPercent === DONE_PERCENT
+  const isUploadFinished = state.type === ImageUploadStateType.FinishUpload
+  const isUploadComplete = state.type === ImageUploadStateType.Complete
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>
-    if (isUploadComplete) {
+    if (isUploadFinished) {
       timeout = setTimeout(() => {
-        setIsUploading.off()
+        setComplete()
       }, 2000)
     }
 
     return () => clearTimeout(timeout)
-  }, [isUploadComplete])
+  }, [isUploadFinished])
 
-  const shouldShowCompleteImage = isUploadComplete && !isUploading
+  const shouldShowCompleteImage = isUploadFinished && isUploadComplete && !isUploading
 
   return (
     <Tooltip label="Upload">
@@ -198,6 +182,7 @@ export const ImageUploader = ({
                     opacity: isHovering ? 1 : 0,
                   }}
                   transition={transitionMediumConfig}
+                  boxShadow="0 0 16px 0 rgba(0, 0, 0, 0.25)"
                 >
                   <IconButton
                     p={2}
@@ -270,7 +255,7 @@ export const ImageUploader = ({
                           transition={transitionMediumConfig}
                         >
                           <HStack p={4} w="full" justify="space-between">
-                            {isUploadComplete ? (
+                            {isUploadFinished ? (
                               <UploadCompleteIcon
                                 color="status.ok"
                                 boxSize={5}
@@ -290,7 +275,7 @@ export const ImageUploader = ({
                             )}
 
                             <Text textStyle="label.small">
-                              {isUploadComplete ? 'Done!' : `${uploadPercent}%`}
+                              {isUploadFinished ? 'Done!' : `${state.percent}%`}
                             </Text>
                           </HStack>
                         </MotionFlex>
