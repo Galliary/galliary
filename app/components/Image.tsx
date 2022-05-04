@@ -1,5 +1,5 @@
 import { memo, ReactNode, useMemo } from 'react'
-import { Image as BlitzImage, ImageProps as BlitzImageProps } from 'blitz'
+import { default as NextImage, ImageProps as NextImageProps } from 'next/image'
 import {
   Box,
   BoxProps,
@@ -23,7 +23,7 @@ export type ImageProps = CustomImageProps &
     BoxProps,
     'as' | 'src' | 'boxSize' | 'h' | 'w' | 'width' | 'height' | 'fallbackSrc'
   > &
-  Omit<BlitzImageProps, 'style' | 'ref' | 'src'>
+  Omit<NextImageProps, 'style' | 'ref' | 'src'>
 
 // Includes support for stringified numbers
 const appendPxToNumber = (str?: string | number) =>
@@ -97,7 +97,7 @@ export const Image = memo(
             {hasErrored ? (
               fallback ?? placeholder
             ) : (
-              <BlitzImage
+              <NextImage
                 alt={alt}
                 src={src ?? fallbackSrc}
                 width={imgWidth}

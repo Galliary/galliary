@@ -1,11 +1,25 @@
-import { Center, Container, Image, Text, VStack, Wrap } from "@chakra-ui/react";
-import Layout from "app/layouts/Layout";
-import { createContext, useContext, useEffect, useState } from "react";
-import { Box } from "@chakra-ui/layout";
-import { ImageUploader } from "app/components/views/ImageUploader";
-import { getDataUriForBlob } from "app/utils/files";
-import { NextPage } from "next";
-import { getGlobalServerSideProps } from "app/utils/getGlobalServerSideProps";
+import {
+  Center,
+  Container,
+  Image,
+  SimpleGrid,
+  Text,
+  VStack,
+  Wrap,
+} from '@chakra-ui/react'
+import Layout from 'app/layouts/Layout'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
+import { Box } from '@chakra-ui/layout'
+import { ImageUploader } from 'app/components/views/ImageUploader'
+import { getDataUriForBlob } from 'app/utils/files'
+import { NextPage } from 'next'
+import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 
 export const getServerSideProps = getGlobalServerSideProps(async () => {
   return {
@@ -17,10 +31,6 @@ const EMPTY_ITEMS = [...Array(12)].fill(undefined)
 
 const NewAlbumPage: NextPage = () => {
   const [items, setItems] = useState<Array<string | undefined>>([])
-
-  const queueUpload = () => {
-
-  }
 
   const onUploadFiles = (startIndex: number, fileList: FileList | null) => {
     if (fileList) {
@@ -99,7 +109,7 @@ const NewAlbumPage: NextPage = () => {
 
         <Center>
           <Container>
-            <Wrap p={10} spacing={1}>
+            <SimpleGrid columns={6} p={10} spacing={1}>
               {[...items, ...EMPTY_ITEMS].map((maybeSource, i) => (
                 <ImageUploader
                   key={i}
@@ -107,7 +117,7 @@ const NewAlbumPage: NextPage = () => {
                   onUpload={(fileList) => onUploadFiles(i, fileList)}
                 />
               ))}
-            </Wrap>
+            </SimpleGrid>
           </Container>
         </Center>
       </VStack>

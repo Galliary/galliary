@@ -9,23 +9,17 @@ import {
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import AvatarEditor from 'react-avatar-editor'
-import { useMutation } from 'blitz'
 import { EditIcon } from 'app/components/icons/EditIcon'
 import { MotionBox, MotionImage, transitionConfig } from 'app/components/Motion'
 import { CancelIcon } from 'app/components/icons/CancelIcon'
 import { SaveIcon } from 'app/components/icons/SaveIcon'
-import updateCurrentUserBanner from 'app/data/mutations/users/updateCurrentUserBanner'
 import { Tooltip } from 'app/components/Tooltip'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
-import {
-  getBannerImageUrl,
-  postNextUpload,
-  UploadType,
-} from 'app/services/cdn/client.service'
+import { getBannerImageUrl } from 'app/services/cdn.service'
 import { snowflake } from 'app/utils/snowflake'
 
 interface ProfileBannerProps {
-  user: { id: string; username: string; bannerExt: string; updatedAt: Date }
+  user: { id: string; username: string; bannerExt: string; updatedAt: string }
   isOwnProfile: boolean
 }
 
@@ -85,14 +79,14 @@ export const ProfileBanner = ({ user, isOwnProfile }: ProfileBannerProps) => {
           type: 'image/png',
         })
 
-        postNextUpload(UploadType.Banner, user, { id: 'banner' }, file)
-          .then(() => {
-            setBannerUrl(currentBannerUrl + `?r=${snowflake()}`)
-            setLoading.off()
-          })
-          .catch(() => {
-            console.error("Failed to update user's banner")
-          })
+        // postNextUpload(UploadType.Banner, user, { id: 'banner' }, file)
+        //   .then(() => {
+        //     setBannerUrl(currentBannerUrl + `?r=${snowflake()}`)
+        //     setLoading.off()
+        //   })
+        //   .catch(() => {
+        //     console.error("Failed to update user's banner")
+        //   })
       }
     })
   }
@@ -122,7 +116,7 @@ export const ProfileBanner = ({ user, isOwnProfile }: ProfileBannerProps) => {
     }
   }, [currentBannerUrl])
 
-  const freshBannerUrl = `${bannerUrl}?=${user.updatedAt.getTime()}`
+  const freshBannerUrl = `${bannerUrl}?=${user.updatedAt}`
 
   return (
     <Box w="full">

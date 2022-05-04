@@ -1,4 +1,3 @@
-import { Routes } from 'blitz'
 import {
   Box,
   Center,
@@ -7,7 +6,6 @@ import {
   useToken,
 } from '@chakra-ui/react'
 import { Suspense } from 'react'
-import favouriteAlbum from 'app/data/mutations/albums/favouriteAlbum'
 import { MotionBox, transitionMediumConfig } from 'app/components/Motion'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
 import { Favourite } from 'app/components/views/Favourite'
@@ -15,21 +13,30 @@ import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
-import type { Album } from '@prisma/client'
 import { AnimatePresence } from 'framer-motion'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
 import { Image } from 'app/components/Image'
+import { useRoutes } from 'app/data/hooks/useRoutes'
+import { useFavouriteAlbumMutation } from 'generated/graphql'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { Maybe } from 'global'
 
 export interface EntityPreviewProps {
-  item: Album & {
-    userFavourites: Array<{ id: string }>
+  item: {
+    id: string
+    authorId: string
+    title?: Maybe<string>
+    colors: number[]
+    coverExt: string
+    userFavouritesIds?: Maybe<string[]>
   }
 }
 
 export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
+  const routes = useRoutes()
   const boxSize = useThumbnailSizing()
   const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
   const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
+  const [favouriteAlbum] = useFavouriteAlbumMutation()
 
   return (
     <Tooltip label={album.title ?? 'Untitled Album'}>
@@ -40,7 +47,7 @@ export const AlbumPreview = ({ item: album }: EntityPreviewProps) => {
           overflow="hidden"
           boxSize={boxSize}
           aria-label={album.title ?? 'Untitled Album'}
-          href={Routes.ShowAlbumPage({ albumId: album.id })}
+          href={routes.toAlbumPage(album.id)}
         >
           <AnimatePresence>
             <MotionBox

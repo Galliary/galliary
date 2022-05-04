@@ -61,8 +61,6 @@ G
 app/meta/LocaleMeta.tsx,2\1\2130cba93357c4b3bfb79ad480195f17d8c7b99b
 E
 app/meta/MiscMeta.tsx,6\b\6b5d65ea2ce51d26be17d930d2e0728af83e8f40
-<
-.eslintrc.js,d\b\dbc0c31823b8f2e4ed04a397722fed33a67f123f
 ;
 .prettierrc,2\0\20137a9e94744624390b6748bc96df5ca1579b71
 C
@@ -107,13 +105,19 @@ R
 "app/graphql/queries/albums.graphql,2\3\23dc11d3018a1c13bebc2ad47ea71e7a93b4c26b
 D
 generated/graphql.ts,6\4\64508f5df71afc703b51c56c876692efdbf58e7a
-T
-$app/graphql/mutations/albums.graphql,d\a\dab1acbc40f0dff9efb04d1a0b7792f9ca6a0203
 B
 app/utils/files.ts,f\8\f86f93b2dead0ac2ba7e41623df2f92d1b3c965c
+T
+$app/graphql/mutations/albums.graphql,d\a\dab1acbc40f0dff9efb04d1a0b7792f9ca6a0203
+T
+$app/graphql/mutations/images.graphql,e\5\e571150a51b5ff75dd9f1026ab9ed5b3a18123cc
 @
 pages/upload.tsx,f\0\f0ecc519180042a2653333f2248fc1a696084dfa
-P
- app/data/hooks/useUploadState.ts,c\b\cb3c32edc7b90a8ce226ad358b14741eddcd699a
+<
+.eslintrc.js,d\b\dbc0c31823b8f2e4ed04a397722fed33a67f123f
 V
 &app/components/views/ImageUploader.tsx,0\1\01899ea13a152751fea13d9f599de088f212a5c9
+P
+ app/data/hooks/useUploadState.ts,c\b\cb3c32edc7b90a8ce226ad358b14741eddcd699a
+T
+$app/controllers/UploadController.tsx,a\a\aa1c9857c37aebe8b6e1b63e3b26f809f2f24b5f

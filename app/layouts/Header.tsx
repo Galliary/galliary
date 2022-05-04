@@ -1,14 +1,12 @@
 import dynamic from 'next/dynamic'
-import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
-import { Center, Heading, HStack, Text } from '@chakra-ui/layout'
+import { Center, Heading, HStack } from '@chakra-ui/layout'
 import { Avatar } from '@chakra-ui/avatar'
 import { Button } from '@chakra-ui/button'
 import { Link } from 'app/components/Link'
-import { ENABLED_AUTH_STRATEGIES } from 'app/constants'
-import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
 import type { CurrentUserType } from 'app/controllers/LoginController'
-import { useRoutes } from "app/data/hooks/useRoutes";
+import { useRoutes } from 'app/data/hooks/useRoutes'
+import { useLogout } from 'app/data/hooks/useLogout'
 
 const LoginController = dynamic(
   () => import('app/controllers/LoginController'),
@@ -25,6 +23,7 @@ export const UserLoggedInHeaderButtons = ({
 }: {
   currentUser: CurrentUserType
 }) => {
+  const logout = useLogout()
   const routes = useRoutes()
 
   if (!currentUser) {
@@ -36,6 +35,7 @@ export const UserLoggedInHeaderButtons = ({
       <Button d={['none', null, 'flex']} as={Link} href={routes.toUploadPage()}>
         Create
       </Button>
+      <Button onClick={logout}>Logout</Button>
       <Avatar
         bg="ui.5"
         _hover={{ color: 'ui.100', bg: 'ui.10' }}
@@ -73,14 +73,18 @@ export const Header = ({}: HeaderProps) => {
         <Link href={routes.toHomePage()} py={3} px={6} ml={-6} rounded="md">
           <Heading
             as="h1"
-            textStyle={["display.small-mobile", null, "display.small"]}
+            textStyle={['display.small-mobile', null, 'display.small']}
             color="ui.100"
           >
             Galliary
           </Heading>
         </Link>
         <HStack spacing={4}>
-          <Button d={["none", null, "flex"]} as={Link} href={routes.toHomePage()}>
+          <Button
+            d={['none', null, 'flex']}
+            as={Link}
+            href={routes.toHomePage()}
+          >
             Browse
           </Button>
 
@@ -98,5 +102,5 @@ export const Header = ({}: HeaderProps) => {
         </HStack>
       </HStack>
     </Center>
-  );
+  )
 }

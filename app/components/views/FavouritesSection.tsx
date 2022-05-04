@@ -1,4 +1,3 @@
-import { Routes } from 'blitz'
 import { useMemo } from 'react'
 import {
   AspectRatio,
@@ -9,26 +8,27 @@ import {
   useToken,
   VStack,
 } from '@chakra-ui/react'
-import { Maybe } from 'types'
 import { Link } from 'app/components/Link'
 import { Tooltip } from 'app/components/Tooltip'
 import { MotionBox, transitionFastConfig } from 'app/components/Motion'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { Maybe } from 'global'
+import { useRoutes } from 'app/data/hooks/useRoutes'
 
 type AnyItem =
-  | { id: string; authorId: string; coverExt: string; title: Maybe<string> }
+  | { id: string; authorId: string; coverExt: string; title?: Maybe<string> }
   | {
       id: string
       authorId: string
       imageExt: string
       albumId: string
-      title: Maybe<string>
+      title?: Maybe<string>
     }
   | {
       id: string
-      avatarUrl: Maybe<string>
+      avatarUrl?: Maybe<string>
       username: string
-      nickname: Maybe<string>
+      nickname?: Maybe<string>
     }
 
 interface FavouritesSectionProps {
@@ -41,6 +41,7 @@ interface FavouriteItem {
 }
 
 export const FavouriteItem = ({ item }: FavouriteItem) => {
+  const routes = useRoutes()
   const [ui10] = useToken('colors', ['ui.10'])
 
   const href = useMemo(() => {
@@ -49,11 +50,11 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     }
 
     if ('username' in item) {
-      return Routes.UserPage({ userId: item.username })
+      return routes.toUserPage(item.id)
     } else if ('albumId' in item) {
-      return Routes.ShowImagePage({ imageId: item.id, albumId: item.albumId })
+      return routes.toImagePage(item.albumId, item.id)
     } else {
-      return Routes.ShowAlbumPage({ albumId: item.id })
+      return routes.toAlbumPage(item.id)
     }
   }, [])
 

@@ -1,40 +1,43 @@
-import { Image } from '@prisma/client'
-import { Routes } from 'blitz'
 import {
   Box,
   Center,
-  Image as Img,
   useBoolean,
   useBreakpointValue,
   useToken,
 } from '@chakra-ui/react'
-import { Suspense, useRef } from 'react'
+import { Suspense } from 'react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
-import favouriteImage from 'app/data/mutations/images/favouriteImage'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import { useHasImageLoaded } from 'app/data/hooks/useHasImageLoaded'
 import { Favourite } from 'app/components/views/Favourite'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
 import { AnimatePresence } from 'framer-motion'
-import {
-  getImageUrl,
-  getImageUrlFromItem,
-} from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
 import { Image as ImageComponent } from 'app/components/Image'
+import { useRoutes } from 'app/data/hooks/useRoutes'
+import { useFavouriteImageMutation } from 'generated/graphql'
+import { Maybe } from 'global'
 
 export interface EntityPreviewProps {
-  item: Image & {
-    userFavourites: Array<{ id: string }>
+  item: {
+    id: string
+    title?: Maybe<string>
+    albumId: string
+    authorId: string
+    colors: number[]
+    imageExt: string
+    userFavouritesIds?: Maybe<string[]>
   }
 }
 
 export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
+  const routes = useRoutes()
   const boxSize = useThumbnailSizing()
   const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
   const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
+  const [favouriteImage] = useFavouriteImageMutation()
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
@@ -43,10 +46,7 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
           d="flex"
           pos="relative"
           aria-label={image.title ?? 'Untitled Image'}
-          href={Routes.ShowImagePage({
-            albumId: image.albumId,
-            imageId: image.id,
-          })}
+          href={routes.toImagePage(image.albumId, image.id)}
         >
           <AnimatePresence>
             <MotionBox

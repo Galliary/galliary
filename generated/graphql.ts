@@ -68,6 +68,9 @@ export type Mutation = {
   createAlbum: Album;
   createImage: Image;
   createUser: Scalars['Boolean'];
+  favouriteAlbum: Scalars['Boolean'];
+  favouriteImage: Scalars['Boolean'];
+  favouriteUser: Scalars['Boolean'];
   login: JwtResponse;
   reportAlbum: Scalars['Boolean'];
   reportImage: Scalars['Boolean'];
@@ -102,6 +105,24 @@ export type MutationCreateUserArgs = {
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   username: Scalars['String'];
+};
+
+
+export type MutationFavouriteAlbumArgs = {
+  albumId: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+};
+
+
+export type MutationFavouriteImageArgs = {
+  imageId: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+};
+
+
+export type MutationFavouriteUserArgs = {
+  unfavourite: Scalars['Boolean'];
+  userId: Scalars['String'];
 };
 
 
@@ -306,7 +327,6 @@ export enum SafetyRating {
 export type SearchDocument = {
   __typename?: 'SearchDocument';
   authorId: Scalars['String'];
-  authorName: Scalars['String'];
   colors: Array<Scalars['Int']>;
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
@@ -348,7 +368,11 @@ export type User = {
   bio?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  favouriteAlbums?: Maybe<Array<Album>>;
+  favouriteImages?: Maybe<Array<Image>>;
+  favouriteUsers?: Maybe<Array<User>>;
   id: Scalars['String'];
+  images?: Maybe<Array<Image>>;
   lockStatus: LockingStatus;
   nickname?: Maybe<Scalars['String']>;
   permissions: Scalars['Int'];
@@ -405,6 +429,45 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', success: boolean };
 
+export type FavouriteAlbumMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteAlbumMutation = { __typename?: 'Mutation', success: boolean };
+
+export type FavouriteImageMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteImageMutation = { __typename?: 'Mutation', success: boolean };
+
+export type FavouriteUserMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteUserMutation = { __typename?: 'Mutation', success: boolean };
+
+export type CreateImageFragmentMutationVariables = Exact<{
+  albumId: Scalars['String'];
+}>;
+
+
+export type CreateImageFragmentMutation = { __typename?: 'Mutation', image: { __typename?: 'Image', id: string } };
+
+export type UploadImageMutationVariables = Exact<{
+  imageId: Scalars['String'];
+  image: Scalars['Upload'];
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', success: boolean };
+
 export type GetAlbumQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -421,6 +484,13 @@ export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, bio?: string | null, email: string, badges: Array<UserBadge>, username: string, nickname?: string | null, avatarUrl?: string | null, updatedAt: any, createdAt: any, permissions: number } | null };
+
+export type UserProfileQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, bio?: string | null, email: string, badges: Array<UserBadge>, username: string, nickname?: string | null, avatarUrl?: string | null, updatedAt: any, createdAt: any, bannerExt: string, userFavouriteIds: Array<string>, albums?: Array<{ __typename?: 'Album', id: string, title?: string | null, authorId: string, coverExt: string, colors: Array<number>, userFavouriteIds: Array<string> }> | null, images?: Array<{ __typename?: 'Image', id: string, title?: string | null, authorId: string, albumId: string, imageExt: string, colors: Array<number>, userFavouriteIds: Array<string> }> | null, favouriteAlbums?: Array<{ __typename?: 'Album', id: string, authorId: string, title?: string | null, coverExt: string, userFavouriteIds: Array<string> }> | null, favouriteImages?: Array<{ __typename?: 'Image', id: string, authorId: string, imageExt: string, albumId: string, title?: string | null, userFavouriteIds: Array<string> }> | null, favouriteUsers?: Array<{ __typename?: 'User', id: string, avatarUrl?: string | null, username: string, nickname?: string | null, userFavouriteIds: Array<string> }> | null } | null };
 
 
 export const CreateAlbumDocument = gql`
@@ -567,6 +637,167 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const FavouriteAlbumDocument = gql`
+    mutation FavouriteAlbum($id: String!, $unfavourite: Boolean!) {
+  success: favouriteAlbum(albumId: $id, unfavourite: $unfavourite)
+}
+    `;
+export type FavouriteAlbumMutationFn = Apollo.MutationFunction<FavouriteAlbumMutation, FavouriteAlbumMutationVariables>;
+
+/**
+ * __useFavouriteAlbumMutation__
+ *
+ * To run a mutation, you first call `useFavouriteAlbumMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFavouriteAlbumMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [favouriteAlbumMutation, { data, loading, error }] = useFavouriteAlbumMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      unfavourite: // value for 'unfavourite'
+ *   },
+ * });
+ */
+export function useFavouriteAlbumMutation(baseOptions?: Apollo.MutationHookOptions<FavouriteAlbumMutation, FavouriteAlbumMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FavouriteAlbumMutation, FavouriteAlbumMutationVariables>(FavouriteAlbumDocument, options);
+      }
+export type FavouriteAlbumMutationHookResult = ReturnType<typeof useFavouriteAlbumMutation>;
+export type FavouriteAlbumMutationResult = Apollo.MutationResult<FavouriteAlbumMutation>;
+export type FavouriteAlbumMutationOptions = Apollo.BaseMutationOptions<FavouriteAlbumMutation, FavouriteAlbumMutationVariables>;
+export const FavouriteImageDocument = gql`
+    mutation FavouriteImage($id: String!, $unfavourite: Boolean!) {
+  success: favouriteImage(imageId: $id, unfavourite: $unfavourite)
+}
+    `;
+export type FavouriteImageMutationFn = Apollo.MutationFunction<FavouriteImageMutation, FavouriteImageMutationVariables>;
+
+/**
+ * __useFavouriteImageMutation__
+ *
+ * To run a mutation, you first call `useFavouriteImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFavouriteImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [favouriteImageMutation, { data, loading, error }] = useFavouriteImageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      unfavourite: // value for 'unfavourite'
+ *   },
+ * });
+ */
+export function useFavouriteImageMutation(baseOptions?: Apollo.MutationHookOptions<FavouriteImageMutation, FavouriteImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FavouriteImageMutation, FavouriteImageMutationVariables>(FavouriteImageDocument, options);
+      }
+export type FavouriteImageMutationHookResult = ReturnType<typeof useFavouriteImageMutation>;
+export type FavouriteImageMutationResult = Apollo.MutationResult<FavouriteImageMutation>;
+export type FavouriteImageMutationOptions = Apollo.BaseMutationOptions<FavouriteImageMutation, FavouriteImageMutationVariables>;
+export const FavouriteUserDocument = gql`
+    mutation FavouriteUser($id: String!, $unfavourite: Boolean!) {
+  success: favouriteUser(userId: $id, unfavourite: $unfavourite)
+}
+    `;
+export type FavouriteUserMutationFn = Apollo.MutationFunction<FavouriteUserMutation, FavouriteUserMutationVariables>;
+
+/**
+ * __useFavouriteUserMutation__
+ *
+ * To run a mutation, you first call `useFavouriteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFavouriteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [favouriteUserMutation, { data, loading, error }] = useFavouriteUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      unfavourite: // value for 'unfavourite'
+ *   },
+ * });
+ */
+export function useFavouriteUserMutation(baseOptions?: Apollo.MutationHookOptions<FavouriteUserMutation, FavouriteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FavouriteUserMutation, FavouriteUserMutationVariables>(FavouriteUserDocument, options);
+      }
+export type FavouriteUserMutationHookResult = ReturnType<typeof useFavouriteUserMutation>;
+export type FavouriteUserMutationResult = Apollo.MutationResult<FavouriteUserMutation>;
+export type FavouriteUserMutationOptions = Apollo.BaseMutationOptions<FavouriteUserMutation, FavouriteUserMutationVariables>;
+export const CreateImageFragmentDocument = gql`
+    mutation CreateImageFragment($albumId: String!) {
+  image: createImage(albumId: $albumId, colors: [0, 0, 0]) {
+    id
+  }
+}
+    `;
+export type CreateImageFragmentMutationFn = Apollo.MutationFunction<CreateImageFragmentMutation, CreateImageFragmentMutationVariables>;
+
+/**
+ * __useCreateImageFragmentMutation__
+ *
+ * To run a mutation, you first call `useCreateImageFragmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateImageFragmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createImageFragmentMutation, { data, loading, error }] = useCreateImageFragmentMutation({
+ *   variables: {
+ *      albumId: // value for 'albumId'
+ *   },
+ * });
+ */
+export function useCreateImageFragmentMutation(baseOptions?: Apollo.MutationHookOptions<CreateImageFragmentMutation, CreateImageFragmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateImageFragmentMutation, CreateImageFragmentMutationVariables>(CreateImageFragmentDocument, options);
+      }
+export type CreateImageFragmentMutationHookResult = ReturnType<typeof useCreateImageFragmentMutation>;
+export type CreateImageFragmentMutationResult = Apollo.MutationResult<CreateImageFragmentMutation>;
+export type CreateImageFragmentMutationOptions = Apollo.BaseMutationOptions<CreateImageFragmentMutation, CreateImageFragmentMutationVariables>;
+export const UploadImageDocument = gql`
+    mutation UploadImage($imageId: String!, $image: Upload!) {
+  success: updateImageFile(imageId: $imageId, imageFile: $image)
+}
+    `;
+export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
+
+/**
+ * __useUploadImageMutation__
+ *
+ * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
+ *   variables: {
+ *      imageId: // value for 'imageId'
+ *      image: // value for 'image'
+ *   },
+ * });
+ */
+export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+      }
+export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
+export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
+export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const GetAlbumDocument = gql`
     query GetAlbum($id: String!) {
   album(id: $id) {
@@ -679,3 +910,87 @@ export function useCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
 export type CurrentUserLazyQueryHookResult = ReturnType<typeof useCurrentUserLazyQuery>;
 export type CurrentUserQueryResult = Apollo.QueryResult<CurrentUserQuery, CurrentUserQueryVariables>;
+export const UserProfileDocument = gql`
+    query UserProfile($userId: String!) {
+  user(id: $userId) {
+    id
+    bio
+    email
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    bannerExt
+    userFavouriteIds
+    albums {
+      id
+      title
+      authorId
+      coverExt
+      colors
+      userFavouriteIds
+    }
+    images {
+      id
+      title
+      authorId
+      albumId
+      imageExt
+      colors
+      userFavouriteIds
+    }
+    favouriteAlbums {
+      id
+      authorId
+      title
+      coverExt
+      userFavouriteIds
+    }
+    favouriteImages {
+      id
+      authorId
+      imageExt
+      albumId
+      title
+      userFavouriteIds
+    }
+    favouriteUsers {
+      id
+      avatarUrl
+      username
+      nickname
+      userFavouriteIds
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserProfileQuery__
+ *
+ * To run a query within a React component, call `useUserProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfileQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserProfileQuery(baseOptions: Apollo.QueryHookOptions<UserProfileQuery, UserProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfileQuery, UserProfileQueryVariables>(UserProfileDocument, options);
+      }
+export function useUserProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfileQuery, UserProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfileQuery, UserProfileQueryVariables>(UserProfileDocument, options);
+        }
+export type UserProfileQueryHookResult = ReturnType<typeof useUserProfileQuery>;
+export type UserProfileLazyQueryHookResult = ReturnType<typeof useUserProfileLazyQuery>;
+export type UserProfileQueryResult = Apollo.QueryResult<UserProfileQuery, UserProfileQueryVariables>;

@@ -1,13 +1,4 @@
 import {
-  BlitzPage,
-  invokeWithMiddleware,
-  PromiseReturnType,
-  useMutation,
-  useParam,
-  useQuery,
-  useRouter,
-} from 'blitz'
-import {
   Avatar,
   Box,
   Button,
@@ -17,7 +8,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { AlbumPreview } from 'app/components/views/AlbumPreview'
-import getUserProfile from 'app/data/queries/users/getUserProfile'
 import { LogoutIcon } from 'app/components/icons/LogoutIcon'
 import { ImagePreview } from 'app/components/views/ImagePreview'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
@@ -26,55 +16,38 @@ import { FavouritesSection } from 'app/components/views/FavouritesSection'
 import { Favourite } from 'app/components/views/Favourite'
 import { ProfileBanner } from 'app/components/views/ProfileBanner'
 import { HeartIcon } from 'app/components/icons/HeartIcon'
-import favouriteUser from 'app/data/mutations/users/favouriteUser'
-import logout from 'app/data/mutations/auth/logout'
 import { Tooltip } from 'app/components/Tooltip'
 import Layout from 'app/layouts/Layout'
 import { EditIcon } from 'app/components/icons/EditIcon'
 import { useModal } from 'app/data/hooks/useModal'
-import { Link } from 'app/components/Link'
-import { getConnectionDetails } from 'app/auth/utils/getConnectionDetails'
 import { CogIcon } from 'app/components/icons/CogIcon'
 import { Suspense } from 'react'
 import { Loader } from 'app/components/views/Loader'
-import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { SiteDetails } from 'app/constants'
+import {
+  useFavouriteUserMutation,
+  useUserProfileQuery,
+} from 'generated/graphql'
+import { useRouter } from 'next/router'
+import { useLogout } from 'app/data/hooks/useLogout'
+import { NextPage } from 'next'
+import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 
-export interface UserPageProps {
-  initialData: PromiseReturnType<typeof getUserProfile>
-}
+export const getServerSideProps = getGlobalServerSideProps(async (context) => {
+  return {
+    props: {},
+  }
+})
 
-export const getServerSideProps = getGlobalServerSideProps<UserPageProps>(
-  async ({ query, req, res }) => {
-    const params: Parameters<typeof getUserProfile>[0] = {
-      idOrUsername: query.userId as string,
-    }
-
-    const initialData = await invokeWithMiddleware(getUserProfile, params, {
-      req,
-      res,
-    })
-
-    return {
-      props: {
-        initialData,
-      },
-    }
-  },
-)
+export interface UserPageProps {}
 
 const LogoutButton = () => {
-  const router = useRouter()
-  const [logoutMutation] = useMutation(logout)
+  const logout = useLogout()
 
   return (
-    <IconButton
-      aria-label="Logout"
-      p={2}
-      onClick={() => logoutMutation().then(() => router.reload())}
-    >
+    <IconButton aria-label="Logout" p={2} onClick={logout}>
       <LogoutIcon
         boxSize={8}
         cursor="pointer"
@@ -86,21 +59,33 @@ const LogoutButton = () => {
   )
 }
 
-const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
-  const idOrUsername = useParam('userId', 'string')
-  const [user] = useQuery(getUserProfile, { idOrUsername }, { initialData })
+const UserPage: NextPage<UserPageProps> = ({ currentUser }) => {
+  const router = useRouter()
+  const { data: { user } = {}, error } = useUserProfileQuery({
+    variables: {
+      userId: router.query.userId as string,
+    },
+  })
   const [openEditProfileModal] = useModal('editProfile')
   const [openManageConnectionsModal] = useModal('manageConnections')
+  const [favouriteUser] = useFavouriteUserMutation()
+
+  if (!user) {
+    // TODO: change me
+    return null
+  }
+
+  console.log({ currentUser })
 
   const isOwnProfile = Boolean(currentUser && currentUser.id === user.id)
 
   const hasFavourites =
-    user.favouriteUsers.length > 0 ||
-    user.favouriteAlbums.length > 0 ||
-    user.favouriteImages.length > 0
+    (user.favouriteUsers?.length ?? 0) > 0 ||
+    (user.favouriteAlbums?.length ?? 0) > 0 ||
+    (user.favouriteImages?.length ?? 0) > 0
 
   return (
-    <>
+    <Layout>
       <SimpleMeta
         title={`${SiteDetails.Name} | ${user.nickname ?? user.username}`}
         description={user.bio ?? 'I am a new Galliary user!'}
@@ -156,43 +141,6 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                   {user.bio ?? 'I am a new Galliary user!'}
                 </Text>
                 <VStack align="start" w="full" spacing={1}>
-                  {user.connections
-                    .filter((connection) => Boolean(connection.handle))
-                    .map((connection, index) => {
-                      const details = getConnectionDetails(connection.type)
-
-                      return (
-                        <Button
-                          key={index}
-                          as={Link}
-                          p={3}
-                          w="full"
-                          rounded={0}
-                          bg="flow.10"
-                          target="_blank"
-                          _hover={{ bg: 'flow.20' }}
-                          href={details.baseUrl + connection.handle}
-                        >
-                          <HStack w="full" justify="space-between">
-                            <HStack spacing={2} color="brand.primary.80">
-                              {details.icon}
-                              <Text textStyle="label.small">
-                                {details.displayName}
-                              </Text>
-                            </HStack>
-                            <Text textStyle="label.small" color="ui.100">
-                              <Text as="span" opacity={0.4}>
-                                {details.preHandle}
-                              </Text>
-                              <Text as="span">{connection.handle}</Text>
-                              <Text as="span" opacity={0.4}>
-                                {details.postHandle}
-                              </Text>
-                            </Text>
-                          </HStack>
-                        </Button>
-                      )
-                    })}
                   {isOwnProfile && (
                     <Button
                       p={3}
@@ -218,15 +166,15 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                     <VStack w="full">
                       <FavouritesSection
                         label="People"
-                        items={user.favouriteUsers}
+                        items={user.favouriteUsers ?? []}
                       />
                       <FavouritesSection
                         label="Albums"
-                        items={user.favouriteAlbums}
+                        items={user.favouriteAlbums ?? []}
                       />
                       <FavouritesSection
                         label="Images"
-                        items={user.favouriteImages}
+                        items={user.favouriteImages ?? []}
                       />
                     </VStack>
                   </VStack>
@@ -284,25 +232,25 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
                 )}
               </VStack>
             </VStack>
-            {user.albums.length > 0 && (
+            {(user.albums?.length ?? 0) > 0 && (
               <VStack w="full" align="start">
                 <Text textStyle="heading.medium" color="ui.80">
                   Latest Albums
                 </Text>
                 <HStack w="full">
-                  {user.albums.map((album) => (
+                  {user.albums?.map((album) => (
                     <AlbumPreview key={album.id} item={album} />
                   ))}
                 </HStack>
               </VStack>
             )}
-            {user.images.length > 0 && (
+            {(user.images?.length ?? 0) > 0 && (
               <VStack w="full" align="start">
                 <Text textStyle="heading.medium" color="ui.80">
                   Latest Images
                 </Text>
                 <HStack w="full">
-                  {user.images.map((image) => (
+                  {user.images?.map((image) => (
                     <ImagePreview key={image.id} item={image} />
                   ))}
                 </HStack>
@@ -319,10 +267,8 @@ const UserPage: BlitzPage<UserPageProps> = ({ initialData, currentUser }) => {
           </VStack>
         </HStack>
       </VStack>
-    </>
+    </Layout>
   )
 }
-
-UserPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default UserPage

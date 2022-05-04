@@ -68,6 +68,9 @@ export type Mutation = {
   createAlbum: Album;
   createImage: Image;
   createUser: Scalars['Boolean'];
+  favouriteAlbum: Scalars['Boolean'];
+  favouriteImage: Scalars['Boolean'];
+  favouriteUser: Scalars['Boolean'];
   login: JwtResponse;
   reportAlbum: Scalars['Boolean'];
   reportImage: Scalars['Boolean'];
@@ -102,6 +105,24 @@ export type MutationCreateUserArgs = {
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   username: Scalars['String'];
+};
+
+
+export type MutationFavouriteAlbumArgs = {
+  albumId: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+};
+
+
+export type MutationFavouriteImageArgs = {
+  imageId: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+};
+
+
+export type MutationFavouriteUserArgs = {
+  unfavourite: Scalars['Boolean'];
+  userId: Scalars['String'];
 };
 
 
@@ -306,7 +327,6 @@ export enum SafetyRating {
 export type SearchDocument = {
   __typename?: 'SearchDocument';
   authorId: Scalars['String'];
-  authorName: Scalars['String'];
   colors: Array<Scalars['Int']>;
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
@@ -348,7 +368,11 @@ export type User = {
   bio?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  favouriteAlbums?: Maybe<Array<Album>>;
+  favouriteImages?: Maybe<Array<Image>>;
+  favouriteUsers?: Maybe<Array<User>>;
   id: Scalars['String'];
+  images?: Maybe<Array<Image>>;
   lockStatus: LockingStatus;
   nickname?: Maybe<Scalars['String']>;
   permissions: Scalars['Int'];
@@ -405,6 +429,45 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', success: boolean };
 
+export type FavouriteAlbumMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteAlbumMutation = { __typename?: 'Mutation', success: boolean };
+
+export type FavouriteImageMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteImageMutation = { __typename?: 'Mutation', success: boolean };
+
+export type FavouriteUserMutationVariables = Exact<{
+  id: Scalars['String'];
+  unfavourite: Scalars['Boolean'];
+}>;
+
+
+export type FavouriteUserMutation = { __typename?: 'Mutation', success: boolean };
+
+export type CreateImageFragmentMutationVariables = Exact<{
+  albumId: Scalars['String'];
+}>;
+
+
+export type CreateImageFragmentMutation = { __typename?: 'Mutation', image: { __typename?: 'Image', id: string } };
+
+export type UploadImageMutationVariables = Exact<{
+  imageId: Scalars['String'];
+  image: Scalars['Upload'];
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', success: boolean };
+
 export type GetAlbumQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -421,6 +484,13 @@ export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, bio?: string | null, email: string, badges: Array<UserBadge>, username: string, nickname?: string | null, avatarUrl?: string | null, updatedAt: any, createdAt: any, permissions: number } | null };
+
+export type UserProfileQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserProfileQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, bio?: string | null, email: string, badges: Array<UserBadge>, username: string, nickname?: string | null, avatarUrl?: string | null, updatedAt: any, createdAt: any, bannerExt: string, userFavouriteIds: Array<string>, albums?: Array<{ __typename?: 'Album', id: string, title?: string | null, authorId: string, coverExt: string, colors: Array<number>, userFavouriteIds: Array<string> }> | null, images?: Array<{ __typename?: 'Image', id: string, title?: string | null, authorId: string, albumId: string, imageExt: string, colors: Array<number>, userFavouriteIds: Array<string> }> | null, favouriteAlbums?: Array<{ __typename?: 'Album', id: string, authorId: string, title?: string | null, coverExt: string, userFavouriteIds: Array<string> }> | null, favouriteImages?: Array<{ __typename?: 'Image', id: string, authorId: string, imageExt: string, albumId: string, title?: string | null, userFavouriteIds: Array<string> }> | null, favouriteUsers?: Array<{ __typename?: 'User', id: string, avatarUrl?: string | null, username: string, nickname?: string | null, userFavouriteIds: Array<string> }> | null } | null };
 
 
 export const CreateAlbumDocument = gql`
@@ -455,6 +525,33 @@ export const RegisterDocument = gql`
   )
 }
     `;
+export const FavouriteAlbumDocument = gql`
+    mutation FavouriteAlbum($id: String!, $unfavourite: Boolean!) {
+  success: favouriteAlbum(albumId: $id, unfavourite: $unfavourite)
+}
+    `;
+export const FavouriteImageDocument = gql`
+    mutation FavouriteImage($id: String!, $unfavourite: Boolean!) {
+  success: favouriteImage(imageId: $id, unfavourite: $unfavourite)
+}
+    `;
+export const FavouriteUserDocument = gql`
+    mutation FavouriteUser($id: String!, $unfavourite: Boolean!) {
+  success: favouriteUser(userId: $id, unfavourite: $unfavourite)
+}
+    `;
+export const CreateImageFragmentDocument = gql`
+    mutation CreateImageFragment($albumId: String!) {
+  image: createImage(albumId: $albumId, colors: [0, 0, 0]) {
+    id
+  }
+}
+    `;
+export const UploadImageDocument = gql`
+    mutation UploadImage($imageId: String!, $image: Upload!) {
+  success: updateImageFile(imageId: $imageId, imageFile: $image)
+}
+    `;
 export const GetAlbumDocument = gql`
     query GetAlbum($id: String!) {
   album(id: $id) {
@@ -485,6 +582,62 @@ export const CurrentUserDocument = gql`
   }
 }
     `;
+export const UserProfileDocument = gql`
+    query UserProfile($userId: String!) {
+  user(id: $userId) {
+    id
+    bio
+    email
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    bannerExt
+    userFavouriteIds
+    albums {
+      id
+      title
+      authorId
+      coverExt
+      colors
+      userFavouriteIds
+    }
+    images {
+      id
+      title
+      authorId
+      albumId
+      imageExt
+      colors
+      userFavouriteIds
+    }
+    favouriteAlbums {
+      id
+      authorId
+      title
+      coverExt
+      userFavouriteIds
+    }
+    favouriteImages {
+      id
+      authorId
+      imageExt
+      albumId
+      title
+      userFavouriteIds
+    }
+    favouriteUsers {
+      id
+      avatarUrl
+      username
+      nickname
+      userFavouriteIds
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -505,6 +658,21 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Register(variables: RegisterMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RegisterMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RegisterMutation>(RegisterDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Register', 'mutation');
     },
+    FavouriteAlbum(variables: FavouriteAlbumMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FavouriteAlbumMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FavouriteAlbumMutation>(FavouriteAlbumDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FavouriteAlbum', 'mutation');
+    },
+    FavouriteImage(variables: FavouriteImageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FavouriteImageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FavouriteImageMutation>(FavouriteImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FavouriteImage', 'mutation');
+    },
+    FavouriteUser(variables: FavouriteUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FavouriteUserMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<FavouriteUserMutation>(FavouriteUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FavouriteUser', 'mutation');
+    },
+    CreateImageFragment(variables: CreateImageFragmentMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateImageFragmentMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateImageFragmentMutation>(CreateImageFragmentDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateImageFragment', 'mutation');
+    },
+    UploadImage(variables: UploadImageMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadImageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UploadImageMutation>(UploadImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadImage', 'mutation');
+    },
     GetAlbum(variables: GetAlbumQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAlbumQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAlbumQuery>(GetAlbumDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAlbum', 'query');
     },
@@ -513,6 +681,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CurrentUser(variables?: CurrentUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CurrentUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CurrentUserQuery>(CurrentUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CurrentUser', 'query');
+    },
+    UserProfile(variables: UserProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UserProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UserProfileQuery>(UserProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UserProfile', 'query');
     }
   };
 }

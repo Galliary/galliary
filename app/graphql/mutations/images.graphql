@@ -1,0 +1,9 @@
+mutation CreateImageFragment($albumId: String!) {
+  image: createImage(albumId: $albumId, colors: [0, 0, 0]) {
+    id
+  }
+}
+
+mutation UploadImage($imageId: String!, $image: Upload!) {
+  success: updateImageFile(imageId: $imageId, imageFile: $image)
+}

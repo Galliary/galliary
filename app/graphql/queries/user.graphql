@@ -12,3 +12,63 @@ query CurrentUser {
     permissions
   }
 }
+
+query UserProfile($userId: String!) {
+  user(id: $userId) {
+    id
+    bio
+    email
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    bannerExt
+    userFavouriteIds
+
+    albums {
+      id
+      title
+      authorId
+      coverExt
+      colors
+      userFavouriteIds
+    }
+
+    images {
+      id
+      title
+      authorId
+      albumId
+      imageExt
+      colors
+      userFavouriteIds
+    }
+
+    favouriteAlbums {
+      id
+      authorId
+      title
+      coverExt
+      userFavouriteIds
+    }
+
+    favouriteImages {
+      id
+      authorId
+      imageExt
+      albumId
+      title
+      userFavouriteIds
+    }
+
+    favouriteUsers {
+      id
+      avatarUrl
+      username
+      nickname
+      userFavouriteIds
+    }
+  }
+}

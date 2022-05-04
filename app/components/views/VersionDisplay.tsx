@@ -1,14 +1,17 @@
 import { Box, Text } from '@chakra-ui/layout'
+import packageJson from 'package.json'
 
 export const VersionDisplay = () => (
-  <Box p={2} pos="fixed" left={0} bottom={0}>
-    <Text
-      textStyle="overline"
-      cursor="pointer"
-      color="ui.20"
-      _hover={{ color: 'ui.40' }}
-    >
-      This is a beta, this may not resemble the final version.
+  <Box
+    p={2}
+    pos="fixed"
+    left={0}
+    bottom={0}
+    pointerEvents="none"
+    userSelect="none"
+  >
+    <Text textStyle="overline" color="ui.40" fontSize="10px">
+      VERSION v{packageJson.version}
     </Text>
   </Box>
 )

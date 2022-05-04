@@ -1,6 +1,16 @@
-import { useThumbnailSizing } from "app/data/hooks/useThumbnailSizing";
-import { Box, Button, Center, chakra, HStack, IconButton, Image, Text, useBoolean } from "@chakra-ui/react";
-import { UploadIcon } from "app/components/icons/UploadIcon";
+import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
+import {
+  Box,
+  Button,
+  Center,
+  chakra,
+  HStack,
+  IconButton,
+  Image,
+  Text,
+  useBoolean,
+} from '@chakra-ui/react'
+import { UploadIcon } from 'app/components/icons/UploadIcon'
 import {
   DragEventHandler,
   FormEventHandler,
@@ -8,18 +18,29 @@ import {
   PropsWithChildren,
   useEffect,
   useRef,
-  useState
-} from "react";
-import { AnimatePresence } from "framer-motion";
-import { MotionBox, MotionFlex, MotionSpinner, MotionStack, transitionMediumConfig } from "app/components/Motion";
-import { Tooltip } from "app/components/Tooltip";
-import { UploadIndicatorIcon } from "app/components/icons/UploadIndicatorIcon";
-import { UploadCompleteIcon } from "app/components/icons/UploadCompleteIcon";
-import { DeleteIcon } from "app/components/icons/DeleteIcon";
-import { EditIcon } from "app/components/icons/EditIcon";
-import { ImageUploadStateType, useUploadState } from "app/data/hooks/useUploadState";
+  useState,
+} from 'react'
+import { AnimatePresence } from 'framer-motion'
+import {
+  MotionBox,
+  MotionFlex,
+  MotionSpinner,
+  MotionStack,
+  transitionMediumConfig,
+} from 'app/components/Motion'
+import { Tooltip } from 'app/components/Tooltip'
+import { UploadIndicatorIcon } from 'app/components/icons/UploadIndicatorIcon'
+import { UploadCompleteIcon } from 'app/components/icons/UploadCompleteIcon'
+import { DeleteIcon } from 'app/components/icons/DeleteIcon'
+import { EditIcon } from 'app/components/icons/EditIcon'
+import {
+  ImageUploadStateType,
+  useUploadState,
+} from 'app/data/hooks/useUploadState'
 
 export interface ImageUploaderProps {
+  uploadProgress: number
+  previewImageSrc?: string
   uploadedImageSrc?: string
   onUpload?(files: FileList | null): void
 }
@@ -79,6 +100,8 @@ const ImageThumbnail = ({ src }: { src: string }) => (
 )
 
 export const ImageUploader = ({
+  uploadProgress,
+  previewImageSrc,
   uploadedImageSrc,
   onUpload: _onUpload,
 }: ImageUploaderProps) => {
@@ -86,9 +109,19 @@ export const ImageUploader = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useBoolean(false)
   const [currentDataUri, setCurrentDataUri] = useState('')
-  const { state, setUploadProgress, setStartUpload, setFinishUpload, setComplete } = useUploadState()
+  const {
+    state,
+    setUploadProgress,
+    setStartUpload,
+    setFinishUpload,
+    setComplete,
+  } = useUploadState()
 
-  const isUploading = [ImageUploadStateType.StartUpload, ImageUploadStateType.UploadProgress, ImageUploadStateType.FinishUpload].includes(state.type)
+  const isUploading = [
+    ImageUploadStateType.StartUpload,
+    ImageUploadStateType.UploadProgress,
+    ImageUploadStateType.FinishUpload,
+  ].includes(state.type)
 
   useEffect(() => {
     if (uploadedImageSrc && uploadedImageSrc !== currentDataUri) {
@@ -129,7 +162,8 @@ export const ImageUploader = ({
 
     if (isUploading && state.percent !== DONE_PERCENT) {
       interval = setInterval(() => {
-        const newPercent = (state.percent ?? 0) + Math.floor(Math.random() * 10) + 1
+        const newPercent =
+          (state.percent ?? 0) + Math.floor(Math.random() * 10) + 1
 
         if (newPercent >= DONE_PERCENT) {
           return setFinishUpload()
@@ -156,14 +190,14 @@ export const ImageUploader = ({
     return () => clearTimeout(timeout)
   }, [isUploadFinished])
 
-  const shouldShowCompleteImage = isUploadFinished && isUploadComplete && !isUploading
+  const shouldShowCompleteImage = isUploadComplete && !isUploading
 
   return (
-    <Tooltip label="Upload">
+    <Tooltip label={shouldShowCompleteImage ? 'Untitled Image' : 'Upload'}>
       {({ isHovering }) => (
         <Box boxSize={boxSize} pos="relative">
           {shouldShowCompleteImage && (
-            <Box boxSize="full">
+            <Box boxSize="full" bg="flow.20" rounded="sm">
               <ImageThumbnail src={currentDataUri} />
               <Box pos="absolute" zIndex={10} p={4} inset={0}>
                 <MotionStack

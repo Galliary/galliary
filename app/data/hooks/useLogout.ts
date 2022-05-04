@@ -1,14 +1,9 @@
-import { useContext } from "react";
-import { AppContext } from "pages/_app";
-import { useCookie } from "react-use";
-import { AUTH_COOKIE_NAME } from "app/constants";
+import { useRouter } from 'next/router'
+import { useRoutes } from 'app/data/hooks/useRoutes'
 
 export const useLogout = () => {
-  const context = useContext(AppContext)
-  const [, setAuthToken] = useCookie(AUTH_COOKIE_NAME);
+  const router = useRouter()
+  const routes = useRoutes()
 
-  return () => {
-    setAuthToken("");
-    context.setAuthToken("");
-  }
+  return () => router.push(routes.toLogout())
 }

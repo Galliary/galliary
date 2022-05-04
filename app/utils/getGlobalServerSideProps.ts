@@ -1,9 +1,9 @@
-import deepmerge from "deepmerge";
-import { GetServerSideProps } from "next";
-import { getSdk } from "generated/graphql.ssr";
-import { GraphQLClient } from "graphql-request";
-import { default as getCookies } from "next-cookies";
-import { AUTH_COOKIE_NAME } from "app/constants";
+import deepmerge from 'deepmerge'
+import { GetServerSideProps } from 'next'
+import { getSdk } from 'generated/graphql.ssr'
+import { GraphQLClient } from 'graphql-request'
+import { default as getCookies } from 'next-cookies'
+import { API_URL, AUTH_COOKIE_NAME } from 'app/constants'
 
 export const getGlobalServerSideProps = <Props>(
   callback: GetServerSideProps<Props>,
@@ -18,17 +18,18 @@ export const getGlobalServerSideProps = <Props>(
 
     const authToken = cookies[AUTH_COOKIE_NAME] ?? null
 
-    const client = new GraphQLClient('http://localhost:8080/graphql', {
+    const client = new GraphQLClient(`${API_URL}/graphql`, {
       headers: {
-        Authorization: `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     })
 
-    const { user: currentUser } = authToken ? await getSdk(client)
-      .CurrentUser()
-      .catch(() => ({ user: null })) : { user: null }
+    const { user: currentUser } = authToken
+      ? await getSdk(client)
+          .CurrentUser()
+          .catch(() => ({ user: null }))
+      : { user: null }
 
     return deepmerge(pageProps, { props: { currentUser, authToken } })
   }
 }
-

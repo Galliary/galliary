@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['plugin:prettier/recommended'],
+  extends: ['next/core-web-vitals', 'plugin:prettier/recommended'],
   rules: {
     'react-hooks/exhaustive-deps': 'off',
     'react/no-array-index-key': 'off',
@@ -7,11 +7,6 @@ module.exports = {
       'error',
       {
         paths: [
-          {
-            name: 'next/link',
-            importNames: ['Link'],
-            message: 'Use custom Link component instead.',
-          },
           {
             name: '@chakra-ui/react',
             importNames: ['Link'],
