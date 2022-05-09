@@ -4,11 +4,11 @@ import {
   FavouriteAlbumMutationFn,
   FavouriteImageMutationFn,
   FavouriteUserMutationFn,
-} from 'generated/graphql'
+} from 'generated/graphql.client'
 import { Maybe } from 'global'
 
 export const useOptimisticFavourites = (
-  item: { id: string; userFavouritesIds?: Maybe<string[]> },
+  item: { id: string; userFavourites?: Maybe<Array<{ id: string }>> },
   mutation:
     | FavouriteImageMutationFn
     | FavouriteAlbumMutationFn
@@ -16,8 +16,7 @@ export const useOptimisticFavourites = (
 ) => {
   const currentUser = useCurrentUser()
   const [userHasLoved, setUserHasLoved] = useState(
-    item.userFavouritesIds?.some((userId) => userId === currentUser?.id) ??
-      false,
+    item.userFavourites?.some((u) => u.id === currentUser?.id) ?? false,
   )
 
   const setAlbumFavourite = () => {
@@ -25,7 +24,7 @@ export const useOptimisticFavourites = (
       const newLoveState = !prev
 
       mutation({
-        onError() {
+        onError(error) {
           setUserHasLoved(prev)
         },
         variables: { id: item.id, unfavourite: userHasLoved },

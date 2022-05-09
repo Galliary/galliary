@@ -1,5 +1,4 @@
-import { useReducer } from "react";
-
+import { useReducer } from 'react'
 
 export enum ImageUploadStateType {
   NoContent,
@@ -17,22 +16,28 @@ type ImageUploadState = {
   percent?: number
 }
 
-type ImageUploadAction = {
-  type: ImageUploadStateType.NoContent
-} | {
-  type: ImageUploadStateType.ReadyToUpload
-  file: File
-  dataUri: string
-} | {
-  type: ImageUploadStateType.StartUpload
-} | {
-  type: ImageUploadStateType.UploadProgress
-  percent: number
-} | {
-  type: ImageUploadStateType.FinishUpload
-} | {
-  type: ImageUploadStateType.Complete
-}
+type ImageUploadAction =
+  | {
+      type: ImageUploadStateType.NoContent
+    }
+  | {
+      type: ImageUploadStateType.ReadyToUpload
+      file: File
+      dataUri: string
+    }
+  | {
+      type: ImageUploadStateType.StartUpload
+    }
+  | {
+      type: ImageUploadStateType.UploadProgress
+      percent: number
+    }
+  | {
+      type: ImageUploadStateType.FinishUpload
+    }
+  | {
+      type: ImageUploadStateType.Complete
+    }
 
 const reducer = (state: ImageUploadState, action: ImageUploadAction) => {
   switch (action.type) {
@@ -50,7 +55,7 @@ const reducer = (state: ImageUploadState, action: ImageUploadAction) => {
       return {
         ...state,
         type: ImageUploadStateType.StartUpload,
-        percent: 0
+        percent: 0,
       }
     case ImageUploadStateType.UploadProgress:
       return {
@@ -69,7 +74,8 @@ const reducer = (state: ImageUploadState, action: ImageUploadAction) => {
         ...state,
         type: ImageUploadStateType.Complete,
       }
-    default: throw new Error("Unhandled action type")
+    default:
+      throw new Error('Unhandled action type')
   }
 }
 
@@ -79,10 +85,14 @@ export const useUploadState = () => {
   })
 
   const setNoContent = () => dispatch({ type: ImageUploadStateType.NoContent })
-  const setReadyToUpload = (file: File, dataUri: string) => dispatch({ type: ImageUploadStateType.ReadyToUpload, file, dataUri })
-  const setStartUpload = () => dispatch({ type: ImageUploadStateType.StartUpload })
-  const setUploadProgress = (percent: number) => dispatch({ type: ImageUploadStateType.UploadProgress, percent })
-  const setFinishUpload = () => dispatch({ type: ImageUploadStateType.FinishUpload })
+  const setReadyToUpload = (file: File, dataUri: string) =>
+    dispatch({ type: ImageUploadStateType.ReadyToUpload, file, dataUri })
+  const setStartUpload = () =>
+    dispatch({ type: ImageUploadStateType.StartUpload })
+  const setUploadProgress = (percent: number) =>
+    dispatch({ type: ImageUploadStateType.UploadProgress, percent })
+  const setFinishUpload = () =>
+    dispatch({ type: ImageUploadStateType.FinishUpload })
   const setComplete = () => dispatch({ type: ImageUploadStateType.Complete })
 
   return {

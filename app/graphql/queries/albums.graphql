@@ -2,11 +2,65 @@
 query GetAlbum($id: String!) {
   album(id: $id) {
     id
+    title
+    description
+    authorId
+    colors
+    coverExt
+    author {
+      id
+      nickname
+      username
+    }
+    userFavourites {
+      id
+    }
+  }
+}
+
+query GetAlbumEditPage($id: String!) {
+  album(id: $id) {
+    id
+    title
+    description
+    authorId
+    colors
+    coverExt
+    author {
+      id
+      nickname
+      username
+    }
+    userFavourites {
+      id
+    }
+    images {
+      id
+      title
+      description
+      albumId
+      colors
+      authorId
+      imageExt
+    }
   }
 }
 
 query GetAlbums {
   albums {
     id
+    title
+    authorId
+    coverExt
+    colors
+    images {
+      id
+      albumId
+      authorId
+      imageExt
+    }
+    userFavourites {
+      id
+    }
   }
 }

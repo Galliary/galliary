@@ -1,4 +1,4 @@
-import { PropsForModal } from 'types'
+import { PropsForModal } from 'global'
 import {
   Button,
   HStack,

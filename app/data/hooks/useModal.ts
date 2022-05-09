@@ -6,7 +6,7 @@ import {
   ModalContextNames,
   ModalContextProps,
 } from 'app/controllers/ModalController'
-import { PropsForModal } from 'types'
+import { PropsForModal } from 'global'
 
 type WithoutDisclosure<Props extends PropsForModal> = Omit<
   Props,

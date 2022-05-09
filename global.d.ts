@@ -1,7 +1,7 @@
-import * as React from "react";
-import { UseDisclosureReturn } from "@chakra-ui/react";
-import { NextComponentType, NextPageContext } from "next/dist/shared/lib/utils";
-import { CurrentUserQueryHookResult } from "generated/graphql";
+import * as React from 'react'
+import { UseDisclosureReturn } from '@chakra-ui/react'
+import { NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils'
+import { CurrentUserQueryHookResult } from 'generated/graphql.client'
 
 export type Maybe<T> = T | null | undefined
 export type NotUndefined<T> = T extends undefined ? never : T
@@ -14,7 +14,11 @@ export interface GlobalPageProps {
 }
 
 declare module 'next' {
-  export type NextPage<P = {}, IP = P> = NextComponentType<NextPageContext, IP, P & GlobalPageProps>
+  export type NextPage<P = {}, IP = P> = NextComponentType<
+    NextPageContext,
+    IP,
+    P & GlobalPageProps
+  >
 }
 
 // svg cringe

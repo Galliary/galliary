@@ -3,7 +3,7 @@ import produce from 'immer'
 import {
   useCreateImageFragmentMutation,
   useUploadImageMutation,
-} from 'generated/graphql'
+} from 'generated/graphql.client'
 import { Wrap } from '@chakra-ui/react'
 
 export interface UploaderProps {

@@ -5,9 +5,11 @@ import { Header } from 'app/layouts/Header'
 import { Footer } from 'app/layouts/Footer'
 import { GlobalMeta } from 'app/meta/GlobalMeta'
 import { VersionDisplay } from 'app/components/views/VersionDisplay'
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren } from 'react'
 
-export interface LayoutProps { hideFooter?: boolean }
+export interface LayoutProps {
+  hideFooter?: boolean
+}
 
 const Layout: FC<PropsWithChildren<LayoutProps>> = ({
   hideFooter = false,
@@ -17,9 +19,9 @@ const Layout: FC<PropsWithChildren<LayoutProps>> = ({
     <>
       <GlobalMeta />
 
-      <VStack spacing={0} boxSize="full">
+      <VStack spacing={0} w="full">
         <Header />
-        <VStack boxSize="full">
+        <VStack w="full">
           <Body>{children}</Body>
           {!hideFooter && <Footer />}
         </VStack>

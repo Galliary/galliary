@@ -18,7 +18,7 @@ export type LinkProps = Omit<
   'href'
 > & { href: NextLinkProps['href'] }
 
-const blitzLinkProps = [
+const nextLinkProps = [
   'href',
   'replace',
   'shallow',
@@ -28,8 +28,8 @@ const blitzLinkProps = [
 
 export const Link = forwardRef<LinkProps, typeof ChakraLink>(
   ({ linkAs, ...props }, ref) => {
-    const linkProps = pick(props, blitzLinkProps)
-    const chakraProps = omit<LinkProps, keyof LinkProps>(props, blitzLinkProps)
+    const linkProps = pick(props, nextLinkProps)
+    const chakraProps = omit<LinkProps, keyof LinkProps>(props, nextLinkProps)
 
     return (
       <NextLink {...linkProps} as={linkAs} passHref>

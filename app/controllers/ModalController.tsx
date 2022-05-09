@@ -3,10 +3,13 @@ import { useDisclosure } from '@chakra-ui/hooks'
 import { createContext, PropsWithChildren, useMemo, useState } from 'react'
 import { Box, Center, Portal, UseDisclosureReturn } from '@chakra-ui/react'
 import { ConfirmationModalProps } from 'app/components/modals/ConfirmationModal'
-import { NotUndefined } from 'types'
+import { NotUndefined } from 'global'
 import { EditProfileModalProps } from 'app/components/modals/EditProfileModal'
 import { Loader } from 'app/components/views/Loader'
 import { ManageConnectionsModalProps } from 'app/components/modals/ManageConnectionsModal'
+import ReportImageModal, {
+  ReportImageModalProps,
+} from 'app/components/modals/ReportImageModal'
 
 const loading = () => (
   <Center pos="fixed" inset={0} m="auto">
@@ -15,22 +18,23 @@ const loading = () => (
 )
 
 const modals = {
-  confirm: dynamic(
-    () => import('app/components/modals/ConfirmationModal'),
-    {
-      ssr: false,
-      loading,
-    },
-  ),
-  editProfile: dynamic(
-    () => import('app/components/modals/EditProfileModal'),
-    {
-      ssr: false,
-      loading,
-    },
-  ),
+  confirm: dynamic(() => import('app/components/modals/ConfirmationModal'), {
+    ssr: false,
+    loading,
+  }),
+  editProfile: dynamic(() => import('app/components/modals/EditProfileModal'), {
+    ssr: false,
+    loading,
+  }),
   manageConnections: dynamic(
     () => import('app/components/modals/ManageConnectionsModal'),
+    {
+      ssr: false,
+      loading,
+    },
+  ),
+  reportImageModal: dynamic(
+    () => import('app/components/modals/ReportImageModal'),
     {
       ssr: false,
       loading,
@@ -42,6 +46,7 @@ export type ModalContextProps = {
   confirm: ConfirmationModalProps
   editProfile: EditProfileModalProps
   manageConnections: ManageConnectionsModalProps
+  reportImageModal: ReportImageModalProps
 }
 
 export type ModalContextNames = keyof typeof modals

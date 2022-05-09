@@ -1,10 +1,11 @@
-import { theme } from "app/theme";
-import { ChakraProvider } from "@chakra-ui/react";
-import { ModalController } from "app/controllers/ModalController";
-import { AppProps } from "next/app";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { createContext, useState } from "react";
-import { GlobalPageProps } from "global";
+import { theme } from 'app/theme'
+import { ChakraProvider } from '@chakra-ui/react'
+import { ModalController } from 'app/controllers/ModalController'
+import { AppProps } from 'next/app'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { createContext, useState } from 'react'
+import { GlobalPageProps } from 'global'
+import { API_URL } from 'app/constants'
 
 type AppContextType = {
   setAuthToken: (newToken: string) => void
@@ -22,22 +23,26 @@ function App({ Component, pageProps }: AppProps<GlobalPageProps>) {
   const cache = new InMemoryCache()
 
   const client = new ApolloClient({
-    uri: 'http://localhost:8080/graphql',
+    uri: `${API_URL}/graphql`,
     cache,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    }
+    headers: authToken
+      ? {
+          Authorization: `Bearer ${authToken}`,
+        }
+      : {},
   })
 
   return (
     <ChakraProvider theme={theme}>
-      <ModalController>
-        <AppContext.Provider value={{ ...pageProps, authToken, setAuthToken }}>
-          <ApolloProvider client={client}>
+      <ApolloProvider client={client}>
+        <ModalController>
+          <AppContext.Provider
+            value={{ ...pageProps, authToken, setAuthToken }}
+          >
             <Component {...pageProps} />
-          </ApolloProvider>
-        </AppContext.Provider>
-      </ModalController>
+          </AppContext.Provider>
+        </ModalController>
+      </ApolloProvider>
     </ChakraProvider>
   )
 }

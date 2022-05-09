@@ -1,10 +1,10 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const FullscreenIcon = createIcon({
-  displayName: "FullscreenIcon",
-  viewBox: "0 0 24 24",
+  displayName: 'FullscreenIcon',
+  viewBox: '0 0 24 24',
   defaultProps: {
-    fill: "none",
+    fill: 'none',
     boxSize: 6,
   },
   path: (

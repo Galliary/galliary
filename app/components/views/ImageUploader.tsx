@@ -4,11 +4,13 @@ import {
   Button,
   Center,
   chakra,
+  Flex,
   HStack,
   IconButton,
   Image,
   Text,
   useBoolean,
+  VStack,
 } from '@chakra-ui/react'
 import { UploadIcon } from 'app/components/icons/UploadIcon'
 import {
@@ -37,11 +39,16 @@ import {
   ImageUploadStateType,
   useUploadState,
 } from 'app/data/hooks/useUploadState'
+import {
+  useDeleteImageMutation,
+  useUpdateImageMutation,
+} from 'generated/graphql.client'
+import { getDataUriForBlob } from 'app/utils/files'
+import { Loader } from 'app/components/views/Loader'
+import { getImageUrl } from 'app/services/cdn.service'
+import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 
 export interface ImageUploaderProps {
-  uploadProgress: number
-  previewImageSrc?: string
-  uploadedImageSrc?: string
   onUpload?(files: FileList | null): void
 }
 
@@ -75,12 +82,17 @@ const DragUploadPrompt = () => (
 const ImageUploadPrompt = ({ children }: PropsWithChildren<unknown>) => (
   <Prompt>
     <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
-      <UploadIcon
-        className={IU_NAME}
-        boxSize={['32px', null, '64px']}
-        transitionDuration="fast"
-        color="brand.primary.40"
-      />
+      <VStack spacing={[2, null, 6]}>
+        <UploadIcon
+          className={IU_NAME}
+          boxSize={['32px', null, '64px']}
+          transitionDuration="fast"
+          color="brand.primary.40"
+        />
+        <Text textStyle="label.medium" color="ui.60">
+          Click here or Drag & Drop images
+        </Text>
+      </VStack>
       {children}
     </Center>
   </Prompt>
@@ -99,48 +111,155 @@ const ImageThumbnail = ({ src }: { src: string }) => (
   </MotionBox>
 )
 
-export const ImageUploader = ({
-  uploadProgress,
-  previewImageSrc,
-  uploadedImageSrc,
-  onUpload: _onUpload,
-}: ImageUploaderProps) => {
+export interface ImagePartial {
+  id: string
+  albumId: string
+  authorId: string
+  imageExt: string
+  file?: File
+}
+
+interface UploadedImageProps {
+  image: ImagePartial
+  onDelete?(): void
+}
+
+export const UploadedImage = ({ image, onDelete }: UploadedImageProps) => {
+  const boxSize = useThumbnailSizing()
+  const [deleteImage] = useDeleteImageMutation()
+
+  return (
+    <Tooltip label="Untitled Image">
+      {({ isHovering }) => (
+        <Box boxSize={boxSize} pos="relative">
+          <Box boxSize="full" bg="flow.20" rounded="sm">
+            <ImageThumbnail
+              src={getImageUrl(
+                image.authorId,
+                image.albumId,
+                image.id,
+                image.imageExt,
+              )}
+            />
+            <Center pos="absolute" inset={0} zIndex={-1}>
+              <LogoLoadingAnimation size="128px" />
+            </Center>
+            <Box pos="absolute" zIndex={10} p={4} inset={0}>
+              <MotionStack
+                pos="absolute"
+                p={1}
+                right={2}
+                bottom={2}
+                spacing={1}
+                rounded="full"
+                direction="row"
+                bg="background.full"
+                exit={{ y: 8, opacity: 0 }}
+                initial={{ y: 8, opacity: 0 }}
+                animate={{
+                  y: isHovering ? 0 : 8,
+                  opacity: isHovering ? 1 : 0,
+                }}
+                transition={transitionMediumConfig}
+                boxShadow="0 0 16px 0 rgba(0, 0, 0, 0.25)"
+              >
+                {/*<IconButton
+                    p={2}
+                    variant="ghost"
+                    aria-label="Edit"
+                    rounded="full"
+                    icon={<EditIcon boxSize={5} />}
+                  />*/}
+                <IconButton
+                  p={2}
+                  variant="ghost"
+                  aria-label="Delete"
+                  rounded="full"
+                  color="status.bad"
+                  onClick={() =>
+                    deleteImage({ variables: { imageId: image.id } }).then(
+                      onDelete,
+                    )
+                  }
+                  icon={<DeleteIcon boxSize={5} />}
+                />
+              </MotionStack>
+            </Box>
+          </Box>
+        </Box>
+      )}
+    </Tooltip>
+  )
+}
+
+interface QueuedImageProps {
+  file: File
+  isUploading: boolean
+}
+
+export const QueuedImage = ({ file, isUploading }: QueuedImageProps) => {
+  const [dataUri, setDataUri] = useState<string>()
+  const boxSize = useThumbnailSizing()
+
+  useEffect(() => {
+    getDataUriForBlob(file).then(setDataUri)
+  }, [])
+
+  return (
+    <Tooltip label="Untitled Image">
+      <Box boxSize={boxSize} bg="ui.20" pos="relative">
+        <MotionFlex
+          pos="absolute"
+          inset={0}
+          zIndex={100}
+          align="end"
+          color="ui.80"
+          boxSize="full"
+          bgGradient="linear(to-t, background.full, transparent)"
+          exit={{ y: 32, opacity: 0 }}
+          initial={{ y: 32, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={transitionMediumConfig}
+        >
+          <Flex p={4} w="full" align="start">
+            {isUploading ? (
+              <HStack spacing={2}>
+                <MotionSpinner>
+                  <UploadIndicatorIcon color="inherit" boxSize={5} />
+                </MotionSpinner>
+                <Text textStyle="label.medium">Uploading...</Text>
+              </HStack>
+            ) : (
+              <Flex w="full" align="end">
+                <Text textStyle="label.small">Pending</Text>
+              </Flex>
+            )}
+          </Flex>
+        </MotionFlex>
+
+        {dataUri ? (
+          <Image boxSize="full" src={dataUri} />
+        ) : (
+          <Center boxSize="full">
+            <Loader color="brand.100" />
+          </Center>
+        )}
+      </Box>
+    </Tooltip>
+  )
+}
+
+export const ImageUploader = ({ onUpload: _onUpload }: ImageUploaderProps) => {
   const boxSize = useThumbnailSizing()
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useBoolean(false)
-  const [currentDataUri, setCurrentDataUri] = useState('')
-  const {
-    state,
-    setUploadProgress,
-    setStartUpload,
-    setFinishUpload,
-    setComplete,
-  } = useUploadState()
-
-  const isUploading = [
-    ImageUploadStateType.StartUpload,
-    ImageUploadStateType.UploadProgress,
-    ImageUploadStateType.FinishUpload,
-  ].includes(state.type)
-
-  useEffect(() => {
-    if (uploadedImageSrc && uploadedImageSrc !== currentDataUri) {
-      if (currentDataUri) {
-        console.error(
-          "Can't set currentDataUri twice, there must be something wrong:",
-          { currentDataUri },
-        )
-      }
-
-      setStartUpload()
-      setCurrentDataUri(uploadedImageSrc)
-    }
-  }, [uploadedImageSrc])
 
   const onUpload: FormEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault()
-    _onUpload?.(e.currentTarget.files)
-    setStartUpload()
+    if (e.currentTarget.validity.valid) {
+      _onUpload?.(e.currentTarget.files)
+      setIsDragging.off()
+    }
   }
 
   const onKeyboardUpload: KeyboardEventHandler<HTMLButtonElement> = (e) => {
@@ -153,191 +272,64 @@ export const ImageUploader = ({
 
   const onDropUpload: DragEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
-    _onUpload?.(e.dataTransfer.files)
-    setStartUpload()
+    if (e.currentTarget.validity.valid) {
+      _onUpload?.(e.dataTransfer.files)
+      setIsDragging.off()
+    }
   }
 
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>
-
-    if (isUploading && state.percent !== DONE_PERCENT) {
-      interval = setInterval(() => {
-        const newPercent =
-          (state.percent ?? 0) + Math.floor(Math.random() * 10) + 1
-
-        if (newPercent >= DONE_PERCENT) {
-          return setFinishUpload()
-        }
-
-        setUploadProgress(newPercent)
-      }, 200)
-    }
-
-    return () => clearInterval(interval)
-  }, [isUploading, state])
-
-  const isUploadFinished = state.type === ImageUploadStateType.FinishUpload
-  const isUploadComplete = state.type === ImageUploadStateType.Complete
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>
-    if (isUploadFinished) {
-      timeout = setTimeout(() => {
-        setComplete()
-      }, 2000)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [isUploadFinished])
-
-  const shouldShowCompleteImage = isUploadComplete && !isUploading
-
   return (
-    <Tooltip label={shouldShowCompleteImage ? 'Untitled Image' : 'Upload'}>
-      {({ isHovering }) => (
-        <Box boxSize={boxSize} pos="relative">
-          {shouldShowCompleteImage && (
-            <Box boxSize="full" bg="flow.20" rounded="sm">
-              <ImageThumbnail src={currentDataUri} />
-              <Box pos="absolute" zIndex={10} p={4} inset={0}>
-                <MotionStack
-                  pos="absolute"
-                  p={1}
-                  right={2}
-                  bottom={2}
-                  spacing={1}
-                  rounded="full"
-                  direction="row"
-                  bg="background.full"
-                  exit={{ y: 8, opacity: 0 }}
-                  initial={{ y: 8, opacity: 0 }}
-                  animate={{
-                    y: isHovering ? 0 : 8,
-                    opacity: isHovering ? 1 : 0,
-                  }}
-                  transition={transitionMediumConfig}
-                  boxShadow="0 0 16px 0 rgba(0, 0, 0, 0.25)"
-                >
-                  <IconButton
-                    p={2}
-                    variant="ghost"
-                    aria-label="Edit"
-                    rounded="full"
-                    icon={<EditIcon boxSize={5} />}
-                  />
-                  <IconButton
-                    p={2}
-                    variant="ghost"
-                    aria-label="Delete"
-                    rounded="full"
-                    color="status.bad"
-                    icon={<DeleteIcon boxSize={5} />}
-                  />
-                </MotionStack>
-              </Box>
-            </Box>
-          )}
-          {!shouldShowCompleteImage && (
-            <Button
-              d="flex"
-              rounded="sm"
-              size="none"
-              variant="none"
+    <Box h={boxSize} pos="relative">
+      <Button
+        d="flex"
+        rounded="sm"
+        size="none"
+        variant="none"
+        boxSize="full"
+        onDrop={onDropUpload}
+        onKeyDown={onKeyboardUpload}
+        onDragOver={(e) => e.preventDefault()}
+        onDragEnter={setIsDragging.on}
+        onDragLeave={setIsDragging.off}
+      >
+        <chakra.label
+          cursor="pointer"
+          boxSize="full"
+          htmlFor={IU_NAME}
+          bg="flow.10"
+          rounded="sm"
+          _hover={{
+            bg: 'flow.40',
+            ['.' + IU_NAME]: {
+              color: 'brand.primary.100',
+            },
+          }}
+        >
+          <AnimatePresence>
+            <Box
+              pos="relative"
+              pointerEvents="none"
+              overflow="hidden"
               boxSize="full"
-              pointerEvents={uploadedImageSrc ? 'none' : 'all'}
-              onDrop={uploadedImageSrc ? undefined : onDropUpload}
-              onKeyDown={uploadedImageSrc ? undefined : onKeyboardUpload}
-              onDragOver={(e) =>
-                uploadedImageSrc ? undefined : e.preventDefault()
-              }
-              onDragEnter={uploadedImageSrc ? undefined : setIsDragging.on}
-              onDragLeave={uploadedImageSrc ? undefined : setIsDragging.off}
             >
-              <chakra.label
-                cursor="pointer"
-                boxSize="full"
-                htmlFor={IU_NAME}
-                bg="flow.20"
-                rounded="sm"
-                _hover={{
-                  bg: 'flow.40',
-                  ['.' + IU_NAME]: {
-                    color: 'brand.primary.100',
-                  },
-                }}
-              >
-                <AnimatePresence>
-                  <Box
-                    pos="relative"
-                    pointerEvents="none"
-                    overflow="hidden"
-                    boxSize="full"
-                  >
-                    <AnimatePresence exitBeforeEnter>
-                      {isUploading && (
-                        <MotionFlex
-                          pos="absolute"
-                          inset={0}
-                          zIndex={100}
-                          align="end"
-                          color="ui.80"
-                          boxSize="full"
-                          bgGradient="linear(to-t, background.full, transparent)"
-                          exit={{ y: 32, opacity: 0 }}
-                          initial={{ y: 32, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={transitionMediumConfig}
-                        >
-                          <HStack p={4} w="full" justify="space-between">
-                            {isUploadFinished ? (
-                              <UploadCompleteIcon
-                                color="status.ok"
-                                boxSize={5}
-                              />
-                            ) : (
-                              <HStack spacing={2}>
-                                <MotionSpinner>
-                                  <UploadIndicatorIcon
-                                    color="inherit"
-                                    boxSize={5}
-                                  />
-                                </MotionSpinner>
-                                <Text textStyle="label.medium">
-                                  Uploading..
-                                </Text>
-                              </HStack>
-                            )}
-
-                            <Text textStyle="label.small">
-                              {isUploadFinished ? 'Done!' : `${state.percent}%`}
-                            </Text>
-                          </HStack>
-                        </MotionFlex>
-                      )}
-                    </AnimatePresence>
-                    {currentDataUri && <ImageThumbnail src={currentDataUri} />}
-                    {!currentDataUri &&
-                      (isDragging ? (
-                        <DragUploadPrompt />
-                      ) : (
-                        <ImageUploadPrompt>
-                          <input
-                            ref={inputRef}
-                            id={IU_NAME}
-                            multiple
-                            type="file"
-                            onInput={onUpload}
-                            style={{ display: 'none' }}
-                          />
-                        </ImageUploadPrompt>
-                      ))}
-                  </Box>
-                </AnimatePresence>
-              </chakra.label>
-            </Button>
-          )}
-        </Box>
-      )}
-    </Tooltip>
+              {isDragging ? (
+                <DragUploadPrompt />
+              ) : (
+                <ImageUploadPrompt>
+                  <input
+                    ref={inputRef}
+                    id={IU_NAME}
+                    multiple
+                    type="file"
+                    onInput={onUpload}
+                    style={{ display: 'none' }}
+                  />
+                </ImageUploadPrompt>
+              )}
+            </Box>
+          </AnimatePresence>
+        </chakra.label>
+      </Button>
+    </Box>
   )
 }

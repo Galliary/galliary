@@ -1,13 +1,5 @@
 import { Suspense } from 'react'
-import {
-  BlitzPage,
-  invokeWithMiddleware,
-  PromiseReturnType,
-  Routes,
-  usePaginatedQuery,
-  useParam,
-  useQuery,
-} from 'blitz'
+
 import {
   Center,
   HStack,
@@ -17,13 +9,8 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { DeleteAlbumModal } from 'app/components/modals/DeleteAlbumModal'
-import getAlbumImages from 'app/data/queries/albums/getAlbumImages'
-import { EditIcon } from 'app/components/icons/EditIcon'
 import { ImagePreview } from 'app/components/views/ImagePreview'
-import { UploadIcon } from 'app/components/icons/UploadIcon'
-import { usePage } from 'app/data/hooks/usePage'
 import { GalleryViewController } from 'app/controllers/GalleryViewController'
-import getAlbum from 'app/data/queries/albums/getAlbum'
 import { DeleteIcon } from 'app/components/icons/DeleteIcon'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { Tooltip } from 'app/components/Tooltip'
@@ -37,71 +24,53 @@ import { ImageMeta } from 'app/meta/ImageMeta'
 import { SiteDetails } from 'app/constants'
 import { Box } from '@chakra-ui/layout'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { NextPage } from 'next'
+import { useParam } from 'app/data/hooks/useParam'
+import {
+  useGetAlbumQuery,
+  useGetImagesForAlbumQuery,
+} from 'generated/graphql.client'
+import { useRoutes } from 'app/data/hooks/useRoutes'
+import { EditIcon } from 'app/components/icons/EditIcon'
 
-export interface AlbumPageProps {
-  initialAlbum: PromiseReturnType<typeof getAlbum>
-  initialAlbumImages: PromiseReturnType<typeof getAlbumImages>
-}
+export interface AlbumPageProps {}
 
 export const getServerSideProps = getGlobalServerSideProps<AlbumPageProps>(
   async ({ query, req, res }) => {
-    const initialAlbum = await invokeWithMiddleware(
-      getAlbum,
-      { id: query.albumId },
-      { req, res },
-    )
-
-    const initialAlbumImages = await invokeWithMiddleware(
-      getAlbumImages,
-      {
-        albumId: initialAlbum.id,
-        orderBy: { id: 'asc' },
-        skip: ITEMS_PER_PAGE * Number(query.page ?? 0) || 0,
-        take: ITEMS_PER_PAGE,
-      },
-      { req, res },
-    )
-
     return {
-      props: {
-        initialAlbum,
-        initialAlbumImages,
-      },
+      props: {},
     }
   },
 )
 
 const ITEMS_PER_PAGE = 42
 
-const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
-  initialAlbum,
-  initialAlbumImages,
-  currentUser,
-}) => {
+const ShowAlbumPage: NextPage<AlbumPageProps> = ({ currentUser }) => {
   const deleteConfirmDisclosure = useDisclosure()
   const boxSize = useThumbnailSizing()
-  const albumId = useParam('albumId', 'string')
-  const [album] = useQuery(
-    getAlbum,
-    { id: albumId },
-    { initialData: initialAlbum },
-  )
+  const Routes = useRoutes()
 
-  const { page } = usePage()
+  const albumId = useParam('albumId')
 
-  const [{ images, hasMore }] = usePaginatedQuery(
-    getAlbumImages,
-    {
-      albumId: album.id,
-      orderBy: { id: 'asc' },
-      skip: ITEMS_PER_PAGE * page,
-      take: ITEMS_PER_PAGE,
+  const { data: albumData } = useGetAlbumQuery({
+    variables: {
+      id: albumId,
     },
-    {
-      initialData: initialAlbumImages,
+  })
+
+  const { data: imageData } = useGetImagesForAlbumQuery({
+    variables: {
+      albumId,
     },
-  )
+  })
+
+  if (!albumData?.album || !imageData?.images) {
+    return null
+  }
+
+  const album = albumData.album
+  const images = imageData.images
 
   const filledImages = [
     ...images,
@@ -109,7 +78,7 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
   ]
 
   return (
-    <>
+    <Layout>
       <SimpleMeta
         title={`${SiteDetails.Name} | ${album.title ?? 'Untitled Album'} by ${
           album.author?.nickname ?? album.author?.username
@@ -184,24 +153,24 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
             currentUser &&
             currentUser.id === album.authorId && (
               <HStack spacing={2}>
-                <Tooltip label="Upload Image">
+                {/*<Tooltip label="Upload Image">
                   <IconButton
                     as={Link}
-                    href={Routes.NewImagePage({ albumId: album.id })}
+                    href={Routes.({ albumId: album.id })}
                     aria-label="Upload Image"
                     p={3}
                     icon={<UploadIcon />}
                   />
-                </Tooltip>
-                {/*<Tooltip label="Edit Album">
+                </Tooltip>*/}
+                <Tooltip label="Edit Album">
                   <IconButton
                     as={Link}
-                    href={Routes.EditAlbumPage({ albumId: album.id })}
+                    href={Routes.toEditAlbumPage(album.id)}
                     aria-label="Edit Album"
                     p={3}
                     icon={<EditIcon />}
                   />
-                </Tooltip>*/}
+                </Tooltip>
                 <Tooltip label="Delete Album">
                   <IconButton
                     aria-label="Delete Album"
@@ -219,14 +188,14 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
             ) : (
               <>
                 <Text as="span">By</Text>{' '}
-                <Link href={Routes.UserPage({ userId: album.authorId })}>
-                  {album.author.nickname ?? album.author.username}
+                <Link href={Routes.toUserPage(album.authorId)}>
+                  {album.author?.nickname ?? album.author?.username}
                 </Link>
               </>
             )
           }
           data={filledImages}
-          hasMore={hasMore}
+          hasMore={false}
           addPrompt={<AddNewItem />}
           onDisplay={(data) =>
             data ? (
@@ -239,10 +208,8 @@ const ShowAlbumPage: BlitzPage<AlbumPageProps> = ({
           }
         />
       </VStack>
-    </>
+    </Layout>
   )
 }
-
-ShowAlbumPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default ShowAlbumPage

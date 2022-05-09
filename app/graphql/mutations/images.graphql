@@ -4,6 +4,14 @@ mutation CreateImageFragment($albumId: String!) {
   }
 }
 
-mutation UploadImage($imageId: String!, $image: Upload!) {
-  success: updateImageFile(imageId: $imageId, imageFile: $image)
+mutation UpdateImage($imageId: String!, $input: UpdateImageInput!) {
+  image: updateImage(imageId: $imageId, input: $input) {
+    id
+    albumId
+    imageExt
+  }
+}
+
+mutation DeleteImage($imageId: String!) {
+  success: deleteImage(imageId: $imageId)
 }

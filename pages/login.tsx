@@ -1,7 +1,7 @@
 import Layout from 'app/layouts/Layout'
 import { Button, HStack } from '@chakra-ui/react'
 import { NextPage } from 'next'
-import { useLoginMutation, useRegisterMutation } from 'generated/graphql'
+import { useLoginMutation, useRegisterMutation } from 'generated/graphql.client'
 import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import Form from 'app/components/forms/Form'
 import { z } from 'zod'

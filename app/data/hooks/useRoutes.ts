@@ -20,6 +20,9 @@ export const useRoutes = () => {
     toAlbumPage(albumId: string) {
       return `/albums/${albumId}`
     },
+    toEditAlbumPage(albumId: string) {
+      return `/albums/${albumId}/edit`
+    },
     toImagePage(albumId: string, imageId: string) {
       return `${this.toAlbumPage(albumId)}/images/${imageId}`
     },

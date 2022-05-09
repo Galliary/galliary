@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { useRouter } from 'blitz'
 import { Article } from 'schema-dts'
 import { Image, User } from '@prisma/client'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import { SiteDetails } from 'app/constants'
-import { Head } from 'blitz'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 interface ImagePageProps {
   image: Image & {

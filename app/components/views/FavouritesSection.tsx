@@ -2,9 +2,12 @@ import { useMemo } from 'react'
 import {
   AspectRatio,
   Box,
+  Flex,
   HStack,
   Img,
+  SimpleGrid,
   Text,
+  useConst,
   useToken,
   VStack,
 } from '@chakra-ui/react'
@@ -16,7 +19,20 @@ import { Maybe } from 'global'
 import { useRoutes } from 'app/data/hooks/useRoutes'
 
 type AnyItem =
-  | { id: string; authorId: string; coverExt: string; title?: Maybe<string> }
+  | {
+      id: string
+      authorId: string
+      coverExt: string
+      title?: Maybe<string>
+      images?: Maybe<
+        Array<{
+          id: string
+          albumId: string
+          authorId: string
+          imageExt: string
+        }>
+      >
+    }
   | {
       id: string
       authorId: string
@@ -82,6 +98,27 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     }
   }, [])
 
+  const imageDisplay = useConst(
+    () =>
+      item &&
+      'images' in item &&
+      [...(item.images ?? [])]
+        .slice(0, 4)
+        .map((item, i) => (
+          <Flex
+            key={i}
+            boxSize="full"
+            grow={0}
+            shrink={0}
+            overflow="hidden"
+            bgImg={getImageUrlFromItem(item)}
+            bgRepeat="no-repeat"
+            bgPos="center"
+            bgSize="cover"
+          />
+        )),
+  )
+
   return item ? (
     <Link
       boxSize="full"
@@ -97,7 +134,13 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
             transition={transitionFastConfig}
             whileHover={{ backgroundColor: ui10, opacity: 0.8 }}
           >
-            <Img alt={label} boxSize="full" src={imageUrl} />
+            {'imageExt' in item ? (
+              <Img alt={label} boxSize="full" src={imageUrl} />
+            ) : (
+              <SimpleGrid boxSize="full" columns={2}>
+                {imageDisplay}
+              </SimpleGrid>
+            )}
           </MotionBox>
         </AspectRatio>
       </Tooltip>

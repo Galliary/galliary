@@ -29,7 +29,7 @@ import { SiteDetails } from 'app/constants'
 import {
   useFavouriteUserMutation,
   useUserProfileQuery,
-} from 'generated/graphql'
+} from 'generated/graphql.client'
 import { useRouter } from 'next/router'
 import { useLogout } from 'app/data/hooks/useLogout'
 import { NextPage } from 'next'
@@ -72,10 +72,8 @@ const UserPage: NextPage<UserPageProps> = ({ currentUser }) => {
 
   if (!user) {
     // TODO: change me
-    return null
+    return <>no user</>
   }
-
-  console.log({ currentUser })
 
   const isOwnProfile = Boolean(currentUser && currentUser.id === user.id)
 

@@ -13,13 +13,19 @@ export const InputStyle: ComponentMultiStyleConfig = {
       transitionProperty: 'common',
       transitionDuration: 'normal',
       textStyle: 'paragraph.large',
-      _focus: {
-        boxShadow: 'outline',
-      },
     },
     addon: {},
   },
   variants: {
+    none: {
+      field: {
+        bg: 'transparent',
+        _focus: {
+          bg: 'ui.5',
+          boxShadow: 'transparent',
+        },
+      },
+    },
     default: {
       field: {
         bg: 'ui.5',
@@ -27,10 +33,18 @@ export const InputStyle: ComponentMultiStyleConfig = {
         _hover: {
           bg: 'ui.10',
         },
+        _focus: {
+          boxShadow: 'outline',
+        },
       },
     },
   },
   sizes: {
+    none: {
+      field: {
+        p: 2,
+      },
+    },
     default: {
       field: {
         p: 4,

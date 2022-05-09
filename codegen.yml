@@ -2,13 +2,17 @@ overwrite: true
 schema: "generated/schema.graphql"
 documents: "app/graphql/**/*.graphql"
 generates:
-  generated/graphql.ts:
+  generated/graphql.client.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
-  generated/graphql.ssr.ts:
+    config:
+      useInfiniteQuery: true
+  generated/graphql.server.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-graphql-request"
+    config:
+      noExport: true

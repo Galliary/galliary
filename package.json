@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
+    "lint:files": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx",
+    "lint": "yarn lint:files .",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install",
@@ -15,7 +16,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "postinstall": "yarn theme",
-    "gql:gen": "graphql-codegen --config codegen.yml"
+    "gql:gen": "graphql-codegen --config codegen.yml && yarn lint:files --fix \"generated\""
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -35,6 +36,7 @@
     "@floating-ui/dom": "0.3.1",
     "@floating-ui/react-dom": "0.5.0",
     "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/import-types-preset": "2.1.17",
     "@graphql-codegen/typescript-graphql-request": "4.4.5",
     "@graphql-codegen/typescript-react-apollo": "3.2.11",
     "@graphql-codegen/typescript-stencil-apollo": "2.2.8",

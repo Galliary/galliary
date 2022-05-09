@@ -1,10 +1,11 @@
-import { Routes } from 'blitz'
 import { Box, Center, Text, useBoolean } from '@chakra-ui/react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
 import { NewGraphicIcon } from 'app/components/icons/NewGraphicIcon'
 import { Link } from 'app/components/Link'
+import { useRoutes } from 'app/data/hooks/useRoutes'
 
 export const AddNewItem = () => {
+  const Routes = useRoutes()
   const [isHovering, setHovering] = useBoolean(false)
 
   return (
@@ -13,7 +14,7 @@ export const AddNewItem = () => {
         boxSize="full"
         d="flex"
         rounded="full"
-        href={Routes.NewAlbumPage()}
+        href={Routes.toUploadPage()}
         pos="relative"
         onPointerEnter={setHovering.on}
         onPointerLeave={setHovering.off}

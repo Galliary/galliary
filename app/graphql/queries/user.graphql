@@ -2,7 +2,6 @@ query CurrentUser {
   user {
     id
     bio
-    email
     badges
     username
     nickname
@@ -17,7 +16,6 @@ query UserProfile($userId: String!) {
   user(id: $userId) {
     id
     bio
-    email
     badges
     username
     nickname
@@ -25,50 +23,74 @@ query UserProfile($userId: String!) {
     updatedAt
     createdAt
     bannerExt
-    userFavouriteIds
+    userFavourites {
+      id
+    }
 
-    albums {
+    albums(skip: 0, take: 3) {
       id
       title
       authorId
       coverExt
       colors
-      userFavouriteIds
+      images {
+        id
+        albumId
+        authorId
+        imageExt
+      }
+      userFavourites {
+        id
+      }
     }
 
-    images {
+    images(skip: 0, take: 3) {
       id
       title
       authorId
       albumId
       imageExt
       colors
-      userFavouriteIds
+      userFavourites {
+        id
+      }
     }
 
-    favouriteAlbums {
+    favouriteAlbums(skip: 0, take: 6) {
       id
       authorId
       title
       coverExt
-      userFavouriteIds
+      images {
+        id
+        albumId
+        authorId
+        imageExt
+      }
+      userFavourites {
+        id
+      }
     }
 
-    favouriteImages {
+    favouriteImages(skip: 0, take: 6) {
       id
       authorId
       imageExt
       albumId
       title
-      userFavouriteIds
+      userFavourites {
+        id
+      }
     }
 
-    favouriteUsers {
+    favouriteUsers(skip: 0, take: 6) {
       id
       avatarUrl
       username
       nickname
-      userFavouriteIds
+      userFavourites {
+        id
+      }
     }
   }
 }

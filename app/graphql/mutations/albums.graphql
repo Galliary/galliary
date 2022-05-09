@@ -1,12 +1,20 @@
 
-mutation CreateAlbum($title: String!, $description: String!, $colors: [Int!]!) {
-  createAlbum(title: $title, description: $description, colors: $colors) {
+mutation CreateAlbum($title: String!, $description: String, $colors: [Int!] = [0, 0, 0]) {
+  album: createAlbum(title: $title, description: $description, colors: $colors) {
     id
     title
     description
   }
 }
 
-mutation UploadAlbumCover($albumId: String!, $file: Upload!) {
-  success: updateAlbumCover(albumId: $albumId, coverImage: $file)
+mutation UpdateAlbum($albumId: String!, $input: UpdateAlbumInput!) {
+  album: updateAlbum(albumId: $albumId, input: $input) {
+    id
+    title
+    description
+  }
+}
+
+mutation DeleteAlbum($albumId: String!) {
+  success: deleteAlbum(albumId: $albumId)
 }

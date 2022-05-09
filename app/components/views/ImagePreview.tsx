@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Text,
   useBoolean,
   useBreakpointValue,
   useToken,
@@ -17,7 +18,7 @@ import { AnimatePresence } from 'framer-motion'
 import { getImageUrlFromItem } from 'app/services/cdn.service'
 import { Image as ImageComponent } from 'app/components/Image'
 import { useRoutes } from 'app/data/hooks/useRoutes'
-import { useFavouriteImageMutation } from 'generated/graphql'
+import { useFavouriteImageMutation } from 'generated/graphql.client'
 import { Maybe } from 'global'
 
 export interface EntityPreviewProps {
@@ -28,7 +29,7 @@ export interface EntityPreviewProps {
     authorId: string
     colors: number[]
     imageExt: string
-    userFavouritesIds?: Maybe<string[]>
+    userFavourites?: Maybe<Array<{ id: string }>>
   }
 }
 
@@ -36,8 +37,9 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
   const routes = useRoutes()
   const boxSize = useThumbnailSizing()
   const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
-  const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
   const [favouriteImage] = useFavouriteImageMutation()
+  const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
+  const [hasImageErrored, setHasImageErrored] = useBoolean(false)
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
@@ -85,34 +87,44 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
               boxSize="full"
               bg={`rgba(${image.colors[0]}, ${image.colors[1]}, ${image.colors[2]}, 0.4)`}
             />
-            <MotionBox
-              pointerEvents="none"
-              userSelect="none"
-              transition={transitionConfig}
-              animate={{ opacity: Number(!hasImageLoaded) }}
-            >
-              <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
-                <LogoLoadingAnimation size="60%" />
+            {hasImageErrored && (
+              <Center boxSize="full">
+                <Text textStyle="label.medium">{image.title}</Text>
               </Center>
-            </MotionBox>
-            <MotionBox
-              transition={transitionConfig}
-              animate={{ opacity: Number(hasImageLoaded) }}
-              pos="absolute"
-              inset={0}
-              boxSize={boxSize}
-            >
-              <ImageComponent
-                loading="lazy"
-                overflow="hidden"
-                objectFit="cover"
-                height={boxSizeImage}
-                width={boxSizeImage}
-                alt={image.title ?? image.id}
-                src={getImageUrlFromItem(image)}
-                onLoadComplete={setHasImageLoaded.on}
-              />
-            </MotionBox>
+            )}
+            {!(hasImageErrored || hasImageLoaded) && (
+              <MotionBox
+                pointerEvents="none"
+                userSelect="none"
+                transition={transitionConfig}
+                animate={{ opacity: Number(!hasImageLoaded) }}
+              >
+                <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
+                  <LogoLoadingAnimation size="60%" />
+                </Center>
+              </MotionBox>
+            )}
+            {!hasImageErrored && (
+              <MotionBox
+                transition={transitionConfig}
+                animate={{ opacity: Number(hasImageLoaded) }}
+                pos="absolute"
+                inset={0}
+                boxSize={boxSize}
+              >
+                <ImageComponent
+                  loading="lazy"
+                  overflow="hidden"
+                  objectFit="cover"
+                  height={boxSizeImage}
+                  width={boxSizeImage}
+                  alt={image.title ?? image.id}
+                  src={getImageUrlFromItem(image)}
+                  onLoadComplete={setHasImageLoaded.on}
+                  onError={setHasImageErrored.on}
+                />
+              </MotionBox>
+            )}
           </Box>
         </Link>
       )}

@@ -11,9 +11,8 @@ import {
   Text,
   UseDisclosureReturn,
 } from '@chakra-ui/react'
-import { useMutation } from 'blitz'
-import deleteImage from 'app/data/mutations/images/deleteImage'
 import { usePage } from 'app/data/hooks/usePage'
+import { useDeleteImageMutation } from 'generated/graphql.client'
 
 export const DeleteImageModal = ({
   imageId,
@@ -23,7 +22,11 @@ export const DeleteImageModal = ({
   disclosure: UseDisclosureReturn
 }) => {
   const { goBack } = usePage()
-  const [deleteImageMutation] = useMutation(deleteImage)
+  const [deleteImageMutation] = useDeleteImageMutation({
+    variables: {
+      imageId,
+    },
+  })
 
   return (
     <Modal {...disclosure}>
@@ -40,7 +43,7 @@ export const DeleteImageModal = ({
           <HStack spacing={4} w="full" justify="space-between">
             <Button
               variant="bad"
-              onClick={() => deleteImageMutation({ id: imageId }).then(goBack)}
+              onClick={() => deleteImageMutation().then(goBack)}
             >
               watch me cuh
             </Button>

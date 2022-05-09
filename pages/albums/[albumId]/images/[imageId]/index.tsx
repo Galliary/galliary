@@ -1,13 +1,4 @@
 import {
-  BlitzPage,
-  Head,
-  invokeWithMiddleware,
-  PromiseReturnType,
-  Routes,
-  useParam,
-  useQuery,
-} from 'blitz'
-import {
   Box,
   Button,
   Center,
@@ -26,14 +17,11 @@ import {
   transitionConfig,
   transitionMediumConfig,
 } from 'app/components/Motion'
-import { EditIcon } from 'app/components/icons/EditIcon'
 import { FullscreenIcon } from 'app/components/icons/FullscreenIcon'
 import { usePage } from 'app/data/hooks/usePage'
-import getImage from 'app/data/queries/images/getImage'
 import { DeleteIcon } from 'app/components/icons/DeleteIcon'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Tooltip } from 'app/components/Tooltip'
-import { Link } from 'app/components/Link'
 import Layout from 'app/layouts/Layout'
 import { ImageMeta } from 'app/meta/ImageMeta'
 import { SimpleMeta } from 'app/meta/SimpleMeta'
@@ -41,47 +29,48 @@ import { getGlobalServerSideProps } from 'app/utils/getGlobalServerSideProps'
 import { SiteDetails } from 'app/constants'
 import { Controlled as ControlledZoom } from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { useParam } from 'app/data/hooks/useParam'
+import { NextPage } from 'next'
+import { useGetImageQuery } from 'generated/graphql.client'
 
-export interface ImagePageProps {
-  initialData: PromiseReturnType<typeof getImage>
-}
+export interface ImagePageProps {}
 
 export const getServerSideProps = getGlobalServerSideProps<ImagePageProps>(
   async ({ query, req, res }) => {
-    const initialData = await invokeWithMiddleware(
-      getImage,
-      { id: query.imageId },
-      { req, res },
-    )
-
     return {
-      props: {
-        initialData,
-      },
+      props: {},
     }
   },
 )
 
-const ShowImagePage: BlitzPage<ImagePageProps> = ({
-  initialData,
-  currentUser,
-}) => {
+const ShowImagePage: NextPage<ImagePageProps> = ({ currentUser }) => {
   const { goBack } = usePage()
   const bgFull = useToken('colors', 'background.full')
   const deleteConfirmDisclosure = useDisclosure()
   const [isFullscreen, setIsFullscreen] = useBoolean(false)
-  const albumId = useParam('albumId', 'string')
-  const imageId = useParam('imageId', 'string')
-  const [image] = useQuery(getImage, { id: imageId }, { initialData })
+  const albumId = useParam('albumId')
+  const imageId = useParam('imageId')
   const [isLoaded, setLoaded] = useBoolean(false)
 
   const [isHovering, setHovering] = useBoolean(false)
 
+  const { data: imageData } = useGetImageQuery({
+    variables: {
+      id: imageId,
+    },
+  })
+
+  if (!imageData?.image) {
+    return null
+  }
+
+  const image = imageData.image
+
   const isAuthor = image.authorId === currentUser?.id
 
   return (
-    <>
+    <Layout hideFooter>
       <SimpleMeta
         title={`${SiteDetails.Name} | ${image.title ?? 'Untitled Image'} by ${
           image.author?.nickname ?? image.author?.username
@@ -292,10 +281,8 @@ const ShowImagePage: BlitzPage<ImagePageProps> = ({
           </Center>
         </Center>
       </Center>
-    </>
+    </Layout>
   )
 }
-
-ShowImagePage.getLayout = (page) => <Layout hideFooter>{page}</Layout>
 
 export default ShowImagePage

@@ -1,10 +1,10 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const ShieldOkayIcon = createIcon({
-  displayName: "ShieldOkayIcon",
-  viewBox: "0 0 24 24",
+  displayName: 'ShieldOkayIcon',
+  viewBox: '0 0 24 24',
   defaultProps: {
-    fill: "none",
+    fill: 'none',
   },
   path: (
     <>

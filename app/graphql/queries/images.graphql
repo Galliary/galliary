@@ -1,0 +1,56 @@
+query GetImage($id: String!) {
+  image (id: $id) {
+    id
+    albumId
+    title
+    description
+    authorId
+    colors
+    imageExt
+    author {
+      id
+      username
+      nickname
+    }
+    userFavourites {
+      id
+    }
+  }
+}
+
+query GetImagesForAlbum($albumId: String!) {
+  images: imagesForAlbum(albumId: $albumId, args: { amount: 10, cursor: 0 }) {
+    id
+    albumId
+    title
+    authorId
+    colors
+    description
+    imageExt
+    userFavourites {
+      id
+    }
+  }
+}
+
+query GetFrontPageImages {
+  images(amount: 10, cursor: 0) {
+    id
+    authorId
+    imageExt
+    author {
+      id
+      nickname
+      username
+      avatarUrl
+    }
+    albumId
+    album {
+      title
+    }
+    title
+    userFavourites {
+      id
+    }
+  }
+}

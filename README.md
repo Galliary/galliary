@@ -1,12 +1,6 @@
 <img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_light.png#gh-dark-mode-only" alt="Galliary" />
 <img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_dark.png#gh-light-mode-only" alt="Galliary" />
 
-<h3>
-  <p align="center">
-    Proudly built with <a href="https://github.com/blitz-js/blitz">Blitz.js</a>
-  </p>
-</h3>
-
 ## Prerequisites
 1. Install and get Docker running on your local machine (I suggest using [Docker Desktop](https://www.docker.com/products/docker-desktop))
    1. You will need to install WSL2 for Windows machines
@@ -45,43 +39,3 @@ Add the following key-value pairs using your own auth values:
 `CDN_ACCOUNT_ID` - The CDN account ID for the Cloudflare CDN.
 
 `CDN_API_KEY` - The CDN API key for the Cloudflare CDN.
-
-
-### Run your app in the development mode.
-
-```
-blitz dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Tests
-
-Runs your tests using Jest.
-
-```
-yarn test
-```
-
-Blitz comes with a test setup using [Jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/).
-
-## Commands
-
-Blitz comes with a powerful CLI that is designed to make development easy and fast. You can install it with `npm i -g blitz`
-
-```
-  blitz [COMMAND]
-
-  dev       Start a development server
-  build     Create a production build
-  start     Start a production server
-  export    Export your Blitz app as a static application
-  prisma    Run prisma commands
-  generate  Generate new files for your Blitz project
-  console   Run the Blitz console REPL
-  install   Install a recipe
-  help      Display help for blitz
-  test      Run project tests
-```
-
-You can read more about it on the [CLI Overview](https://blitzjs.com/docs/cli-overview) documentation.

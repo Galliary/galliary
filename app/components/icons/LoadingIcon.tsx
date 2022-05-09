@@ -1,18 +1,18 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 const DASH_FILLED = 710
 
 export const LoadingIcon = createIcon({
-  displayName: "LoadingIcon",
-  viewBox: "0 0 128 128",
+  displayName: 'LoadingIcon',
+  viewBox: '0 0 128 128',
   defaultProps: {
-    h: "128px",
-    w: "128px",
+    h: '128px',
+    w: '128px',
     strokeWidth: 2,
-    fill: "none",
-    stroke: "brand.primary.100",
-    strokeLinejoin: "round",
-    strokeLinecap: "round",
+    fill: 'none',
+    stroke: 'brand.primary.100',
+    strokeLinejoin: 'round',
+    strokeLinecap: 'round',
     strokeDasharray: 700,
     strokeDashoffset: DASH_FILLED,
   },

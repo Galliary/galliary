@@ -23,8 +23,6 @@ const rootStyles = {
   color: themeData.colors.ui,
   w: 'full',
   minW: 'full',
-  h: 'full',
-  minH: 'full',
   lineHeight: 1.25,
   fontFamily: 'body',
   scrollBehavior: 'smooth',
