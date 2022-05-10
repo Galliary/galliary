@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { Article } from 'schema-dts'
-import { Image, User } from '@prisma/client'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import { SiteDetails } from 'app/constants'
 import { getImageUrlFromItem } from 'app/services/cdn.service'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { Image, User } from 'generated/graphql.client'
 
 interface ImagePageProps {
   image: Image & {
