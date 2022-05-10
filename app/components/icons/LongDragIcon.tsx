@@ -1,12 +1,12 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const LongDragIcon = createIcon({
-  displayName: "LongDragIcon",
-  viewBox: "0 0 24 24",
+  displayName: 'LongDragIcon',
+  viewBox: '0 0 24 24',
   defaultProps: {
-    h: "14px",
-    w: "49px",
-    fill: "none",
+    h: '14px',
+    w: '49px',
+    fill: 'none',
   },
   path: (
     <>

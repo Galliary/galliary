@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { jsonLdScriptProps } from 'react-schemaorg'
 import type { Organization, WebPage, WebSite } from 'schema-dts'
 import { SiteDetails } from 'app/constants'
-import { Head } from 'blitz'
+import Head from 'next/head'
 
 export interface OrganizationInfoProps {}
 

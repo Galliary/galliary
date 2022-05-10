@@ -1,0 +1,7 @@
+
+Etypescript:S1128")Remove this unused import of 'useEffect'.(š»‘Î
+typescript:S1172i"gRemove the unused function parameter "Uploader" or rename it to "_Uploader" to make intention explicit.(íÉöÀûÿÿÿÿ8ÚŠ¢÷‡0
+btypescript:S1854k"ARemove this useless assignment to variable "createImageFragment".(æĞ¾ƒûÿÿÿÿ
+atypescript:S1854l"9Remove this useless assignment to variable "uploadImage".(ì¢Ë¦úÿÿÿÿ8ÚŠ¢÷‡0
+Vtypescript:S1854n"3Remove this useless assignment to variable "state".(´«ñÂ8ÚŠ¢÷‡0
+Ytypescript:S1854n"6Remove this useless assignment to variable "dispatch".(´«ñÂ8ÚŠ¢÷‡0

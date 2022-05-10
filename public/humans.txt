@@ -21,4 +21,4 @@
     Language: English (sorry)
     Contact: contact [at] galliary.com
 
-Built with <3 by a programming hobbyist team using the Blitz framework!
+Built with <3 by a programming hobbyist team using the Next, Nest & GraphQL!

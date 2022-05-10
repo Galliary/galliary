@@ -1,7 +1,5 @@
-import type { Config } from "@jest/types"
+import type { Config } from '@jest/types'
 
-const config: Config.InitialOptions = {
-  preset: "blitz",
-}
+const config: Config.InitialOptions = {}
 
 export default config

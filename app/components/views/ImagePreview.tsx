@@ -1,40 +1,45 @@
-import { Image } from '@prisma/client'
-import { Routes } from 'blitz'
 import {
   Box,
   Center,
-  Image as Img,
+  Text,
   useBoolean,
   useBreakpointValue,
   useToken,
 } from '@chakra-ui/react'
-import { Suspense, useRef } from 'react'
+import { Suspense } from 'react'
 import { MotionBox, transitionConfig } from 'app/components/Motion'
-import favouriteImage from 'app/data/mutations/images/favouriteImage'
 import { useThumbnailSizing } from 'app/data/hooks/useThumbnailSizing'
-import { useHasImageLoaded } from 'app/data/hooks/useHasImageLoaded'
 import { Favourite } from 'app/components/views/Favourite'
 import { Tooltip } from 'app/components/Tooltip'
 import { Link } from 'app/components/Link'
 import { LogoLoadingAnimation } from 'app/components/views/LogoLoadingAnimation'
 import { Loader } from 'app/components/views/Loader'
 import { AnimatePresence } from 'framer-motion'
-import {
-  getImageUrl,
-  getImageUrlFromItem,
-} from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
 import { Image as ImageComponent } from 'app/components/Image'
+import { useRoutes } from 'app/data/hooks/useRoutes'
+import { useFavouriteImageMutation } from 'generated/graphql.client'
+import { Maybe } from 'global'
 
 export interface EntityPreviewProps {
-  item: Image & {
-    userFavourites: Array<{ id: string }>
+  item: {
+    id: string
+    title?: Maybe<string>
+    albumId: string
+    authorId: string
+    colors: number[]
+    imageExt: string
+    userFavourites?: Maybe<Array<{ id: string }>>
   }
 }
 
 export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
+  const routes = useRoutes()
   const boxSize = useThumbnailSizing()
   const boxSizeImage = useBreakpointValue(useToken('sizes', boxSize))
+  const [favouriteImage] = useFavouriteImageMutation()
   const [hasImageLoaded, setHasImageLoaded] = useBoolean(false)
+  const [hasImageErrored, setHasImageErrored] = useBoolean(false)
 
   return (
     <Tooltip label={image.title ?? 'Untitled Image'}>
@@ -43,10 +48,7 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
           d="flex"
           pos="relative"
           aria-label={image.title ?? 'Untitled Image'}
-          href={Routes.ShowImagePage({
-            albumId: image.albumId,
-            imageId: image.id,
-          })}
+          href={routes.toImagePage(image.albumId, image.id)}
         >
           <AnimatePresence>
             <MotionBox
@@ -85,34 +87,44 @@ export const ImagePreview = ({ item: image }: EntityPreviewProps) => {
               boxSize="full"
               bg={`rgba(${image.colors[0]}, ${image.colors[1]}, ${image.colors[2]}, 0.4)`}
             />
-            <MotionBox
-              pointerEvents="none"
-              userSelect="none"
-              transition={transitionConfig}
-              animate={{ opacity: Number(!hasImageLoaded) }}
-            >
-              <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
-                <LogoLoadingAnimation size="60%" />
+            {hasImageErrored && (
+              <Center boxSize="full">
+                <Text textStyle="label.medium">{image.title}</Text>
               </Center>
-            </MotionBox>
-            <MotionBox
-              transition={transitionConfig}
-              animate={{ opacity: Number(hasImageLoaded) }}
-              pos="absolute"
-              inset={0}
-              boxSize={boxSize}
-            >
-              <ImageComponent
-                loading="lazy"
-                overflow="hidden"
-                objectFit="cover"
-                height={boxSizeImage}
-                width={boxSizeImage}
-                alt={image.title ?? image.id}
-                src={getImageUrlFromItem(image)}
-                onLoadComplete={setHasImageLoaded.on}
-              />
-            </MotionBox>
+            )}
+            {!(hasImageErrored || hasImageLoaded) && (
+              <MotionBox
+                pointerEvents="none"
+                userSelect="none"
+                transition={transitionConfig}
+                animate={{ opacity: Number(!hasImageLoaded) }}
+              >
+                <Center zIndex={1} boxSize="full" inset={0} pos="absolute">
+                  <LogoLoadingAnimation size="60%" />
+                </Center>
+              </MotionBox>
+            )}
+            {!hasImageErrored && (
+              <MotionBox
+                transition={transitionConfig}
+                animate={{ opacity: Number(hasImageLoaded) }}
+                pos="absolute"
+                inset={0}
+                boxSize={boxSize}
+              >
+                <ImageComponent
+                  loading="lazy"
+                  overflow="hidden"
+                  objectFit="cover"
+                  height={boxSizeImage}
+                  width={boxSizeImage}
+                  alt={image.title ?? image.id}
+                  src={getImageUrlFromItem(image)}
+                  onLoadComplete={setHasImageLoaded.on}
+                  onError={setHasImageErrored.on}
+                />
+              </MotionBox>
+            )}
           </Box>
         </Link>
       )}

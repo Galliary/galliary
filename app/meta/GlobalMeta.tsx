@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { MiscMeta } from 'app/meta/MiscMeta'
 import { LocaleMeta } from 'app/meta/LocaleMeta'
 import { SiteDetails } from 'app/constants'
-import { Head } from 'blitz'
+import Head from 'next/head'
 
 export interface GlobalMetaProps {}
 

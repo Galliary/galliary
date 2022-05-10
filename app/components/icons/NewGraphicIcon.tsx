@@ -1,11 +1,11 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const NewGraphicIcon = createIcon({
-  displayName: "NewGraphicIcon",
-  viewBox: "0 0 256 256",
+  displayName: 'NewGraphicIcon',
+  viewBox: '0 0 256 256',
   defaultProps: {
-    boxSize: "256px",
-    fill: "none",
+    boxSize: '256px',
+    fill: 'none',
   },
   path: (
     <>

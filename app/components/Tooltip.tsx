@@ -16,11 +16,13 @@ export type TooltipProps = {
 }
 
 const TOOLTIP_GRADIENT_BG = '#000000'
+const DEFAULT_OFFSET = 0
+const OFFSET_OFFSET = 8 // Offset because of arrow size
 
 export const Tooltip = ({
   label,
   children,
-  offset: offsetN = 8,
+  offset: offsetN = DEFAULT_OFFSET,
 }: TooltipProps) => {
   const arrowRef = useRef(null)
   const [isHovering, setHovering] = useBoolean(false)
@@ -39,7 +41,7 @@ export const Tooltip = ({
     placement: 'bottom',
     middleware: [
       shift({ padding: 8 }),
-      offset(offsetN),
+      offset(OFFSET_OFFSET + offsetN),
       arrow({ element: arrowRef }),
     ],
   })

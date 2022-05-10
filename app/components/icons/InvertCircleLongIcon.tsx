@@ -1,12 +1,12 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const InvertCircleLongIcon = createIcon({
-  displayName: "InvertCircleLongIcon",
-  viewBox: "0 0 71 40",
+  displayName: 'InvertCircleLongIcon',
+  viewBox: '0 0 71 40',
   defaultProps: {
-    w: "71px",
-    h: "40px",
-    fill: "none",
+    w: '71px',
+    h: '40px',
+    fill: 'none',
   },
   path: (
     <>

@@ -1,0 +1,3 @@
+mutation FavouriteAlbum($id: String!, $unfavourite: Boolean!) {
+  success: favouriteAlbum(albumId: $id, unfavourite: $unfavourite)
+}

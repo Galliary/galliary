@@ -34,6 +34,14 @@
     "22": "88px",
     "23": "92px",
     "24": "96px",
+    "25": "100px",
+    "26": "104px",
+    "27": "108px",
+    "28": "112px",
+    "29": "116px",
+    "30": "120px",
+    "31": "124px",
+    "32": "128px",
     "banner": {
       "height": "420px",
       "height-with-header": "510px"
@@ -66,6 +74,10 @@
     },
     "content": {
       "width": "1648px"
+    },
+    "feed": {
+      "width": "900px",
+      "aside": "240px"
     }
   },
   "colors": {
@@ -90,6 +102,7 @@
     },
     "background": {
       "full": "#1B1F2F",
+      "80": "#1B1F2FCC",
       "full-darker": "#10131c",
       "dark": "#08090e"
     }

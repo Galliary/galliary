@@ -1,34 +1,50 @@
-import { Routes } from 'blitz'
 import { useMemo } from 'react'
 import {
   AspectRatio,
   Box,
+  Flex,
   HStack,
   Img,
+  SimpleGrid,
   Text,
+  useConst,
   useToken,
   VStack,
 } from '@chakra-ui/react'
-import { Maybe } from 'types'
 import { Link } from 'app/components/Link'
 import { Tooltip } from 'app/components/Tooltip'
 import { MotionBox, transitionFastConfig } from 'app/components/Motion'
-import { getImageUrlFromItem } from 'app/services/cdn/client.service'
+import { getImageUrlFromItem } from 'app/services/cdn.service'
+import { Maybe } from 'global'
+import { useRoutes } from 'app/data/hooks/useRoutes'
 
 type AnyItem =
-  | { id: string; authorId: string; coverExt: string; title: Maybe<string> }
+  | {
+      id: string
+      authorId: string
+      coverExt: string
+      title?: Maybe<string>
+      images?: Maybe<
+        Array<{
+          id: string
+          albumId: string
+          authorId: string
+          imageExt: string
+        }>
+      >
+    }
   | {
       id: string
       authorId: string
       imageExt: string
       albumId: string
-      title: Maybe<string>
+      title?: Maybe<string>
     }
   | {
       id: string
-      avatarUrl: Maybe<string>
+      avatarUrl?: Maybe<string>
       username: string
-      nickname: Maybe<string>
+      nickname?: Maybe<string>
     }
 
 interface FavouritesSectionProps {
@@ -41,6 +57,7 @@ interface FavouriteItem {
 }
 
 export const FavouriteItem = ({ item }: FavouriteItem) => {
+  const routes = useRoutes()
   const [ui10] = useToken('colors', ['ui.10'])
 
   const href = useMemo(() => {
@@ -49,11 +66,11 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     }
 
     if ('username' in item) {
-      return Routes.UserPage({ userId: item.username })
+      return routes.toUserPage(item.id)
     } else if ('albumId' in item) {
-      return Routes.ShowImagePage({ imageId: item.id, albumId: item.albumId })
+      return routes.toImagePage(item.albumId, item.id)
     } else {
-      return Routes.ShowAlbumPage({ albumId: item.id })
+      return routes.toAlbumPage(item.id)
     }
   }, [])
 
@@ -81,6 +98,27 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
     }
   }, [])
 
+  const imageDisplay = useConst(
+    () =>
+      item &&
+      'images' in item &&
+      [...(item.images ?? [])]
+        .slice(0, 4)
+        .map((item, i) => (
+          <Flex
+            key={i}
+            boxSize="full"
+            grow={0}
+            shrink={0}
+            overflow="hidden"
+            bgImg={getImageUrlFromItem(item)}
+            bgRepeat="no-repeat"
+            bgPos="center"
+            bgSize="cover"
+          />
+        )),
+  )
+
   return item ? (
     <Link
       boxSize="full"
@@ -96,7 +134,13 @@ export const FavouriteItem = ({ item }: FavouriteItem) => {
             transition={transitionFastConfig}
             whileHover={{ backgroundColor: ui10, opacity: 0.8 }}
           >
-            <Img alt={label} boxSize="full" src={imageUrl} />
+            {'imageExt' in item ? (
+              <Img alt={label} boxSize="full" src={imageUrl} />
+            ) : (
+              <SimpleGrid boxSize="full" columns={2}>
+                {imageDisplay}
+              </SimpleGrid>
+            )}
           </MotionBox>
         </AspectRatio>
       </Tooltip>

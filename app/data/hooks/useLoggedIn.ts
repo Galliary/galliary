@@ -1,11 +1,6 @@
-import { useQuery } from 'blitz'
-import getCurrentUser from 'app/data/queries/users/getCurrentUser'
+import { useCurrentUser } from 'app/data/hooks/useCurrentUser'
 
 export const useLoggedIn = (): boolean => {
-  const [user] = useQuery(getCurrentUser, null, {
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  })
+  const user = useCurrentUser()
   return Boolean(user)
 }

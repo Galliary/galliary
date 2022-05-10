@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['blitz', 'plugin:prettier/recommended'],
+  extends: ['next/core-web-vitals', 'plugin:prettier/recommended'],
   rules: {
     'react-hooks/exhaustive-deps': 'off',
     'react/no-array-index-key': 'off',
@@ -7,11 +7,6 @@ module.exports = {
       'error',
       {
         paths: [
-          {
-            name: 'blitz',
-            importNames: ['Link'],
-            message: 'Use custom Link component instead.',
-          },
           {
             name: '@chakra-ui/react',
             importNames: ['Link'],
@@ -27,13 +22,6 @@ module.exports = {
     'react/prop-types': 'off',
     'import/no-cycle': 'off',
     'no-multi-assign': 'off',
-    'import/imports-first': ['error', 'absolute-first'],
-    'react/jsx-filename-extension': [
-      1,
-      {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
-    ],
     semi: ['error', 'never'],
   },
 }

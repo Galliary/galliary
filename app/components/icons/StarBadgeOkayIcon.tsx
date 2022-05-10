@@ -1,10 +1,10 @@
-import { createIcon } from "@chakra-ui/icon"
+import { createIcon } from '@chakra-ui/icon'
 
 export const StarBadgeOkayIcon = createIcon({
-  displayName: "StarBadgeOkayIcon",
-  viewBox: "0 0 24 24",
+  displayName: 'StarBadgeOkayIcon',
+  viewBox: '0 0 24 24',
   defaultProps: {
-    fill: "none",
+    fill: 'none',
   },
   path: (
     <>

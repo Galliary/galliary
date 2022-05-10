@@ -10,7 +10,7 @@ type UseOptimisticFavouritesParams = Parameters<typeof useOptimisticFavourites>
 interface FavouriteProps {
   item: UseOptimisticFavouritesParams[0]
   mutation: UseOptimisticFavouritesParams[1]
-  style?: (isActive: boolean) => IconProps
+  style?: (isActive: boolean) => Omit<IconProps, 'css'>
 }
 
 export const Favourite = ({

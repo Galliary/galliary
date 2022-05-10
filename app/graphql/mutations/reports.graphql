@@ -1,0 +1,3 @@
+mutation ReportImage($imageId: String!, $reason: String!) {
+  success: reportImage(imageId: $imageId, reason: $reason)
+}

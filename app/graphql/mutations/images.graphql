@@ -1,0 +1,17 @@
+mutation CreateImageFragment($albumId: String!) {
+  image: createImage(albumId: $albumId, colors: [0, 0, 0]) {
+    id
+  }
+}
+
+mutation UpdateImage($imageId: String!, $input: UpdateImageInput!) {
+  image: updateImage(imageId: $imageId, input: $input) {
+    id
+    albumId
+    imageExt
+  }
+}
+
+mutation DeleteImage($imageId: String!) {
+  success: deleteImage(imageId: $imageId)
+}

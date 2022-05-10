@@ -1,6 +1,7 @@
 export const MAX_UPLOAD_FILE_SIZE = 64 * 1024 * 1024
 
-export const CDN_URL = 'https://cdn.galliary.com'
+export const CDN_URL = process.env.CDN_URL ?? 'https://cdn.galliary.com'
+export const API_URL = process.env.API_URL ?? 'https://api.galliary.com'
 
 export const SUPPORTED_MIME_TYPES = [
   'image/jpeg',
@@ -9,6 +10,8 @@ export const SUPPORTED_MIME_TYPES = [
   'image/webp',
   'image/bmp',
 ]
+
+export const AUTH_COOKIE_NAME = 'x-g-a'
 
 export const DISCORD_SUPPORT_SERVER_URL = 'https://discord.gg/9txsZrHcme'
 

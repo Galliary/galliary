@@ -1,4 +1,4 @@
-import { Head } from 'blitz'
+import Head from 'next/head'
 import { SiteDetails } from 'app/constants'
 
 interface SimpleMetaProps {

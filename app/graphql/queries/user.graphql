@@ -1,0 +1,96 @@
+query CurrentUser {
+  user {
+    id
+    bio
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    permissions
+  }
+}
+
+query UserProfile($userId: String!) {
+  user(id: $userId) {
+    id
+    bio
+    badges
+    username
+    nickname
+    avatarUrl
+    updatedAt
+    createdAt
+    bannerExt
+    userFavourites {
+      id
+    }
+
+    albums(skip: 0, take: 3) {
+      id
+      title
+      authorId
+      coverExt
+      colors
+      images {
+        id
+        albumId
+        authorId
+        imageExt
+      }
+      userFavourites {
+        id
+      }
+    }
+
+    images(skip: 0, take: 3) {
+      id
+      title
+      authorId
+      albumId
+      imageExt
+      colors
+      userFavourites {
+        id
+      }
+    }
+
+    favouriteAlbums(skip: 0, take: 6) {
+      id
+      authorId
+      title
+      coverExt
+      images {
+        id
+        albumId
+        authorId
+        imageExt
+      }
+      userFavourites {
+        id
+      }
+    }
+
+    favouriteImages(skip: 0, take: 6) {
+      id
+      authorId
+      imageExt
+      albumId
+      title
+      userFavourites {
+        id
+      }
+    }
+
+    favouriteUsers(skip: 0, take: 6) {
+      id
+      avatarUrl
+      username
+      nickname
+      userFavourites {
+        id
+      }
+    }
+  }
+}

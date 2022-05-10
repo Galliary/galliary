@@ -2,7 +2,7 @@ import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 
 // eslint-disable-next-line no-restricted-imports
-import { Link as BlitzLink, LinkProps as BlitzLinkProps } from 'blitz'
+import { default as NextLink, LinkProps as NextLinkProps } from 'next/link'
 
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -12,13 +12,13 @@ import {
 import { forwardRef } from '@chakra-ui/system'
 
 export type LinkProps = Omit<
-  Omit<BlitzLinkProps, 'passHref' | 'as'> & {
-    linkAs?: BlitzLinkProps['as']
+  Omit<NextLinkProps, 'passHref' | 'as'> & {
+    linkAs?: NextLinkProps['as']
   } & ChakraLinkProps,
   'href'
-> & { href: BlitzLinkProps['href'] }
+> & { href: NextLinkProps['href'] }
 
-const blitzLinkProps = [
+const nextLinkProps = [
   'href',
   'replace',
   'shallow',
@@ -28,13 +28,13 @@ const blitzLinkProps = [
 
 export const Link = forwardRef<LinkProps, typeof ChakraLink>(
   ({ linkAs, ...props }, ref) => {
-    const linkProps = pick(props, blitzLinkProps)
-    const chakraProps = omit<LinkProps, keyof LinkProps>(props, blitzLinkProps)
+    const linkProps = pick(props, nextLinkProps)
+    const chakraProps = omit<LinkProps, keyof LinkProps>(props, nextLinkProps)
 
     return (
-      <BlitzLink {...linkProps} as={linkAs} passHref>
+      <NextLink {...linkProps} as={linkAs} passHref>
         <ChakraLink {...chakraProps} ref={ref} />
-      </BlitzLink>
+      </NextLink>
     )
   },
 )

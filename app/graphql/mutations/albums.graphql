@@ -1,0 +1,20 @@
+
+mutation CreateAlbum($title: String!, $description: String, $colors: [Int!] = [0, 0, 0]) {
+  album: createAlbum(title: $title, description: $description, colors: $colors) {
+    id
+    title
+    description
+  }
+}
+
+mutation UpdateAlbum($albumId: String!, $input: UpdateAlbumInput!) {
+  album: updateAlbum(albumId: $albumId, input: $input) {
+    id
+    title
+    description
+  }
+}
+
+mutation DeleteAlbum($albumId: String!) {
+  success: deleteAlbum(albumId: $albumId)
+}
