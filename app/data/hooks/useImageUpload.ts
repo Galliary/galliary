@@ -24,6 +24,7 @@ export const useImageUpload = () => {
     const res = await fetch(`${API_URL}/images/${id}/upload`, {
       method: 'POST',
       body: form,
+      credentials: 'include',
       headers: authToken
         ? {
             Authorization: `Bearer ${authToken}`,
