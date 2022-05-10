@@ -7,7 +7,7 @@ import { useBoolean } from '@chakra-ui/react'
 import {
   BaseImageItemType,
   getImageUrlFromItem,
-} from 'app/services/cdn/client.service'
+} from 'app/services/cdn.service'
 
 interface AutoImageCarouselProps {
   items: Array<BaseImageItemType>

@@ -13,7 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { Link } from 'app/components/Link'
-import { PropsForModal } from 'types'
+import { PropsForModal } from 'global'
 
 export type ManageConnectionsModalProps = PropsForModal<{}>
 

@@ -1,9 +1,8 @@
 const { defaultLocale, locales } = require('./i18n.json')
 
 const config = {
-  eslint: {
-    // TODO: we need to enable this later but eslint packages are being super cringe
-    ignoreDuringBuilds: true,
+  experimental: {
+    outputStandalone: true,
   },
   async redirects() {
     return [
@@ -15,7 +14,6 @@ const config = {
     ]
   },
   images: {
-    // TODO: Change to "galliary.com" when supported
     domains: ['cdn.galliary.com'],
   },
   i18n: {

@@ -11,11 +11,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install",
-    "theme": "chakra-cli tokens app/theme/index.ts",
+    "theme": "chakra-cli tokens ./app/theme/index.ts",
     "analyze": "cross-env ANALYZE=true yarn build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "yarn theme",
     "gql:gen": "graphql-codegen --config codegen.yml && yarn lint:files --fix \"generated\""
   },
   "prisma": {
