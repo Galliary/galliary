@@ -1,6 +1,5 @@
 import { Link } from 'app/components/Link'
 import { Fragment, ReactNode } from 'react'
-import { Album, Image } from '@prisma/client'
 import { usePage } from 'app/data/hooks/usePage'
 import {
   Box,
@@ -11,6 +10,7 @@ import {
   VStack,
   useBreakpointValue,
 } from '@chakra-ui/react'
+import { Album, Image } from 'generated/graphql.client'
 
 interface GalleryViewControllerProps<Data extends Album | Image> {
   title?: null | string

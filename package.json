@@ -17,9 +17,6 @@
     "build-storybook": "build-storybook",
     "gql:gen": "graphql-codegen --config codegen.yml && yarn lint:files --fix \"generated\""
   },
-  "prisma": {
-    "schema": "db/schema.prisma"
-  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix"
@@ -39,7 +36,6 @@
     "@graphql-codegen/typescript-graphql-request": "4.4.5",
     "@graphql-codegen/typescript-react-apollo": "3.2.11",
     "@graphql-codegen/typescript-stencil-apollo": "2.2.8",
-    "@prisma/client": "^3.10.0",
     "body-parser": "1.20.0",
     "busboy": "1.4.0",
     "color-thief-react": "2.1.0",
@@ -120,10 +116,8 @@
     "husky": "7.x",
     "lint-staged": "11.x",
     "prettier": "2.5.1",
-    "prettier-plugin-prisma": "^3.10.0",
     "pretty-quick": "3.1.3",
     "preview-email": "3.0.5",
-    "prisma": "^3.10.0",
     "react-docgen-typescript-loader": "3.7.2",
     "tsconfig-paths-webpack-plugin": "3.5.2",
     "typescript": "^4.6.2",
