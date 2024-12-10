@@ -1,6 +1,10 @@
 [![Are you hiring?](https://github.com/nanoqoi/tour/blob/main/assets/step-3-dark.png?raw=true)](https://github.com/rammble/web#gh-dark-mode-only)
 [![Are you hiring?](https://github.com/nanoqoi/tour/blob/main/assets/step-3-light.png?raw=true)](https://github.com/rammble/web#gh-light-mode-only)
 
+[![Figma File](https://github.com/nanoqoi/tour/blob/main/assets/figma-button-dark.png?raw=true)](https://www.figma.com/community/file/1252822119205158100/galliary#gh-dark-mode-only)
+[![Figma File](https://github.com/nanoqoi/tour/blob/main/assets/figma-button-light.png?raw=true)](https://www.figma.com/community/file/1252822119205158100/galliary#gh-light-mode-only)
+
+
 <img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_light.png#gh-dark-mode-only" alt="Galliary" />
 <img src="https://raw.githubusercontent.com/Synqat/galliary/main/.github/assets/banner_dark.png#gh-light-mode-only" alt="Galliary" />
 
